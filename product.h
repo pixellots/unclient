@@ -20,6 +20,8 @@ namespace Sara
             void setIconUrl(const QString& aUrl);
             QString getIconUrl() const;
 
+            QString getLocalIcon() const;
+
         private:
             QString m_strName;
             QString m_strCode;

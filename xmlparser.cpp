@@ -36,8 +36,10 @@ bool XmlParser::parse(const QString& aXmlData)
         bool isThere = parseUpdates();
 
         if(!isThere)
-            return parseMessages();
+            isThere = parseMessages();
 
+        if(!isThere)
+            return FALSE;
     }
     else
     {
@@ -92,7 +94,7 @@ bool XmlParser::parseProduct()
             product.setCode(e.text());
         else if(e.tagName()=="name")
             product.setName(e.text());
-        else if(e.tagName()=="iconUrl")
+        else if(e.tagName()=="icon_url")
             product.setIconUrl(e.text());
 
         n = n.nextSibling();

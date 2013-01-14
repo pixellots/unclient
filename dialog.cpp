@@ -1,3 +1,5 @@
+#include <QFile>
+
 #include "dialog.h"
 #include "ui_dialog.h"
 #include "update.h"
@@ -5,6 +7,7 @@
 #include "product.h"
 #include "productversion.h"
 #include "config.h"
+#include "downloader.h"
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
@@ -50,6 +53,15 @@ void Dialog::serviceDone()
     setWindowTitle(config->product().getName() + tr(" - Update Manager"));
 
     m_pUI->treeUpdate->clear();
+
+    if(!config->product().getIconUrl().isEmpty())
+    {
+        m_pUI->labelLogo->setPixmap(QPixmap(config->product().getLocalIcon()).scaledToHeight(64, Qt::SmoothTransformation));
+        m_pUI->labelLogo->show();
+        setWindowIcon(QPixmap(config->product().getLocalIcon()).scaledToHeight(64, Qt::SmoothTransformation));
+    }
+    else
+        m_pUI->labelLogo->hide();
 
     QList<Sara::Update> list = config->updates();
     for(int i = 0; i < list.size(); i++)

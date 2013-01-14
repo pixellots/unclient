@@ -1,3 +1,4 @@
+#include <QDir>
 #include "product.h"
 
 using namespace Sara;
@@ -36,3 +37,9 @@ QString Product::getIconUrl() const
     return m_strIconUrl;
 }
 
+QString Product::getLocalIcon() const
+{
+    if(!QDir(QDir::tempPath() + QDir::separator() + "Sara").exists())
+        QDir(QDir::tempPath()).mkdir("Sara");
+    return QDir::tempPath() + QDir::separator() + "Sara" + QDir::separator() + QFileInfo(m_strIconUrl).fileName();
+}

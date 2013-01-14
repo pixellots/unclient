@@ -5,6 +5,8 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 
+#include "downloader.h"
+
 #define SARA_SERVICE_URL "http://192.168.1.102/sara/index.php/service"
 
 namespace Sara
@@ -27,6 +29,7 @@ namespace Sara
 
         private:
             QNetworkAccessManager* m_pManager;
+            Sara::Downloader* m_pDownloader;
     };
 }
 

@@ -8,6 +8,7 @@
 #include "settings.h"
 #include "version.h"
 #include "xmlparser.h"
+#include "product.h"
 
 using namespace Sara;
 
@@ -15,11 +16,13 @@ Service::Service(QObject* parent)
     : QObject(parent)
 {
     m_pManager = NULL;
+    m_pDownloader = NULL;
 }
 
 Service::~Service()
 {
     m_pManager->deleteLater();
+    m_pDownloader->deleteLater();
 }
 
 bool Service::checkForUpdates()
@@ -92,5 +95,15 @@ void Service::requestReceived(QNetworkReply* reply)
         qDebug() << "ERROR: " << reply->errorString();
     }
 
-    emit done();
+    if(!Sara::Config::Instance()->product().getIconUrl().isEmpty())
+    {
+        if(!m_pDownloader)
+            m_pDownloader = new Sara::Downloader(Sara::Config::Instance()->product().getLocalIcon());
+
+        connect(m_pDownloader, SIGNAL(done()), this, SIGNAL(done()));
+
+        m_pDownloader->doDownload(Sara::Config::Instance()->product().getIconUrl());
+    }
+    else
+        emit done();
 }

@@ -16,7 +16,8 @@ SOURCES += main.cpp \
     product.cpp \
     productversion.cpp \
     update.cpp \
-    message.cpp
+    message.cpp \
+    downloader.cpp
 HEADERS += dialog.h \
     config.h \
     settings.h \
@@ -26,5 +27,6 @@ HEADERS += dialog.h \
     product.h \
     productversion.h \
     update.h \
-    message.h
+    message.h \
+    downloader.h
 FORMS += dialog.ui
