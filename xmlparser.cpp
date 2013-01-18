@@ -30,15 +30,7 @@ bool XmlParser::parse(const QString& aXmlData)
 
     if(m_pDocument->setContent(aXmlData, &errorMsg, &errorLine, &errorColumn))
     {
-        if(!parseStatus() || !parseProduct() || !parseVersion())
-            return FALSE;
-
-        bool isThere = parseUpdates();
-
-        if(!isThere)
-            isThere = parseMessages();
-
-        if(!isThere)
+        if(!parseStatus() || !parseProduct() || !parseVersion() || !parseUpdates() || !parseMessages())
             return FALSE;
     }
     else

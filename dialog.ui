@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>644</width>
-    <height>498</height>
+    <width>705</width>
+    <height>571</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item row="1" column="0" colspan="3">
     <widget class="QGroupBox" name="groupUpdates">
      <property name="title">
-      <string>Updates</string>
+      <string>Updates &amp;&amp; Messages</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0" colspan="4">
@@ -29,9 +29,6 @@
          <bool>true</bool>
         </property>
         <property name="uniformRowHeights">
-         <bool>false</bool>
-        </property>
-        <property name="itemsExpandable">
          <bool>false</bool>
         </property>
         <property name="allColumnsShowFocus">

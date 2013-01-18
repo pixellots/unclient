@@ -63,24 +63,49 @@ void Dialog::serviceDone()
     else
         m_pUI->labelLogo->hide();
 
-    QList<Sara::Update> list = config->updates();
-    for(int i = 0; i < list.size(); i++)
+    QTreeWidgetItem* category= new QTreeWidgetItem(m_pUI->treeUpdate);
+    category->setText(0, tr("Updates"));
+
+    QList<Sara::Update> update_list = config->updates();
+    for(int i = 0; i < update_list.size(); i++)
     {
         QFont font;
-        QTreeWidgetItem* parent = new QTreeWidgetItem(m_pUI->treeUpdate);
 
+        QTreeWidgetItem* parent = new QTreeWidgetItem(category);
         font.setBold(TRUE);
         parent->setFont(0, font);
-        parent->setText(0, list.at(i).getTitle());
+        parent->setText(0, update_list.at(i).getTitle());
         parent->setCheckState(0, Qt::Checked);
 
         QTreeWidgetItem* item = new QTreeWidgetItem(parent);
         font.setBold(FALSE);
         item->setFont(0, font);
-        item->setText(0, list.at(i).getDescription());
-
-        parent->setExpanded(TRUE);
+        item->setText(0, update_list.at(i).getDescription());
     }
+
+    category->setExpanded(TRUE);
+
+    category= new QTreeWidgetItem(m_pUI->treeUpdate);
+    category->setText(0, tr("Messages"));
+
+    QList<Sara::Message> message_list = config->messages();
+    for(int i = 0; i < message_list.size(); i++)
+    {
+        QFont font;
+
+        QTreeWidgetItem* parent = new QTreeWidgetItem(category);
+        font.setBold(TRUE);
+        parent->setFont(0, font);
+        parent->setText(0, message_list.at(i).getTitle());
+
+        QTreeWidgetItem* item = new QTreeWidgetItem(parent);
+        font.setBold(FALSE);
+        item->setFont(0, font);
+        item->setText(0, message_list.at(i).getMessage());
+
+    }
+
+    category->setExpanded(TRUE);
 
     show();
 }
