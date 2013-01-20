@@ -11,8 +11,11 @@
 #include <QStringList>
 #include <QTimer>
 #include <QUrl>
+#include <QMap>
 
 #include <stdio.h>
+
+#include "update.h"
 
 namespace Sara
 {
@@ -26,19 +29,23 @@ namespace Sara
              Downloader(const QString& aTarget);
 
         public:
-             void doDownload(const QUrl &url);
+             void doDownload(const QUrl& url, const Sara::Update& aUpdate);
              bool saveToDisk(const QString &filename, QIODevice *data);
+             void setTarget(const QString& aTarget);
+             QString getTarget() const;
+
+             bool isDownloading();
 
          public slots:
-             void execute();
              void downloadFinished(QNetworkReply *reply);
 
         signals:
-             void done();
+             void done(const Sara::Update& aUpdate);
+             void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
 
         private:
-             QNetworkAccessManager manager;
-             QList<QNetworkReply *> currentDownloads;
+             QNetworkAccessManager m_oManager;
+             QMap<QNetworkReply*, Sara::Update> m_oCurrentDownloads;
 
              QString m_strTarget;
      };

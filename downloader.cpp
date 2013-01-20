@@ -1,81 +1,93 @@
+#include <QDir>
 #include "downloader.h"
 
 using namespace Sara;
 
 Downloader::Downloader()
 {
- connect(&manager, SIGNAL(finished(QNetworkReply*)),
-         SLOT(downloadFinished(QNetworkReply*)));
+    connect(&m_oManager, SIGNAL(finished(QNetworkReply*)), SLOT(downloadFinished(QNetworkReply*)));
 }
 
 Downloader::Downloader(const QString& aTarget)
 {
     m_strTarget = aTarget;
- connect(&manager, SIGNAL(finished(QNetworkReply*)),
-         SLOT(downloadFinished(QNetworkReply*)));
+
+    connect(&m_oManager, SIGNAL(finished(QNetworkReply*)), SLOT(downloadFinished(QNetworkReply*)));
 }
 
-void Downloader::doDownload(const QUrl &url)
+void Downloader::setTarget(const QString& aTarget)
 {
- QNetworkRequest request(url);
- QNetworkReply *reply = manager.get(request);
+    m_strTarget = aTarget;
+}
 
- currentDownloads.append(reply);
+QString Downloader::getTarget() const
+{
+    return m_strTarget;
+}
+
+void Downloader::doDownload(const QUrl& url, const Sara::Update& aUpdate)
+{
+    QNetworkRequest request(url);
+
+    QNetworkReply *reply = m_oManager.get(request);
+
+    connect(reply, SIGNAL(downloadProgress(qint64,qint64)), SIGNAL(downloadProgress(qint64,qint64)));
+
+    m_oCurrentDownloads[reply] = aUpdate;
 }
 
 bool Downloader::saveToDisk(const QString &filename, QIODevice *data)
 {
- QFile file(filename);
- if (!file.open(QIODevice::WriteOnly)) {
-     fprintf(stderr, "Could not open %s for writing: %s\n",
+    QFile file(filename);
+
+    if (!file.open(QIODevice::WriteOnly))
+    {
+        fprintf(stderr, "Could not open %s for writing: %s\n",
              qPrintable(filename),
              qPrintable(file.errorString()));
-     return false;
- }
+        return false;
+    }
 
- file.write(data->readAll());
- file.close();
+    file.write(data->readAll());
+    file.close();
 
- return true;
-}
-
-void Downloader::execute()
-{
- QStringList args = QCoreApplication::instance()->arguments();
- args.takeFirst();           // skip the first argument, which is the program's name
- if (args.isEmpty()) {
-     printf("Qt Download example - downloads all URLs in parallel\n"
-            "Usage: download url1 [url2... urlN]\n"
-            "\n"
-            "Downloads the URLs passed in the command-line to the local directory\n"
-            "If the target file already exists, a .0, .1, .2, etc. is appended to\n"
-            "differentiate.\n");
-     QCoreApplication::instance()->quit();
-     return;
- }
-
- foreach (QString arg, args) {
-     QUrl url = QUrl::fromEncoded(arg.toLocal8Bit());
-     doDownload(url);
- }
+    return true;
 }
 
 void Downloader::downloadFinished(QNetworkReply *reply)
 {
- QUrl url = reply->url();
- if (reply->error()) {
-     fprintf(stderr, "Download of %s failed: %s\n",
+
+    QUrl url = reply->url();
+    if (reply->error())
+    {
+        fprintf(stderr, "Download of %s failed: %s\n",
              url.toEncoded().constData(),
              qPrintable(reply->errorString()));
- } else {
-     QString filename = m_strTarget;
-     if (saveToDisk(filename, reply))
-         printf("Download of %s succeeded (saved to %s)\n",
+    }
+    else
+    {
+        QString filename;
+        if(!getTarget().isEmpty())
+            filename = m_strTarget;
+        {
+            if(!QDir(QDir::tempPath() + QDir::separator() + "Sara").exists())
+                QDir(QDir::tempPath()).mkdir("Sara");
+            filename = QDir::tempPath() + QDir::separator() + "Sara" + QDir::separator() + QFileInfo(url.toString()).fileName();
+        }
+
+        if (saveToDisk(filename, reply))
+            printf("Download of %s succeeded (saved to %s)\n",
                 url.toEncoded().constData(), qPrintable(filename));
- }
+    }
 
- currentDownloads.removeAll(reply);
- reply->deleteLater();
+    Sara::Update update = m_oCurrentDownloads.value(reply);
+    m_oCurrentDownloads.remove(reply);
+    reply->deleteLater();
 
- emit done();
+    emit done(update);
+}
+
+bool Downloader::isDownloading()
+{
+    return m_oCurrentDownloads.size() > 0;
 }

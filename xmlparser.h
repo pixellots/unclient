@@ -31,6 +31,7 @@ namespace Sara
             bool parseUpdates();
             bool parseMessages();
 
+            Sara::ProductVersion parseVersion(QDomNode aNode);
             Sara::Update parseUpdate(QDomNode aNode);
             Sara::Message parseMessage(QDomNode aNode);
 

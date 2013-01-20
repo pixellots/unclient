@@ -100,9 +100,9 @@ void Service::requestReceived(QNetworkReply* reply)
         if(!m_pDownloader)
             m_pDownloader = new Sara::Downloader(Sara::Config::Instance()->product().getLocalIcon());
 
-        connect(m_pDownloader, SIGNAL(done()), this, SIGNAL(done()));
+        connect(m_pDownloader, SIGNAL(done(const Sara::Update&)), this, SIGNAL(done()));
 
-        m_pDownloader->doDownload(Sara::Config::Instance()->product().getIconUrl());
+        m_pDownloader->doDownload(Sara::Config::Instance()->product().getIconUrl(), Sara::Update());
     }
     else
         emit done();

@@ -18,16 +18,28 @@ class Dialog : public QDialog
 
         void init(Sara::Service* aService);
 
+    private:
+        void install();
+
     protected:
         void changeEvent(QEvent *e);
 
     public slots:
         void serviceDone();
         void refresh();
+        void openLink(const QUrl& aUrl);
+        void updateSelected();
+        void startInstall();
+        void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
+        void downloadDone(const Sara::Update& aUpdate);
+
 
     private:
         Ui::DialogUpdate* m_pUI;
         Sara::Service* m_pService;
+        Sara::Downloader* m_pDownloader;
+
+        QList<Sara::Update> m_oReadyUpdates;
 };
 
 #endif // DIALOG_H

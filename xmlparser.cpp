@@ -97,18 +97,11 @@ bool XmlParser::parseProduct()
     return TRUE;
 }
 
-bool XmlParser::parseVersion()
+Sara::ProductVersion XmlParser::parseVersion(QDomNode aNode)
 {
-    QDomNodeList list = m_pDocument->elementsByTagName("version");
-
-    if(list.isEmpty())
-        return FALSE;
-
     Sara::ProductVersion version;
 
-    QDomNode versionNode = list.at(0);
-
-    QDomNode n = versionNode.firstChild();
+    QDomNode n = aNode.firstChild();
     while(!n.isNull())
     {
         QDomElement e = n.toElement();
@@ -122,6 +115,20 @@ bool XmlParser::parseVersion()
 
         n = n.nextSibling();
     }
+
+    return version;
+}
+
+bool XmlParser::parseVersion()
+{
+    QDomNodeList list = m_pDocument->elementsByTagName("version");
+
+    if(list.isEmpty())
+        return FALSE;
+
+    QDomNode versionNode = list.at(0);
+
+    Sara::ProductVersion version = parseVersion(versionNode);
 
     Sara::Config::Instance()->setVersion(version);
 
@@ -149,6 +156,8 @@ Sara::Update XmlParser::parseUpdate(QDomNode aNode)
             update.setCommandLine(e.text());
         else if(e.tagName()=="file_size")
             update.setFileSize(e.text());
+        else if(e.tagName()=="target")
+            update.setTargetVersion(parseVersion(n));
 
         n = n.nextSibling();
     }
