@@ -20,6 +20,8 @@ class Dialog : public QDialog
 
     private:
         void install();
+        void updateUpdateView();
+        void updateMessageView();
 
     protected:
         void changeEvent(QEvent *e);
@@ -28,7 +30,8 @@ class Dialog : public QDialog
         void serviceDone();
         void refresh();
         void openLink(const QUrl& aUrl);
-        void updateSelected();
+        void updateSelectedUpdate();
+        void updateSelectedMessage();
         void startInstall();
         void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
         void downloadDone(const Sara::Update& aUpdate);
