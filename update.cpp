@@ -46,6 +46,16 @@ QString Update::getCommandLine() const
     return m_strCommandLine;
 }
 
+void Update::setRequiresAdmin(bool aAdminRequired)
+{
+    m_bAdminRequired = aAdminRequired;
+}
+
+bool Update::isAdminRequired()
+{
+    return m_bAdminRequired;
+}
+
 void Update::setFileSize(const QString& aFileSize)
 {
     m_strFileSize = aFileSize;

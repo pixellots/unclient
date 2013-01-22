@@ -33,6 +33,9 @@ namespace Sara
             int getType();
             Type getTypeEnum();
 
+            void setRequiresAdmin(bool aAdminRequired);
+            bool isAdminRequired();
+
             void setTargetVersion(const ProductVersion& aTarget);
             ProductVersion getTargetVersion() const;
 
@@ -44,6 +47,7 @@ namespace Sara
 
             QString m_strFileSize;
             int m_iType;
+            bool m_bAdminRequired;
 
             ProductVersion m_oTarget;
     };
