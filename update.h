@@ -34,7 +34,7 @@ namespace Sara
             Type getTypeEnum();
 
             void setRequiresAdmin(bool aAdminRequired);
-            bool isAdminRequired();
+            bool isAdminRequired() const;
 
             void setTargetVersion(const ProductVersion& aTarget);
             ProductVersion getTargetVersion() const;

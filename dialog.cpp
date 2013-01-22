@@ -212,6 +212,8 @@ void Dialog::install()
 
     for(int i = 0; i < m_oReadyUpdates.size(); i++)
     {
+        if(m_oReadyUpdates.at(i).isAdminRequired())
+            qDebug() <<  "needs admin rights";
         QString filename = QDir::tempPath() + QDir::separator() + "Sara" + QDir::separator() + QFileInfo(m_oReadyUpdates.at(i).getDownloadLink()).fileName();
         QFile file(filename);
         file.setPermissions(QFile::ExeOwner);

@@ -51,7 +51,7 @@ void Update::setRequiresAdmin(bool aAdminRequired)
     m_bAdminRequired = aAdminRequired;
 }
 
-bool Update::isAdminRequired()
+bool Update::isAdminRequired() const
 {
     return m_bAdminRequired;
 }
