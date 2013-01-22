@@ -7,7 +7,7 @@
 
 #include "downloader.h"
 
-#define SARA_SERVICE_URL "http://192.168.1.102/sara/index.php/service"
+#define SARA_SERVICE_URL "http://localhost/sara/index.php/service"
 
 namespace Sara
 {

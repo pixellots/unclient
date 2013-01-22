@@ -4,12 +4,28 @@
 #include "config.h"
 #include "settings.h"
 #include "sara_service.h"
+#include "version.h"
+
+int printHelp()
+{
+    QString appName = QString("%1 %2 %3").arg(SARA_COMPANY_STR).arg(SARA_APPLICATION_STR).arg(SARA_CLIENT_VERSION);
+
+    QString message = QString("Command Line Parameters:")
+            + "\n\n"
+            + "-k <key>    \tUnique Sara key\n"
+            + "-vc <code>  \tProduct Version Code\n"
+            + "-pc <code>  \tProduct Code\n"
+            + "-v <version>\tProduct Version\n"
+            + "-s          \tSilent check\n";
+
+    QMessageBox::information(NULL, appName, message);
+    return 1;
+}
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     Sara::Config* config = Sara::Config::Instance();
-    Sara::Settings settings;
     Sara::Service* service = new Sara::Service(0);
 
     QStringList arguments = QCoreApplication::arguments();
@@ -25,6 +41,8 @@ int main(int argc, char *argv[])
             config->setVersion(arguments.at(i+1));
         else if(arguments.at(i) == "-s")
             config->setSilent(TRUE);
+        else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help")
+            return printHelp();
     }
 
     Dialog w;

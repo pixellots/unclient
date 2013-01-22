@@ -5,7 +5,7 @@
 #include <QSettings>
 
 #define SARA_COMPANY_STR        "Sara"
-#define SARA_APPLICATION_STR    "client"
+#define SARA_APPLICATION_STR    "Client"
 
 namespace Sara
 {
