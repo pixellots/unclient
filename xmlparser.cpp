@@ -152,6 +152,8 @@ Sara::Update XmlParser::parseUpdate(QDomNode aNode)
             update.setType(e.text().toInt());
         else if(e.tagName()=="file")
             update.setDownloadLink(e.text());
+        else if(e.tagName()=="command")
+            update.setCommand(e.text());
         else if(e.tagName()=="commandline")
             update.setCommandLine(e.text());
         else if(e.tagName()=="file_size")

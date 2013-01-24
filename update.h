@@ -23,6 +23,9 @@ namespace Sara
             void setDownloadLink(const QString& aDownloadLink);
             QString getDownloadLink() const;
 
+            void setCommand(const QString& aCommand);
+            QString getCommand() const;
+
             void setCommandLine(const QString& aCommandLine);
             QString getCommandLine() const;
 
@@ -40,6 +43,7 @@ namespace Sara
             QString m_strTitle;
             QString m_strDescription;
             QString m_strDownloadLink;
+            QString m_strCommand;
             QString m_strCommandLine;
 
             QString m_strFileSize;

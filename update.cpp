@@ -36,6 +36,16 @@ QString Update::getDownloadLink() const
     return m_strDownloadLink;
 }
 
+void Update::setCommand(const QString& aCommand)
+{
+    m_strCommand = aCommand;
+}
+
+QString Update::getCommand() const
+{
+    return m_strCommand;
+}
+
 void Update::setCommandLine(const QString& aCommandLine)
 {
     m_strCommandLine = aCommandLine;
