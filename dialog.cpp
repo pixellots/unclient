@@ -12,6 +12,7 @@
 #include "downloader.h"
 
 Q_DECLARE_METATYPE ( Sara::Update );
+Q_DECLARE_METATYPE ( Sara::Message);
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
@@ -33,9 +34,12 @@ Dialog::Dialog(QWidget *parent) :
     connect(m_pUI->pshUpdate, SIGNAL(clicked()), SLOT(startInstall()));
 
     m_pUI->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+    m_pUI->webViewMessage->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 
     connect(m_pUI->webView, SIGNAL(linkClicked(const QUrl&)), SLOT(openLink(const QUrl&)));
-    connect(m_pUI->treeUpdate, SIGNAL(itemSelectionChanged()), SLOT(updateSelected()));
+    connect(m_pUI->treeUpdate, SIGNAL(itemSelectionChanged()), SLOT(updateSelectedUpdate()));
+    connect(m_pUI->webViewMessage, SIGNAL(linkClicked(const QUrl&)), SLOT(openLink(const QUrl&)));
+    connect(m_pUI->treeMessage, SIGNAL(itemSelectionChanged()), SLOT(updateSelectedMessage()));
 }
 
 Dialog::~Dialog()
@@ -68,7 +72,7 @@ void Dialog::openLink(const QUrl& aUrl)
     QDesktopServices::openUrl(aUrl);
 }
 
-void Dialog::updateSelected()
+void Dialog::updateSelectedUpdate()
 {
     if(m_pUI->treeUpdate->selectedItems().size()>0)
     {
@@ -77,13 +81,28 @@ void Dialog::updateSelected()
         Sara::Update update = item->data(0, Qt::UserRole).value<Sara::Update>();
         m_pUI->webView->setContent(update.getDescription().toUtf8());
 
-        for(int i = 0; i < m_pUI->treeUpdate->topLevelItemCount(); i++)
-        {
-            QTreeWidgetItem* product = m_pUI->treeUpdate->topLevelItem(i);
-            for(int j = 0; j < product->childCount(); j++)
-                product->child(j)->setExpanded(FALSE);
-        }
-        item->setExpanded(TRUE);
+//        for(int i = 0; i < m_pUI->treeUpdate->topLevelItemCount(); i++)
+//        {
+//            QTreeWidgetItem* product = m_pUI->treeUpdate->topLevelItem(i);
+//            for(int j = 0; j < product->childCount(); j++)
+//                product->child(j)->setExpanded(FALSE);
+//        }
+//        item->setExpanded(TRUE);
+    }
+}
+
+void Dialog::updateSelectedMessage()
+{
+    if(m_pUI->treeMessage->selectedItems().size()>0)
+    {
+        QTreeWidgetItem* item = m_pUI->treeMessage->selectedItems().at(0);
+
+        Sara::Message message = item->data(0, Qt::UserRole).value<Sara::Message>();
+
+        if(!message.getMessage().isEmpty())
+            m_pUI->webViewMessage->setContent(message.getMessage().toUtf8());
+        else
+            m_pUI->webViewMessage->load(message.getLink());
     }
 }
 
@@ -117,6 +136,18 @@ void Dialog::serviceDone()
     else
         m_pUI->labelTitle->setText(tr("No Updates/Messages available on this computer").arg(strMessage));
 
+    updateUpdateView();
+    updateMessageView();
+
+    m_pUI->tabWidget->setCurrentIndex(0);
+
+    show();
+}
+
+void Dialog::updateUpdateView()
+{
+    Sara::Config* config = Sara::Config::Instance();
+
     QTreeWidgetItem* product= new QTreeWidgetItem(m_pUI->treeUpdate);
     product->setText(0, config->product().getName());
 
@@ -139,15 +170,42 @@ void Dialog::serviceDone()
         sub->setFlags(Qt::NoItemFlags);
     }
 
-    product->setExpanded(TRUE);
+    m_pUI->treeUpdate->expandAll();
 
 
     if(update_list.size()==0)
         m_pUI->tabWidget->setTabText(0, tr("Updates"));
     else
         m_pUI->tabWidget->setTabText(0, tr("Updates (%1)").arg(update_list.size()));
+}
 
-    show();
+void Dialog::updateMessageView()
+{
+    Sara::Config* config = Sara::Config::Instance();
+
+    QTreeWidgetItem* product= new QTreeWidgetItem(m_pUI->treeMessage);
+    product->setText(0, config->product().getName());
+
+    QList<Sara::Message> message_list= config->messages();
+    for(int i = 0; i < message_list.size(); i++)
+    {
+        QFont font;
+
+        QTreeWidgetItem* parent = new QTreeWidgetItem(product);
+        font.setBold(TRUE);
+        parent->setFont(0, font);
+        parent->setText(0, message_list.at(i).getTitle());
+        parent->setData(0, Qt::UserRole, QVariant::fromValue(message_list.at(i)));
+        if(i==0)
+            parent->setSelected(true);
+    }
+
+    m_pUI->treeMessage->expandAll();
+
+    if(message_list.size()==0)
+        m_pUI->tabWidget->setTabText(1, tr("Messages"));
+    else
+        m_pUI->tabWidget->setTabText(1, tr("Messages (%1)").arg(message_list.size()));
 }
 
 void Dialog::refresh()
@@ -212,6 +270,8 @@ void Dialog::install()
 
     for(int i = 0; i < m_oReadyUpdates.size(); i++)
     {
+        if(m_oReadyUpdates.at(i).isAdminRequired())
+            qDebug() <<  "needs admin rights";
         QString filename = QDir::tempPath() + QDir::separator() + "Sara" + QDir::separator() + QFileInfo(m_oReadyUpdates.at(i).getDownloadLink()).fileName();
         QFile file(filename);
         file.setPermissions(QFile::ExeOwner);
