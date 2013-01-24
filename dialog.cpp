@@ -270,13 +270,41 @@ void Dialog::install()
 
     for(int i = 0; i < m_oReadyUpdates.size(); i++)
     {
+        QString command;
+        QStringList commandParameters;
+#ifdef Q_OS_LINUX // Linux
         if(m_oReadyUpdates.at(i).isAdminRequired())
-            qDebug() <<  "needs admin rights";
+        {
+            QString desktop = getenv("DESKTOP_SESSION");
+            if(desktop.indexOf("kubuntu") != -1 || desktop.indexOf("kde") != -1)
+                command = "/usr/bin/kdesudo ";
+            else
+                command = "/usr/bin/gksudo ";
+        }
+#else
+#ifdef WIN32 // Windows
+
+#else // Mac
+
+#endif
+#endif
         QString filename = QDir::tempPath() + QDir::separator() + "Sara" + QDir::separator() + QFileInfo(m_oReadyUpdates.at(i).getDownloadLink()).fileName();
         QFile file(filename);
-        file.setPermissions(QFile::ExeOwner);
-        process->start(filename);
-        process->waitForStarted(1000);
+        file.setPermissions(QFile::ExeUser | QFile::ReadUser | QFile::WriteUser);
+
+        if(command.isEmpty())
+        {
+            command = m_oReadyUpdates.at(i).getCommand();
+            commandParameters = QStringList() << m_oReadyUpdates.at(i).getCommandLine().split(" ");
+        }
+        else
+        {
+            commandParameters << command;
+            commandParameters << m_oReadyUpdates.at(i).getCommand() << m_oReadyUpdates.at(i).getCommandLine().split(" ");
+        }
+        process->start(command, commandParameters);
+
+        process->waitForStarted(5000);
         qDebug() << process->errorString();
     }
 }
