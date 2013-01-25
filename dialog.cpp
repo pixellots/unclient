@@ -20,7 +20,15 @@ Dialog::Dialog(QWidget *parent) :
 {
     m_pUI->setupUi(this);
 
+    m_oTextEdit.hide();
+
+    m_pProcess = new QProcess(this);
+    connect(m_pProcess, SIGNAL(readyReadStandardError()), this, SLOT(processError()));
+    connect(m_pProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(processOutput()));
+    connect(m_pProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(updateExit(int, QProcess::ExitStatus)));
+
     m_pDownloader = new Sara::Downloader();
+
     connect(m_pDownloader, SIGNAL(downloadProgress(qint64,qint64)), SLOT(downloadProgress(qint64, qint64)));
     connect(m_pDownloader, SIGNAL(done(const Sara::Update&)), SLOT(downloadDone(const Sara::Update&)));
 
@@ -258,7 +266,6 @@ void Dialog::downloadDone(const Sara::Update& aUpdate)
     {
         m_pUI->progressBar->hide();
         m_pUI->toolCancel->hide();
-        m_pUI->labelProgress->setText(tr("Installing Updates ..."));
 
         install();
     }
@@ -266,21 +273,24 @@ void Dialog::downloadDone(const Sara::Update& aUpdate)
 
 void Dialog::install()
 {
-    QProcess* process = new QProcess(this);
+    if(m_oReadyUpdates.size()==0)
+        return;
 
-    for(int i = 0; i < m_oReadyUpdates.size(); i++)
-    {
-        QString command;
-        QStringList commandParameters;
+    m_oTextEdit.clear();
+
+    m_oCurrentUpdate = m_oReadyUpdates.takeFirst();
+
+    QString command;
+    QStringList commandParameters;
 #ifdef Q_OS_LINUX // Linux
-        if(m_oReadyUpdates.at(i).isAdminRequired())
-        {
-            QString desktop = getenv("DESKTOP_SESSION");
-            if(desktop.indexOf("kubuntu") != -1 || desktop.indexOf("kde") != -1)
-                command = "/usr/bin/kdesudo ";
-            else
-                command = "/usr/bin/gksudo ";
-        }
+    if(m_oCurrentUpdate.isAdminRequired())
+    {
+        QString desktop = getenv("DESKTOP_SESSION");
+        if(desktop.indexOf("kubuntu") != -1 || desktop.indexOf("kde") != -1)
+            command = "/usr/bin/kdesudo";
+        else
+            command = "/usr/bin/gksudo";
+    }
 #else
 #ifdef WIN32 // Windows
 
@@ -288,23 +298,62 @@ void Dialog::install()
 
 #endif
 #endif
-        QString filename = QDir::tempPath() + QDir::separator() + "Sara" + QDir::separator() + QFileInfo(m_oReadyUpdates.at(i).getDownloadLink()).fileName();
-        QFile file(filename);
-        file.setPermissions(QFile::ExeUser | QFile::ReadUser | QFile::WriteUser);
+    QString filename = QDir::tempPath() + QDir::separator() + "Sara" + QDir::separator() + QFileInfo(m_oCurrentUpdate.getDownloadLink()).fileName();
+    QFile file(filename);
+    file.setPermissions(QFile::ExeUser | QFile::ReadUser | QFile::WriteUser);
 
-        if(command.isEmpty())
-        {
-            command = m_oReadyUpdates.at(i).getCommand();
-            commandParameters = QStringList() << m_oReadyUpdates.at(i).getCommandLine().split(" ");
-        }
-        else
-        {
-            commandParameters << command;
-            commandParameters << m_oReadyUpdates.at(i).getCommand() << m_oReadyUpdates.at(i).getCommandLine().split(" ");
-        }
-        process->start(command, commandParameters);
+    if(command.isEmpty())
+    {
+        command = m_oCurrentUpdate.getCommand();
+        commandParameters = QStringList() << m_oCurrentUpdate.getCommandLine().split(" ");
+    }
+    else
+        commandParameters << m_oCurrentUpdate.getCommand() << m_oCurrentUpdate.getCommandLine().split(" ");
 
-        process->waitForStarted(5000);
-        qDebug() << process->errorString();
+    m_pUI->labelProgress->setText(tr("Installing Update '%1'").arg(m_oCurrentUpdate.getTitle()));
+
+    qDebug() << "command: " << command;
+    qDebug() << "commandlline: " << commandParameters.join(" ");
+
+    m_pProcess->start(command, commandParameters);
+
+    // wait 5 minutes for process start
+    if(!m_pProcess->waitForStarted(1000 * 60 * 5))
+    {
+        m_pUI->labelProgress->setText(tr("Error: Update '%1' failed to start").arg(m_oCurrentUpdate.getTitle()));
+        return;
     }
 }
+
+void Dialog::processError()
+{
+    m_oTextEdit.setTextColor(Qt::red);
+    m_oTextEdit.append(m_pProcess->readAllStandardError());
+    m_oTextEdit.show();
+}
+
+void Dialog::processOutput()
+{
+    m_oTextEdit.setTextColor(Qt::darkBlue);
+    m_oTextEdit.append(m_pProcess->readAllStandardOutput());
+    m_oTextEdit.show();
+}
+
+void Dialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
+{
+    if(aExitStatus == QProcess::NormalExit)
+    {
+        if(aExitCode == 0)
+        {
+            m_pUI->labelProgress->setText(tr("Update '%1' installed successfully").arg(m_oCurrentUpdate.getTitle()));
+            qDebug() << m_oCurrentUpdate.getTitle() << " updated successfully!";
+
+            install();
+        }
+    }
+    else
+    {
+        qDebug() << m_oCurrentUpdate.getTitle() << " carshed!";
+    }
+}
+

@@ -6,7 +6,6 @@ QT = network \
     gui \
     core \
     webkit
-
 TARGET = sara
 TEMPLATE = app
 SOURCES += main.cpp \

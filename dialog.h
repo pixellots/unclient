@@ -2,6 +2,8 @@
 #define DIALOG_H
 
 #include <QDialog>
+#include <QProcess>
+#include <QTextEdit>
 #include "sara_service.h"
 
 namespace Ui
@@ -36,13 +38,20 @@ class Dialog : public QDialog
         void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
         void downloadDone(const Sara::Update& aUpdate);
 
+        void processError();
+        void processOutput();
+        void updateExit(int aExitCode, QProcess::ExitStatus aExitStatus);
 
     private:
         Ui::DialogUpdate* m_pUI;
         Sara::Service* m_pService;
         Sara::Downloader* m_pDownloader;
+        QProcess* m_pProcess;
 
         QList<Sara::Update> m_oReadyUpdates;
+        Sara::Update m_oCurrentUpdate;
+
+        QTextEdit m_oTextEdit;
 };
 
 #endif // DIALOG_H
