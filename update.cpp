@@ -100,3 +100,14 @@ ProductVersion Update::getTargetVersion() const
 {
     return m_oTarget;
 }
+
+void Update::setCode(const QString& aCode)
+{
+    m_strCode = aCode;
+}
+
+QString Update::getCode() const
+{
+    return m_strCode;
+}
+

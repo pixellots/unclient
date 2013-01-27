@@ -20,10 +20,14 @@ namespace Sara
             void setLink(const QString& aLink);
             QString getLink() const;
 
+            void setCode(const QString& aCode);
+            QString getCode() const;
+
         private:
             QString m_strTitle;
             QString m_strMessage;
             QString m_strLink;
+            QString m_strCode;
     };
 }
 

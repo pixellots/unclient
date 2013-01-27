@@ -1,5 +1,6 @@
 #include <QtGui/QApplication>
 #include <QtGui/QMessageBox>
+#include <QDebug>
 #include "dialog.h"
 #include "config.h"
 #include "settings.h"
@@ -27,6 +28,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     Sara::Config* config = Sara::Config::Instance();
     Sara::Service* service = new Sara::Service(0);
+    Sara::Settings settings;
 
     QStringList arguments = QCoreApplication::arguments();
     for (int i = 0; i < arguments.size(); ++i)
@@ -53,6 +55,9 @@ int main(int argc, char *argv[])
     }
     else
         QObject::connect(service, SIGNAL(done()), &a, SLOT(quit()));
+
+    if(config->isVersionMapped())
+        qDebug() << "Version is mapped";
 
     service->checkForUpdates();
 

@@ -9,6 +9,7 @@
 #include "version.h"
 #include "xmlparser.h"
 #include "product.h"
+#include "osdetection.h"
 
 using namespace Sara;
 
@@ -43,6 +44,7 @@ bool Service::checkForUpdates()
 
     url.addQueryItem("key", config->getKey());
     url.addQueryItem("id", settings.uuid());
+    url.addQueryItem("os", Sara::OSDetection::getOS());
 
     if(config->getVersionCode().isEmpty())
     {

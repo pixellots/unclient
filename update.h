@@ -11,7 +11,7 @@ namespace Sara
         public:
             Update();
 
-            enum Type { INSTALLER = 1, EXECUTABLE = 2, NO_EXECUTABLE = 3, REGISTRY = 4, JAR = 5, UNDEFINED = 0 };
+            enum Type { INSTALLER_SETS_VERSION = 1, CLIENT_SETS_VERSION = 2, UNDEFINED = 0 };
 
         public:
             void setTitle(const QString& aTitle);
@@ -42,12 +42,16 @@ namespace Sara
             void setTargetVersion(const ProductVersion& aTarget);
             ProductVersion getTargetVersion() const;
 
+            void setCode(const QString& aCode);
+            QString getCode() const;
+
         private:
             QString m_strTitle;
             QString m_strDescription;
             QString m_strDownloadLink;
             QString m_strCommand;
             QString m_strCommandLine;
+            QString m_strCode;
 
             QString m_strFileSize;
             int m_iType;

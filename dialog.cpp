@@ -10,6 +10,7 @@
 #include "productversion.h"
 #include "config.h"
 #include "downloader.h"
+#include "settings.h"
 
 Q_DECLARE_METATYPE ( Sara::Update );
 Q_DECLARE_METATYPE ( Sara::Message);
@@ -305,11 +306,15 @@ void Dialog::install()
     if(command.isEmpty())
     {
         command = m_oCurrentUpdate.getCommand();
-        commandParameters = QStringList() << m_oCurrentUpdate.getCommandLine().split(" ");
+        if(!m_oCurrentUpdate.getCommandLine().isEmpty())
+            commandParameters = QStringList() << m_oCurrentUpdate.getCommandLine().split(" ");
     }
     else
-        commandParameters << m_oCurrentUpdate.getCommand() << m_oCurrentUpdate.getCommandLine().split(" ");
-
+    {
+        commandParameters << m_oCurrentUpdate.getCommand();
+        if(!m_oCurrentUpdate.getCommandLine().isEmpty())
+            commandParameters << m_oCurrentUpdate.getCommandLine().split(" ");
+    }
     m_pUI->labelProgress->setText(tr("Installing Update '%1'").arg(m_oCurrentUpdate.getTitle()));
 
     qDebug() << "command: " << command;
@@ -341,12 +346,17 @@ void Dialog::processOutput()
 
 void Dialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
 {
+    Sara::Settings settings;
+
     if(aExitStatus == QProcess::NormalExit)
     {
         if(aExitCode == 0)
         {
             m_pUI->labelProgress->setText(tr("Update '%1' installed successfully").arg(m_oCurrentUpdate.getTitle()));
             qDebug() << m_oCurrentUpdate.getTitle() << " updated successfully!";
+
+            if(m_oCurrentUpdate.getTypeEnum() == Sara::Update::CLIENT_SETS_VERSION)
+                settings.setNewVersion(Sara::Config::Instance()->product(), m_oCurrentUpdate.getTargetVersion());
 
             install();
         }
@@ -355,5 +365,7 @@ void Dialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
     {
         qDebug() << m_oCurrentUpdate.getTitle() << " carshed!";
     }
+
+    settings.setUpdate(m_oCurrentUpdate, "TBD", aExitCode);
 }
 

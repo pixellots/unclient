@@ -35,3 +35,14 @@ QString Message::getLink() const
 {
     return m_strLink;
 }
+
+void Message::setCode(const QString& aCode)
+{
+    m_strCode = aCode;
+}
+
+QString Message::getCode() const
+{
+    return m_strCode;
+}
+

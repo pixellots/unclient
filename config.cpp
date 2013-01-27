@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "config.h"
+#include "settings.h"
 
 using namespace Sara;
 
@@ -20,6 +21,33 @@ Config::Config()
 
 Config::Config(Config const&)
 {}
+
+bool Config::isVersionMapped()
+{
+    Sara::Settings settings;
+
+    if(!getVersionCode().isEmpty())
+    {
+        if(settings.isVersionMapped(getVersionCode()))
+        {
+            setProductCode(settings.getMappedProductCode());
+            setVersion(settings.getMappedVersion());
+            setVersionCode(settings.getMappedVersionCode());
+            return TRUE;
+        }
+    }
+    else
+    {
+        if(settings.isVersionMapped(getProductCode(), getVersion()))
+        {
+            setProductCode(settings.getMappedProductCode());
+            setVersion(settings.getMappedVersion());
+            setVersionCode(settings.getMappedVersionCode());
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
 
 void Config::setKey(const QString& aKey)
 {

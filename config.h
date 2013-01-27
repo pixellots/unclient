@@ -16,6 +16,8 @@ namespace Sara
         public:
             static Config* Instance();
 
+            bool isVersionMapped();
+
             void setKey(const QString& aKey);
             QString getKey() const;
             void setVersionCode(const QString& aVersionCode);

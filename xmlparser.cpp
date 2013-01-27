@@ -146,6 +146,8 @@ Sara::Update XmlParser::parseUpdate(QDomNode aNode)
 
         if(e.tagName()=="title")
             update.setTitle(e.text());
+        else if(e.tagName()=="code")
+            update.setCode(e.text());
         else if(e.tagName()=="description")
             update.setDescription(e.text());
         else if(e.tagName()=="type")
@@ -180,6 +182,8 @@ Sara::Message XmlParser::parseMessage(QDomNode aNode)
 
         if(e.tagName()=="title")
             message.setTitle(e.text());
+        else if(e.tagName()=="code")
+            message.setCode(e.text());
         else if(e.tagName()=="message")
             message.setMessage(e.text());
         else if(e.tagName()=="link")
