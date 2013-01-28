@@ -56,9 +56,6 @@ int main(int argc, char *argv[])
     else
         QObject::connect(service, SIGNAL(done()), &a, SLOT(quit()));
 
-    if(config->isVersionMapped())
-        qDebug() << "Version is mapped";
-
     service->checkForUpdates();
 
     return a.exec();

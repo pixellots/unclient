@@ -48,7 +48,10 @@ Dialog::Dialog(QWidget *parent) :
     connect(m_pUI->webView, SIGNAL(linkClicked(const QUrl&)), SLOT(openLink(const QUrl&)));
     connect(m_pUI->treeUpdate, SIGNAL(itemSelectionChanged()), SLOT(updateSelectedUpdate()));
     connect(m_pUI->webViewMessage, SIGNAL(linkClicked(const QUrl&)), SLOT(openLink(const QUrl&)));
+    connect(m_pUI->webViewMessage, SIGNAL(loadFinished(bool)), SLOT(messageLoaded(bool)));
     connect(m_pUI->treeMessage, SIGNAL(itemSelectionChanged()), SLOT(updateSelectedMessage()));
+
+    connect(m_pUI->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabSelected(int)));
 }
 
 Dialog::~Dialog()
@@ -120,7 +123,10 @@ void Dialog::serviceDone()
     Sara::Config* config = Sara::Config::Instance();
     setWindowTitle(config->product().getName() + tr(" - Update Manager"));
 
+    m_iNewMessages = 0;
+    m_iNewUpdates = 0;
     m_pUI->treeUpdate->clear();
+    m_pUI->treeMessage->clear();
 
     if(!config->product().getIconUrl().isEmpty())
     {
@@ -131,24 +137,12 @@ void Dialog::serviceDone()
     else
         m_pUI->labelLogo->hide();
 
-    QString strMessage;
-
-    if(config->updates().size()>0)
-        strMessage = tr("Software Updates");
-    else if(config->messages().size()>0)
-        strMessage = tr("Product Messages");
-    if(config->updates().size()>0 && config->messages().size()>0)
-        strMessage = tr("Software Updates & Messages");
-
-    if(!strMessage.isEmpty())
-        m_pUI->labelTitle->setText(tr("%1 are available on this computer.").arg(strMessage));
-    else
-        m_pUI->labelTitle->setText(tr("No Updates/Messages available on this computer").arg(strMessage));
+    m_pUI->labelVersion->setDisabled(TRUE);
+    m_pUI->labelVersion->setText(tr("Current Version: %1").arg(config->version().getVersion()));
 
     updateUpdateView();
     updateMessageView();
-
-    m_pUI->tabWidget->setCurrentIndex(0);
+    updateTabCounter();
 
     show();
 }
@@ -177,19 +171,16 @@ void Dialog::updateUpdateView()
         QTreeWidgetItem* sub = new QTreeWidgetItem(parent);
         sub->setText(0, tr("  Size: \t%1\n  Version: \t%2").arg(update_list.at(i).getFileSize()).arg(update_list.at(i).getTargetVersion().getVersion()));
         sub->setFlags(Qt::NoItemFlags);
+
+        m_iNewUpdates++;
     }
 
     m_pUI->treeUpdate->expandAll();
-
-
-    if(update_list.size()==0)
-        m_pUI->tabWidget->setTabText(0, tr("Updates"));
-    else
-        m_pUI->tabWidget->setTabText(0, tr("Updates (%1)").arg(update_list.size()));
 }
 
 void Dialog::updateMessageView()
 {
+    Sara::Settings settings;
     Sara::Config* config = Sara::Config::Instance();
 
     QTreeWidgetItem* product= new QTreeWidgetItem(m_pUI->treeMessage);
@@ -198,11 +189,16 @@ void Dialog::updateMessageView()
     QList<Sara::Message> message_list= config->messages();
     for(int i = 0; i < message_list.size(); i++)
     {
-        QFont font;
-
         QTreeWidgetItem* parent = new QTreeWidgetItem(product);
-        font.setBold(TRUE);
-        parent->setFont(0, font);
+
+        if(!settings.messageShownAndLoaded(message_list.at(i).getCode()))
+        {
+            QFont font;
+            font.setBold(TRUE);
+            parent->setFont(0, font);
+
+            m_iNewMessages++;
+        }
         parent->setText(0, message_list.at(i).getTitle());
         parent->setData(0, Qt::UserRole, QVariant::fromValue(message_list.at(i)));
         if(i==0)
@@ -210,11 +206,43 @@ void Dialog::updateMessageView()
     }
 
     m_pUI->treeMessage->expandAll();
+}
 
-    if(message_list.size()==0)
+void Dialog::updateTabCounter(bool aChangeTab /* = TRUE */)
+{
+    if(aChangeTab)
+    {
+        if(m_iNewUpdates > 0)
+            m_pUI->tabWidget->setCurrentIndex(0);
+        else if(m_iNewMessages > 0)
+            m_pUI->tabWidget->setCurrentIndex(1);
+        else
+            m_pUI->tabWidget->setCurrentIndex(0);
+    }
+
+    QString strMessage;
+
+    if(m_iNewUpdates>0)
+        strMessage = tr("Software Updates");
+    else if(m_iNewMessages>0)
+        strMessage = tr("Product Messages");
+    if(m_iNewUpdates>0 && m_iNewMessages>0)
+        strMessage = tr("Software Updates & Messages");
+
+    if(!strMessage.isEmpty())
+        m_pUI->labelTitle->setText(tr("%1 are available on this computer.").arg(strMessage));
+    else
+        m_pUI->labelTitle->setText(tr("No Updates/Messages available on this computer"));
+
+    if(m_iNewUpdates==0)
+        m_pUI->tabWidget->setTabText(0, tr("Updates"));
+    else
+        m_pUI->tabWidget->setTabText(0, tr("Updates (%1)").arg(m_iNewUpdates));
+
+    if(m_iNewMessages==0)
         m_pUI->tabWidget->setTabText(1, tr("Messages"));
     else
-        m_pUI->tabWidget->setTabText(1, tr("Messages (%1)").arg(message_list.size()));
+        m_pUI->tabWidget->setTabText(1, tr("Messages (%1)").arg(m_iNewMessages));
 }
 
 void Dialog::refresh()
@@ -368,4 +396,57 @@ void Dialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
 
     settings.setUpdate(m_oCurrentUpdate, "TBD", aExitCode);
 }
+
+void Dialog::messageLoaded(bool aSuccess)
+{
+    Sara::Settings settings;
+
+    QTreeWidgetItem* currentItem = m_pUI->treeMessage->selectedItems().at(0);
+
+    if(currentItem && currentItem->parent())
+    {
+        Sara::Message message = currentItem->data(0, Qt::UserRole).value<Sara::Message>();
+
+        if(!settings.messageShownAndLoaded(message.getCode()))
+        {
+            settings.setMessage(message, m_pUI->tabWidget->currentWidget() == m_pUI->tabMessage, aSuccess);
+            if(settings.messageShownAndLoaded(message.getCode()))
+                resetMessageItem(currentItem);
+        }
+        else
+            resetMessageItem(currentItem);
+    }
+}
+
+void Dialog::resetMessageItem(QTreeWidgetItem* aItem)
+{
+    QFont font = aItem->font(0);
+    font.setBold(FALSE);
+    aItem->setFont(0, font);
+    updateTabCounter(FALSE);
+}
+
+void Dialog::tabSelected(int aIndex)
+{
+    if(aIndex == 1)
+    {
+        Sara::Settings settings;
+        QTreeWidgetItem* currentItem = m_pUI->treeMessage->selectedItems().at(0);
+
+        if(currentItem && currentItem->parent())
+        {
+            Sara::Message message = currentItem->data(0, Qt::UserRole).value<Sara::Message>();
+
+            if(!settings.messageShownAndLoaded(message.getCode()))
+            {
+                settings.setMessage(message, TRUE);
+                if(settings.messageShownAndLoaded(message.getCode()))
+                    resetMessageItem(currentItem);
+            }
+            else
+                resetMessageItem(currentItem);
+        }
+    }
+}
+
 

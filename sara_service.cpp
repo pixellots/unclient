@@ -46,13 +46,13 @@ bool Service::checkForUpdates()
     url.addQueryItem("id", settings.uuid());
     url.addQueryItem("os", Sara::OSDetection::getOS());
 
-    if(config->getVersionCode().isEmpty())
+    if(settings.getVersionCode().isEmpty())
     {
-        url.addQueryItem("productCode", config->getProductCode());
-        url.addQueryItem("productVersion", config->getVersion());
+        url.addQueryItem("productCode", settings.getProductCode());
+        url.addQueryItem("productVersion", settings.getProductVersion());
     }
     else
-        url.addQueryItem("versionCode", config->getVersionCode());
+        url.addQueryItem("versionCode", settings.getVersionCode());
 
     qDebug() << "REQUEST: " << url.toString();
     request.setUrl(url);

@@ -4,6 +4,7 @@
 #include <QString>
 #include <QSettings>
 #include "update.h"
+#include "message.h"
 #include "product.h"
 
 #define SARA_COMPANY_STR        "Sara"
@@ -20,14 +21,24 @@ namespace Sara
             QString uuid();
 
             void setUpdate(Sara::Update aUpdate, const QString& aLocalFile, int aResult);
+            void setMessage(Sara::Message aMessage, bool aShown, bool aLoaded);
+            void setMessage(Sara::Message aMessage, bool aShown);
             void setNewVersion(Sara::Product aProduct, Sara::ProductVersion aVersion);
 
-            bool isVersionMapped(const QString& aProductCode, const QString& aVersion);
-            bool isVersionMapped(const QString& aVersionCode);
+            QString getProductCode();
+            QString getProductVersion();
+            QString getVersionCode();
 
             QString getMappedProductCode() const;
             QString getMappedVersionCode() const;
             QString getMappedVersion() const;
+
+            bool messageShownAndLoaded(const QString& aMessageCode);
+
+        private:
+            bool isVersionMapped(const QString& aProductCode, const QString& aVersion);
+            bool isVersionMapped(const QString& aVersionCode);
+
 
         private:
             QString m_strUUID;

@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QProcess>
 #include <QTextEdit>
+#include <QTreeWidgetItem>
 #include "sara_service.h"
 
 namespace Ui
@@ -24,6 +25,8 @@ class Dialog : public QDialog
         void install();
         void updateUpdateView();
         void updateMessageView();
+        void updateTabCounter(bool aChangeTab = TRUE);
+        void resetMessageItem(QTreeWidgetItem* aItem);
 
     protected:
         void changeEvent(QEvent *e);
@@ -37,6 +40,8 @@ class Dialog : public QDialog
         void startInstall();
         void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
         void downloadDone(const Sara::Update& aUpdate);
+        void messageLoaded(bool aSuccess);
+        void tabSelected(int aIndex);
 
         void processError();
         void processOutput();
@@ -52,6 +57,9 @@ class Dialog : public QDialog
         Sara::Update m_oCurrentUpdate;
 
         QTextEdit m_oTextEdit;
+
+        int m_iNewUpdates;
+        int m_iNewMessages;
 };
 
 #endif // DIALOG_H

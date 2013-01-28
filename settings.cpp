@@ -39,13 +39,35 @@ void Settings::setUpdate(Sara::Update aUpdate, const QString& aLocalFile, int aR
     this->setValue( id + "Type" , aUpdate.getType());
 }
 
+void  Settings::setMessage(Sara::Message aMessage, bool aShown, bool aLoaded)
+{
+    QString id = m_strMessage + aMessage.getCode() + "/";
+
+    this->setValue( id + "Shown" , aShown);
+    this->setValue( id + "Loaded" , aLoaded);
+}
+
+void  Settings::setMessage(Sara::Message aMessage, bool aShown)
+{
+    QString id = m_strMessage + aMessage.getCode() + "/";
+
+    this->setValue( id + "Shown" , aShown);
+}
+
+bool Settings::messageShownAndLoaded(const QString& aMessageCode)
+{
+    QString id = m_strMessage + aMessageCode + "/";
+
+    return this->value( id + "Shown" , FALSE).toBool() && this->value( id + "Loaded" , FALSE).toBool();
+}
+
 void Settings::setNewVersion(Sara::Product aProduct, Sara::ProductVersion aVersion)
 {
     QString id = m_strCurrentVersion + aProduct.getCode() + "/";
 
     this->setValue( id + "Name", aProduct.getName());
-    this->setValue( id + "Old/Version", Sara::Config::Instance()->version().getVersion());
-    this->setValue( id + "Old/Code", Sara::Config::Instance()->version().getCode());
+    this->setValue( id + "Old/Version", Sara::Config::Instance()->getVersion());
+    this->setValue( id + "Old/Code", Sara::Config::Instance()->getVersionCode());
 
     this->setValue( id + "Version/Version", aVersion.getVersion());
     this->setValue( id + "Version/Code", aVersion.getCode());
@@ -56,7 +78,8 @@ bool Settings::isVersionMapped(const QString& aProductCode, const QString& aVers
 {
     QString id = m_strCurrentVersion + aProductCode + "/";
 
-    if(!this->value(id + "Name").isNull())
+    if(!this->value(id + "Name").isNull()
+        && this->value(id + "Version/Version").toString() != aVersion)
     {
         // Currently single products only are supported
         m_strMappedProductCode = aProductCode;
@@ -105,4 +128,28 @@ QString Settings::getMappedVersionCode() const
 QString Settings::getMappedVersion() const
 {
     return m_strMappedVersion;
+}
+
+QString Settings::getProductCode()
+{
+    if(isVersionMapped(Sara::Config::Instance()->getProductCode(), Sara::Config::Instance()->getVersion()))
+        return getMappedProductCode();
+    else
+        return Sara::Config::Instance()->getProductCode();
+}
+
+QString Settings::getProductVersion()
+{
+    if(isVersionMapped(Sara::Config::Instance()->getProductCode(), Sara::Config::Instance()->getVersion()))
+        return getMappedVersion();
+    else
+        return Sara::Config::Instance()->getVersion();
+}
+
+QString Settings::getVersionCode()
+{
+    if(isVersionMapped(Sara::Config::Instance()->getVersionCode()))
+        return getMappedVersionCode();
+    else
+        return Sara::Config::Instance()->getVersionCode();
 }
