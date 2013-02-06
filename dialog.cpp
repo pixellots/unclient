@@ -31,7 +31,7 @@ Dialog::Dialog(QWidget *parent) :
     m_pDownloader = new Sara::Downloader();
 
     connect(m_pDownloader, SIGNAL(downloadProgress(qint64,qint64)), SLOT(downloadProgress(qint64, qint64)));
-    connect(m_pDownloader, SIGNAL(done(const Sara::Update&)), SLOT(downloadDone(const Sara::Update&)));
+    connect(m_pDownloader, SIGNAL(done(const Sara::Update&, QNetworkReply::NetworkError, const QString&)), SLOT(downloadDone(const Sara::Update&, QNetworkReply::NetworkError, const QString&)));
 
     m_pUI->labelLogo->hide();
     m_pUI->labelProgress->hide();
@@ -41,12 +41,14 @@ Dialog::Dialog(QWidget *parent) :
     connect(m_pUI->pshClose, SIGNAL(clicked()), SLOT(accept()));
     connect(m_pUI->pshCheck, SIGNAL(clicked()), SLOT(refresh()));
     connect(m_pUI->pshUpdate, SIGNAL(clicked()), SLOT(startInstall()));
+    connect(m_pUI->toolCancel, SIGNAL(clicked()), SLOT(cancelProgress()));
 
     m_pUI->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     m_pUI->webViewMessage->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 
     connect(m_pUI->webView, SIGNAL(linkClicked(const QUrl&)), SLOT(openLink(const QUrl&)));
     connect(m_pUI->treeUpdate, SIGNAL(itemSelectionChanged()), SLOT(updateSelectedUpdate()));
+    connect(m_pUI->treeUpdate, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(checkSelection()));
     connect(m_pUI->webViewMessage, SIGNAL(linkClicked(const QUrl&)), SLOT(openLink(const QUrl&)));
     connect(m_pUI->webViewMessage, SIGNAL(loadFinished(bool)), SLOT(messageLoaded(bool)));
     connect(m_pUI->treeMessage, SIGNAL(itemSelectionChanged()), SLOT(updateSelectedMessage()));
@@ -92,15 +94,16 @@ void Dialog::updateSelectedUpdate()
 
         Sara::Update update = item->data(0, Qt::UserRole).value<Sara::Update>();
         m_pUI->webView->setContent(update.getDescription().toUtf8());
-
-//        for(int i = 0; i < m_pUI->treeUpdate->topLevelItemCount(); i++)
-//        {
-//            QTreeWidgetItem* product = m_pUI->treeUpdate->topLevelItem(i);
-//            for(int j = 0; j < product->childCount(); j++)
-//                product->child(j)->setExpanded(FALSE);
-//        }
-//        item->setExpanded(TRUE);
     }
+}
+
+void Dialog::checkSelection()
+{
+    QTreeWidgetItemIterator it(m_pUI->treeUpdate, QTreeWidgetItemIterator::Checked | QTreeWidgetItemIterator::Enabled);
+    if(*it)
+        m_pUI->pshUpdate->setEnabled(TRUE);
+    else
+        m_pUI->pshUpdate->setEnabled(FALSE);
 }
 
 void Dialog::updateSelectedMessage()
@@ -127,12 +130,22 @@ void Dialog::serviceDone()
     m_iNewUpdates = 0;
     m_pUI->treeUpdate->clear();
     m_pUI->treeMessage->clear();
+    m_pUI->webView->setContent("");
+    m_pUI->webViewMessage->setContent("");
 
     if(!config->product().getIconUrl().isEmpty())
     {
-        m_pUI->labelLogo->setPixmap(QPixmap(config->product().getLocalIcon()).scaledToHeight(64, Qt::SmoothTransformation));
-        m_pUI->labelLogo->show();
-        setWindowIcon(QPixmap(config->product().getLocalIcon()).scaledToHeight(64, Qt::SmoothTransformation));
+        if(!config->mainIcon().isEmpty())
+        {
+            m_pUI->labelLogo->setPixmap(QPixmap(config->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
+            m_pUI->labelLogo->show();
+            setWindowIcon(QPixmap(config->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
+        }
+        else
+        {
+            m_pUI->labelLogo->hide();
+            setWindowIcon(QPixmap(config->product().getLocalIcon()).scaledToHeight(64, Qt::SmoothTransformation));
+        }
     }
     else
         m_pUI->labelLogo->hide();
@@ -144,38 +157,50 @@ void Dialog::serviceDone()
     updateMessageView();
     updateTabCounter();
 
+    m_pUI->pshUpdate->setFocus();
     show();
+}
+
+void Dialog::cancelProgress()
+{
+    if(m_pDownloader->isDownloading())
+        m_pDownloader->cancel();
 }
 
 void Dialog::updateUpdateView()
 {
     Sara::Config* config = Sara::Config::Instance();
 
+    QFont font;
+    font.setPointSize(qApp->font().pointSize()+1);
+
     QTreeWidgetItem* product= new QTreeWidgetItem(m_pUI->treeUpdate);
+    product->setFont(0, font);
     product->setText(0, config->product().getName());
+    product->setIcon(0, QPixmap(config->product().getLocalIcon()));
 
     QList<Sara::Update> update_list = config->updates();
     for(int i = 0; i < update_list.size(); i++)
     {
-        QFont font;
 
         QTreeWidgetItem* parent = new QTreeWidgetItem(product);
-        font.setBold(TRUE);
-        parent->setFont(0, font);
-        parent->setText(0, update_list.at(i).getTitle());
+        parent->setText(0, update_list.at(i).getTitle() + tr(" (Size: %1)").arg(update_list.at(i).getFileSize()));
         parent->setCheckState(0, Qt::Checked);
         parent->setData(0, Qt::UserRole, QVariant::fromValue(update_list.at(i)));
         if(i==0)
             parent->setSelected(true);
 
-        QTreeWidgetItem* sub = new QTreeWidgetItem(parent);
-        sub->setText(0, tr("  Size: \t%1\n  Version: \t%2").arg(update_list.at(i).getFileSize()).arg(update_list.at(i).getTargetVersion().getVersion()));
-        sub->setFlags(Qt::NoItemFlags);
-
         m_iNewUpdates++;
     }
 
-    m_pUI->treeUpdate->expandAll();
+    product->setExpanded(TRUE);
+
+    m_pUI->pshUpdate->show();
+    if(m_iNewUpdates==0)
+        m_pUI->pshUpdate->setEnabled(FALSE);
+    else
+        m_pUI->pshUpdate->setEnabled(TRUE);
+
 }
 
 void Dialog::updateMessageView()
@@ -232,7 +257,7 @@ void Dialog::updateTabCounter(bool aChangeTab /* = TRUE */)
     if(!strMessage.isEmpty())
         m_pUI->labelTitle->setText(tr("%1 are available on this computer.").arg(strMessage));
     else
-        m_pUI->labelTitle->setText(tr("No Updates/Messages available on this computer"));
+        m_pUI->labelTitle->setText(tr("No new Updates/Messages available on this computer"));
 
     if(m_iNewUpdates==0)
         m_pUI->tabWidget->setTabText(0, tr("Updates"));
@@ -263,6 +288,8 @@ void Dialog::startInstall()
     m_pUI->labelProgress->show();
     m_pUI->toolCancel->show();
     m_pUI->progressBar->show();
+    m_pUI->pshUpdate->hide();
+    m_pUI->pshCheck->hide();
 
     m_pUI->progressBar->setValue(0);
     
@@ -287,9 +314,19 @@ void Dialog::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
     }
 }
 
-void Dialog::downloadDone(const Sara::Update& aUpdate)
+void Dialog::downloadDone(const Sara::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString)
 {
     m_oReadyUpdates.append(aUpdate);
+
+    if(aError != QNetworkReply::NoError)
+    {
+        m_pUI->progressBar->hide();
+        m_pUI->toolCancel->hide();
+        m_pUI->pshUpdate->show();
+        m_pUI->pshCheck->show();
+        m_pUI->labelProgress->setText(aErrorString);
+        return;
+    }
 
     if(!m_pDownloader->isDownloading())
     {
@@ -303,7 +340,10 @@ void Dialog::downloadDone(const Sara::Update& aUpdate)
 void Dialog::install()
 {
     if(m_oReadyUpdates.size()==0)
+    {
+        m_pUI->pshCheck->show();
         return;
+    }
 
     m_oTextEdit.clear();
 
@@ -388,6 +428,15 @@ void Dialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
 
             install();
         }
+        else
+        {
+            m_pUI->pshUpdate->show();
+            m_pUI->pshCheck->show();
+            m_pUI->labelProgress->setText(tr("Update '%1' failed with error %2").arg(m_oCurrentUpdate.getTitle()).arg(aExitCode));
+
+            qDebug() << m_oCurrentUpdate.getTitle() << " updated failed!";
+
+        }
     }
     else
     {
@@ -400,6 +449,9 @@ void Dialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
 void Dialog::messageLoaded(bool aSuccess)
 {
     Sara::Settings settings;
+
+    if(m_pUI->treeMessage->selectedItems().count()==0)
+        return;
 
     QTreeWidgetItem* currentItem = m_pUI->treeMessage->selectedItems().at(0);
 

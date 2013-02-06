@@ -32,4 +32,5 @@ HEADERS += dialog.h \
     message.h \
     downloader.h \
     osdetection.h
-FORMS += dialog.ui
+FORMS += dialog.ui \
+    settingsdialog.ui

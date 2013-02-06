@@ -34,14 +34,16 @@ class Dialog : public QDialog
     public slots:
         void serviceDone();
         void refresh();
+        void cancelProgress();
         void openLink(const QUrl& aUrl);
         void updateSelectedUpdate();
         void updateSelectedMessage();
         void startInstall();
         void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
-        void downloadDone(const Sara::Update& aUpdate);
+        void downloadDone(const Sara::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString);
         void messageLoaded(bool aSuccess);
         void tabSelected(int aIndex);
+        void checkSelection();
 
         void processError();
         void processOutput();

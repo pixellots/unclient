@@ -124,6 +124,16 @@ void Config::setVersion(const ProductVersion& aVersion)
     m_oCurrentVersion = aVersion;
 }
 
+QString Config::mainIcon() const
+{
+    return m_strMainIcon;
+}
+
+void Config::setMainIcon(const QString& aIcon)
+{
+    m_strMainIcon = aIcon;
+}
+
 void Config::clear()
 {
     m_listUpdates.clear();

@@ -36,6 +36,16 @@ void Downloader::doDownload(const QUrl& url, const Sara::Update& aUpdate)
     m_oCurrentDownloads[reply] = aUpdate;
 }
 
+void Downloader::cancel()
+{
+    QMapIterator<QNetworkReply*, Sara::Update> i(m_oCurrentDownloads);
+    while (i.hasNext())
+    {
+         i.next();
+         i.key()->abort();
+    }
+}
+
 bool Downloader::saveToDisk(const QString &filename, QIODevice *data)
 {
     QFile file(filename);
@@ -56,9 +66,14 @@ bool Downloader::saveToDisk(const QString &filename, QIODevice *data)
 
 void Downloader::downloadFinished(QNetworkReply *reply)
 {
+    QNetworkReply::NetworkError error;
+    QString errorString;
+
+    error = reply->error();
+    errorString = reply->errorString();
 
     QUrl url = reply->url();
-    if (reply->error())
+    if (reply->error() != QNetworkReply::NoError)
     {
         fprintf(stderr, "Download of %s failed: %s\n",
              url.toEncoded().constData(),
@@ -84,7 +99,7 @@ void Downloader::downloadFinished(QNetworkReply *reply)
     m_oCurrentDownloads.remove(reply);
     reply->deleteLater();
 
-    emit done(update);
+    emit done(update, error, errorString);
 }
 
 bool Downloader::isDownloading()

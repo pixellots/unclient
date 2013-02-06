@@ -16,6 +16,12 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QLabel" name="labelLogo">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -25,6 +31,9 @@
     <widget class="QPushButton" name="pshSettings">
      <property name="text">
       <string>Settings</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
      </property>
     </widget>
    </item>
@@ -45,6 +54,9 @@
     <widget class="QPushButton" name="pshClose">
      <property name="text">
       <string>Close</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
      </property>
     </widget>
    </item>
@@ -68,6 +80,12 @@
          </property>
          <property name="selectionMode">
           <enum>QAbstractItemView::SingleSelection</enum>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>52</width>
+           <height>52</height>
+          </size>
          </property>
          <property name="rootIsDecorated">
           <bool>true</bool>
@@ -134,12 +152,21 @@
          <property name="text">
           <string>Check</string>
          </property>
+         <property name="autoDefault">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
        <item row="2" column="3" colspan="2">
         <widget class="QPushButton" name="pshUpdate">
          <property name="text">
           <string>Install</string>
+         </property>
+         <property name="autoDefault">
+          <bool>true</bool>
+         </property>
+         <property name="default">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -207,6 +234,12 @@
    </item>
    <item row="0" column="1" colspan="3">
     <widget class="QLabel" name="labelTitle">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -222,6 +255,18 @@
    <header>QtWebKit/QWebView</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>pshUpdate</tabstop>
+  <tabstop>toolCancel</tabstop>
+  <tabstop>pshSettings</tabstop>
+  <tabstop>pshClose</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>treeUpdate</tabstop>
+  <tabstop>webView</tabstop>
+  <tabstop>pshCheck</tabstop>
+  <tabstop>treeMessage</tabstop>
+  <tabstop>webViewMessage</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

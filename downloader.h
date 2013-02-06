@@ -36,11 +36,13 @@ namespace Sara
 
              bool isDownloading();
 
+             void cancel();
+
          public slots:
              void downloadFinished(QNetworkReply *reply);
 
         signals:
-             void done(const Sara::Update& aUpdate);
+             void done(const Sara::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString);
              void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
 
         private:

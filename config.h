@@ -16,6 +16,9 @@ namespace Sara
         public:
             static Config* Instance();
 
+            QString mainIcon() const;
+            void setMainIcon(const QString& aIcon);
+
             void setKey(const QString& aKey);
             QString getKey() const;
             void setVersionCode(const QString& aVersionCode);
@@ -53,6 +56,7 @@ namespace Sara
 
             bool m_bSilent;
 
+            QString m_strMainIcon;
             QString m_strKey;
             QString m_strVersionCode;
             QString m_strProductCode;

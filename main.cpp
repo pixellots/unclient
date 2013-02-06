@@ -17,6 +17,7 @@ int printHelp()
             + "-vc <code>  \tProduct Version Code\n"
             + "-pc <code>  \tProduct Code\n"
             + "-v <version>\tProduct Version\n"
+            + "-i <file>   \tMain Icon\n"
             + "-s          \tSilent check\n";
 
     QMessageBox::information(NULL, appName, message);
@@ -43,6 +44,8 @@ int main(int argc, char *argv[])
             config->setVersion(arguments.at(i+1));
         else if(arguments.at(i) == "-s")
             config->setSilent(TRUE);
+        else if(arguments.at(i) == "-i")
+            config->setMainIcon(arguments.at(i+1));
         else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help")
             return printHelp();
     }
