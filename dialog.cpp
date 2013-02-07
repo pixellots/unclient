@@ -23,10 +23,9 @@ Dialog::Dialog(QWidget *parent) :
 
     m_oTextEdit.hide();
 
-    m_pProcess = new QProcess(this);
-    connect(m_pProcess, SIGNAL(readyReadStandardError()), this, SLOT(processError()));
-    connect(m_pProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(processOutput()));
-    connect(m_pProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(updateExit(int, QProcess::ExitStatus)));
+    connect(&m_oCommander, SIGNAL(processError()), this, SLOT(processError()));
+    connect(&m_oCommander, SIGNAL(processError()), this, SLOT(processOutput()));
+    connect(&m_oCommander, SIGNAL(updateExit(int, QProcess::ExitStatus)), this, SLOT(updateExit(int, QProcess::ExitStatus)));
 
     m_pDownloader = new Sara::Downloader();
 
@@ -101,9 +100,9 @@ void Dialog::checkSelection()
 {
     QTreeWidgetItemIterator it(m_pUI->treeUpdate, QTreeWidgetItemIterator::Checked | QTreeWidgetItemIterator::Enabled);
     if(*it)
-        m_pUI->pshUpdate->setEnabled(TRUE);
+        m_pUI->pshUpdate->setEnabled(true);
     else
-        m_pUI->pshUpdate->setEnabled(FALSE);
+        m_pUI->pshUpdate->setEnabled(false);
 }
 
 void Dialog::updateSelectedMessage()
@@ -150,7 +149,7 @@ void Dialog::serviceDone()
     else
         m_pUI->labelLogo->hide();
 
-    m_pUI->labelVersion->setDisabled(TRUE);
+    m_pUI->labelVersion->setDisabled(true);
     m_pUI->labelVersion->setText(tr("Current Version: %1").arg(config->version().getVersion()));
 
     updateUpdateView();
@@ -193,13 +192,13 @@ void Dialog::updateUpdateView()
         m_iNewUpdates++;
     }
 
-    product->setExpanded(TRUE);
+    product->setExpanded(true);
 
     m_pUI->pshUpdate->show();
     if(m_iNewUpdates==0)
-        m_pUI->pshUpdate->setEnabled(FALSE);
+        m_pUI->pshUpdate->setEnabled(false);
     else
-        m_pUI->pshUpdate->setEnabled(TRUE);
+        m_pUI->pshUpdate->setEnabled(true);
 
 }
 
@@ -219,7 +218,7 @@ void Dialog::updateMessageView()
         if(!settings.messageShownAndLoaded(message_list.at(i).getCode()))
         {
             QFont font;
-            font.setBold(TRUE);
+            font.setBold(true);
             parent->setFont(0, font);
 
             m_iNewMessages++;
@@ -233,7 +232,7 @@ void Dialog::updateMessageView()
     m_pUI->treeMessage->expandAll();
 }
 
-void Dialog::updateTabCounter(bool aChangeTab /* = TRUE */)
+void Dialog::updateTabCounter(bool aChangeTab /* = true */)
 {
     if(aChangeTab)
     {
@@ -275,11 +274,11 @@ void Dialog::refresh()
     Sara::Config::Instance()->clear();
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    m_pUI->pshCheck->setDisabled(TRUE);
+    m_pUI->pshCheck->setDisabled(true);
 
     m_pService->checkForUpdates();
 
-    m_pUI->pshCheck->setDisabled(FALSE);
+    m_pUI->pshCheck->setDisabled(false);
     QApplication::restoreOverrideCursor();
 }
 
@@ -349,66 +348,23 @@ void Dialog::install()
 
     m_oCurrentUpdate = m_oReadyUpdates.takeFirst();
 
-    QString command;
-    QStringList commandParameters;
-#ifdef Q_OS_LINUX // Linux
-    if(m_oCurrentUpdate.isAdminRequired())
+    if(!m_oCommander.run(m_oCurrentUpdate))
     {
-        QString desktop = getenv("DESKTOP_SESSION");
-        if(desktop.indexOf("kubuntu") != -1 || desktop.indexOf("kde") != -1)
-            command = "/usr/bin/kdesudo";
-        else
-            command = "/usr/bin/gksudo";
-    }
-#else
-#ifdef WIN32 // Windows
-
-#else // Mac
-
-#endif
-#endif
-    QString filename = QDir::tempPath() + QDir::separator() + "Sara" + QDir::separator() + QFileInfo(m_oCurrentUpdate.getDownloadLink()).fileName();
-    QFile file(filename);
-    file.setPermissions(QFile::ExeUser | QFile::ReadUser | QFile::WriteUser);
-
-    if(command.isEmpty())
-    {
-        command = m_oCurrentUpdate.getCommand();
-        if(!m_oCurrentUpdate.getCommandLine().isEmpty())
-            commandParameters = QStringList() << m_oCurrentUpdate.getCommandLine().split(" ");
-    }
-    else
-    {
-        commandParameters << m_oCurrentUpdate.getCommand();
-        if(!m_oCurrentUpdate.getCommandLine().isEmpty())
-            commandParameters << m_oCurrentUpdate.getCommandLine().split(" ");
-    }
-    m_pUI->labelProgress->setText(tr("Installing Update '%1'").arg(m_oCurrentUpdate.getTitle()));
-
-    qDebug() << "command: " << command;
-    qDebug() << "commandlline: " << commandParameters.join(" ");
-
-    m_pProcess->start(command, commandParameters);
-
-    // wait 5 minutes for process start
-    if(!m_pProcess->waitForStarted(1000 * 60 * 5))
-    {
-        m_pUI->labelProgress->setText(tr("Error: Update '%1' failed to start").arg(m_oCurrentUpdate.getTitle()));
-        return;
+        // TODO .... needs a check or somthing else
     }
 }
 
 void Dialog::processError()
 {
     m_oTextEdit.setTextColor(Qt::red);
-    m_oTextEdit.append(m_pProcess->readAllStandardError());
+    m_oTextEdit.append(m_oCommander.readStdErr());
     m_oTextEdit.show();
 }
 
 void Dialog::processOutput()
 {
     m_oTextEdit.setTextColor(Qt::darkBlue);
-    m_oTextEdit.append(m_pProcess->readAllStandardOutput());
+    m_oTextEdit.append(m_oCommander.readStdOut());
     m_oTextEdit.show();
 }
 
@@ -473,9 +429,9 @@ void Dialog::messageLoaded(bool aSuccess)
 void Dialog::resetMessageItem(QTreeWidgetItem* aItem)
 {
     QFont font = aItem->font(0);
-    font.setBold(FALSE);
+    font.setBold(false);
     aItem->setFont(0, font);
-    updateTabCounter(FALSE);
+    updateTabCounter(false);
 }
 
 void Dialog::tabSelected(int aIndex)
@@ -491,7 +447,7 @@ void Dialog::tabSelected(int aIndex)
 
             if(!settings.messageShownAndLoaded(message.getCode()))
             {
-                settings.setMessage(message, TRUE);
+                settings.setMessage(message, true);
                 if(settings.messageShownAndLoaded(message.getCode()))
                     resetMessageItem(currentItem);
             }

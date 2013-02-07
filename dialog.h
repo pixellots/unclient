@@ -6,6 +6,7 @@
 #include <QTextEdit>
 #include <QTreeWidgetItem>
 #include "sara_service.h"
+#include "commander.h"
 
 namespace Ui
 {
@@ -25,7 +26,7 @@ class Dialog : public QDialog
         void install();
         void updateUpdateView();
         void updateMessageView();
-        void updateTabCounter(bool aChangeTab = TRUE);
+        void updateTabCounter(bool aChangeTab = true);
         void resetMessageItem(QTreeWidgetItem* aItem);
 
     protected:
@@ -53,10 +54,10 @@ class Dialog : public QDialog
         Ui::DialogUpdate* m_pUI;
         Sara::Service* m_pService;
         Sara::Downloader* m_pDownloader;
-        QProcess* m_pProcess;
 
         QList<Sara::Update> m_oReadyUpdates;
         Sara::Update m_oCurrentUpdate;
+        Sara::Commander m_oCommander;
 
         QTextEdit m_oTextEdit;
 

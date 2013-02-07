@@ -58,7 +58,7 @@ bool Settings::messageShownAndLoaded(const QString& aMessageCode)
 {
     QString id = m_strMessage + aMessageCode + "/";
 
-    return this->value( id + "Shown" , FALSE).toBool() && this->value( id + "Loaded" , FALSE).toBool();
+    return this->value( id + "Shown" , false).toBool() && this->value( id + "Loaded" , false).toBool();
 }
 
 void Settings::setNewVersion(Sara::Product aProduct, Sara::ProductVersion aVersion)
@@ -86,10 +86,10 @@ bool Settings::isVersionMapped(const QString& aProductCode, const QString& aVers
 
         m_strMappedVersion = this->value(id + "Version/Version").toString();
         m_strMappedVersionCode = this->value(id + "Version/Code").toString();
-        return TRUE;
+        return true;
     }
     else
-        return FALSE;
+        return false;
 }
 
 bool Settings::isVersionMapped(const QString& aVersionCode)
@@ -109,10 +109,10 @@ bool Settings::isVersionMapped(const QString& aVersionCode)
 
             m_strMappedVersion = this->value(id + "Version/Version").toString();
             m_strMappedVersionCode = this->value(id + "Version/Code").toString();
-            return TRUE;
+            return true;
         }
     }
-    return FALSE;
+    return false;
 }
 
 QString Settings::getMappedProductCode() const

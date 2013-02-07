@@ -7,6 +7,10 @@
 #include "sara_service.h"
 #include "version.h"
 
+#define SARA_PROCERROR_START            2000
+#define SARA_PROCERROR_NO_UPDATES       SARA_PROCERROR_START + 1
+#define SARA_PROCERROR_WRONG_PARAMETER  SARA_PROCERROR_START + 2
+
 int printHelp()
 {
     QString appName = QString("%1 %2 %3").arg(SARA_COMPANY_STR).arg(SARA_APPLICATION_STR).arg(SARA_CLIENT_VERSION);
@@ -49,6 +53,11 @@ int main(int argc, char *argv[])
         else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help")
             return printHelp();
     }
+
+    if((config->getVersionCode().isEmpty()
+            || (config->getVersion().isEmpty() && config->getProductCode().isEmpty()))
+            && config->getKey().isEmpty())
+        return SARA_PROCERROR_WRONG_PARAMETER;
 
     Dialog w;
     if(!config->isSilent())

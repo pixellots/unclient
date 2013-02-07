@@ -15,7 +15,7 @@ Config* Config::Instance()
 
 Config::Config()
 {
-    m_bSilent = FALSE;
+    m_bSilent = false;
 }
 
 Config::Config(Config const&)

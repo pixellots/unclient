@@ -2,18 +2,19 @@
 #include <QSysInfo>
 #include <QProcess>
 #include <QStringList>
+#include <QProcessEnvironment>
 #include <stdlib.h>
 
 using namespace Sara;
 
 QString OSDetection::getWindowsVersion()
 {
-#ifdef Q_WS_WIN
-    switch(QSysInfo::WindowsVersion())
-    {
-        QString prefix = "Windows ";
+    QString prefix = "Windows ";
 
-        case QSysInfo::WV_CE:
+#ifdef Q_WS_WIN
+    switch(QSysInfo::windowsVersion())
+    {
+         case QSysInfo::WV_CE:
             return prefix + "CE";
         case QSysInfo::WV_CENET:
             return prefix + "CE.NET";
@@ -94,10 +95,10 @@ QString OSDetection::getLinuxVersion()
     {
         fullKernelVersion = QString(proc.readAll()).split(".");
         QString kernelVersion = fullKernelVersion.at(0) + "." + fullKernelVersion.at(1);
-        return  QString("Linux ") + kernelVersion + " (" + QString(getenv("DESKTOP_SESSION")) + ")";
+        return  QString("Linux ") + kernelVersion + " (" + QString( QProcessEnvironment::systemEnvironment().value("DESKTOP_SESSION", "unknown")) + ")";
     }
     else
-        return  QString("Linux (" + QString(getenv("DESKTOP_SESSION")) + ")");
+        return  QString("Linux (" + QString( QProcessEnvironment::systemEnvironment().value("DESKTOP_SESSION", "unknown")) + ")");
 }
 
 QString OSDetection::getOthersVersion()

@@ -6,6 +6,7 @@ QT = network \
     gui \
     core \
     webkit
+
 TARGET = sara
 TEMPLATE = app
 SOURCES += main.cpp \
@@ -19,7 +20,8 @@ SOURCES += main.cpp \
     update.cpp \
     message.cpp \
     downloader.cpp \
-    osdetection.cpp
+    osdetection.cpp \
+    commander.cpp
 HEADERS += dialog.h \
     config.h \
     settings.h \
@@ -31,6 +33,7 @@ HEADERS += dialog.h \
     update.h \
     message.h \
     downloader.h \
-    osdetection.h
+    osdetection.h \
+    commander.h
 FORMS += dialog.ui \
     settingsdialog.ui

@@ -31,14 +31,14 @@ bool XmlParser::parse(const QString& aXmlData)
     if(m_pDocument->setContent(aXmlData, &errorMsg, &errorLine, &errorColumn))
     {
         if(!parseStatus() || !parseProduct() || !parseVersion() || !parseUpdates() || !parseMessages())
-            return FALSE;
+            return false;
     }
     else
     {
         qDebug() << "ERROR: " << errorMsg << "(Line " << errorLine << " - Column " << errorColumn << ")";
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 bool XmlParser::parseStatus()
@@ -46,7 +46,7 @@ bool XmlParser::parseStatus()
     QDomNodeList list = m_pDocument->elementsByTagName("status");
 
     if(list.isEmpty())
-        return FALSE;
+        return false;
 
     QDomNode status = list.at(0);
 
@@ -63,7 +63,7 @@ bool XmlParser::parseStatus()
         n = n.nextSibling();
     }
 
-    return TRUE;
+    return true;
 }
 
 bool XmlParser::parseProduct()
@@ -71,7 +71,7 @@ bool XmlParser::parseProduct()
     QDomNodeList list = m_pDocument->elementsByTagName("product");
 
     if(list.isEmpty())
-        return FALSE;
+        return false;
 
     Sara::Product product;
 
@@ -94,7 +94,7 @@ bool XmlParser::parseProduct()
 
     Sara::Config::Instance()->setProduct(product);
 
-    return TRUE;
+    return true;
 }
 
 Sara::ProductVersion XmlParser::parseVersion(QDomNode aNode)
@@ -124,7 +124,7 @@ bool XmlParser::parseVersion()
     QDomNodeList list = m_pDocument->elementsByTagName("version");
 
     if(list.isEmpty())
-        return FALSE;
+        return false;
 
     QDomNode versionNode = list.at(0);
 
@@ -132,7 +132,7 @@ bool XmlParser::parseVersion()
 
     Sara::Config::Instance()->setVersion(version);
 
-    return TRUE;
+    return true;
 }
 
 Sara::Update XmlParser::parseUpdate(QDomNode aNode)
@@ -200,7 +200,7 @@ bool XmlParser::parseUpdates()
     QDomNodeList list = m_pDocument->elementsByTagName("updates");
 
     if(list.isEmpty())
-        return FALSE;
+        return false;
 
     QDomNode n = list.at(0).firstChild();
     while(!n.isNull())
@@ -213,7 +213,7 @@ bool XmlParser::parseUpdates()
         n = n.nextSibling();
     }
 
-    return TRUE;
+    return true;
 }
 
 bool XmlParser::parseMessages()
@@ -221,7 +221,7 @@ bool XmlParser::parseMessages()
     QDomNodeList list = m_pDocument->elementsByTagName("messages");
 
     if(list.isEmpty())
-        return FALSE;
+        return false;
 
     QDomNode n = list.at(0).firstChild();
     while(!n.isNull())
@@ -234,7 +234,7 @@ bool XmlParser::parseMessages()
         n = n.nextSibling();
     }
 
-    return TRUE;
+    return true;
 }
 
 int XmlParser::getStatus()

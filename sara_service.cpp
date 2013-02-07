@@ -60,7 +60,7 @@ bool Service::checkForUpdates()
 
     m_pManager->get(request);
 
-    return TRUE;
+    return true;
 }
 
 void Service::requestReceived(QNetworkReply* reply)
