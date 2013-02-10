@@ -2,6 +2,8 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QDebug>
+#include <QProcessEnvironment>
+#include <QSettings>
 #include "commander.h"
 
 using namespace Sara;
@@ -53,15 +55,15 @@ bool Commander::run(const Sara::Update& aUpdate)
     file.setPermissions(QFile::ExeUser | QFile::ReadUser | QFile::WriteUser);
         if(command.isEmpty())
     {
-        command = m_oUpdate.getCommand();
+        command = resolve(m_oUpdate.getCommand());
         if(!m_oUpdate.getCommandLine().isEmpty())
-            commandParameters = QStringList() << m_oUpdate.getCommandLine().split(" ");
+            commandParameters = QStringList() << resolve(m_oUpdate.getCommandLine()).split(" ");
     }
     else
     {
-        commandParameters << m_oUpdate.getCommand();
+        commandParameters << resolve(m_oUpdate.getCommand());
         if(!m_oUpdate.getCommandLine().isEmpty())
-            commandParameters << m_oUpdate.getCommandLine().split(" ");
+            commandParameters << resolve(m_oUpdate.getCommandLine()).split(" ");
     }
 
     emit progressText(tr("Installing Update '%1'").arg(m_oUpdate.getTitle()));
@@ -91,18 +93,54 @@ QString Commander::readStdOut() const
     return m_pProcess->readAllStandardOutput();
 }
 
-QString Commander::resolveCommand(const QString& aCommand) const
-{
-    return QString();
-}
-
-QStringList Commander::resolveCommandLineParameters(const QStringList& aCommandLineParameter) const
-{
-    return QStringList();
-}
-
+/// command = "ld.exe [HOME] [INI@/home/user/.config/Sara/Client.conf:uuid] [SHELL] [@[HOME]/.config/Sara/Client.conf:uuid]";
 QString Commander::resolve(const QString& aString) const
 {
-    return QString();
+    QString theString = aString;
+
+    // replace environment vars
+    QStringList env = QProcessEnvironment::systemEnvironment().toStringList();
+
+    foreach(QString string, env)
+    {
+        QString key = string.split('=').at(0);
+        QString value = string.split('=').at(1);
+
+        theString = theString.replace("["+key+"]", value);
+    }
+
+    // replace native settings
+    int pos = theString.indexOf(QString("[@"));
+    while(pos!=-1)
+    {
+        int rpos = theString.indexOf(']', pos);
+        QString subString = theString.mid(pos + 2, rpos - pos - 2);
+        QString path = subString.split(':').at(0);
+        QString key = subString.split(':').at(1);
+
+        QSettings settings(path, QSettings::NativeFormat);
+
+        theString = theString.left(pos) + settings.value(key, "").toString() + theString.right(theString.length()-rpos-1);
+
+        pos = theString.indexOf(QString("[@"), pos+1);
+    }
+
+    // replace ini settings
+    pos = theString.indexOf(QString("[INI@"));
+    while(pos!=-1)
+    {
+        int rpos = theString.indexOf(']', pos);
+        QString subString = theString.mid(pos + 5, rpos - pos - 5);
+        QString path = subString.split(':').at(0);
+        QString key = subString.split(':').at(1);
+
+        QSettings settings(path, QSettings::IniFormat);
+
+        theString = theString.left(pos) + settings.value(key, "").toString() + theString.right(theString.length()-rpos-1);
+
+        pos = theString.indexOf(QString("[@"), pos+1);
+    }
+
+    return theString;
 }
 

@@ -15,17 +15,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <widget class="QLabel" name="labelLogo">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
+    <widget class="QLabel" name="labelLogo"/>
    </item>
    <item row="2" column="0">
     <widget class="QPushButton" name="pshSettings">
@@ -233,17 +223,7 @@
     </widget>
    </item>
    <item row="0" column="1" colspan="3">
-    <widget class="QLabel" name="labelTitle">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
+    <widget class="QLabel" name="labelTitle"/>
    </item>
   </layout>
  </widget>

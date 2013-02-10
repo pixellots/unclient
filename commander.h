@@ -26,8 +26,6 @@ namespace Sara
 
         private:
             QString setCommandBasedOnOS() const;
-            QString resolveCommand(const QString& aCommand) const;
-            QStringList resolveCommandLineParameters(const QStringList& aCommandLineParameter) const;
             QString resolve(const QString& aString) const;
 
         private:
