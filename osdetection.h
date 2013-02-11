@@ -8,6 +8,7 @@ namespace Sara {
     class OSDetection
     {
         public:
+            static QString getArch();
             static QString getOS();
 
             static QString getWindowsVersion();

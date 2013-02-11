@@ -4,6 +4,9 @@
 #include <QStringList>
 #include <QProcessEnvironment>
 #include <stdlib.h>
+#ifdef Q_OS_WIN
+#include <Windows.h>
+#endif
 
 using namespace Sara;
 
@@ -11,45 +14,22 @@ QString OSDetection::getWindowsVersion()
 {
     QString prefix = "Windows ";
 
-#ifdef Q_WS_WIN
-    switch(QSysInfo::windowsVersion())
+#ifdef Q_OS_WIN
+    OSVERSIONINFO osinfo;
+
+    osinfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+
+    if (GetVersionEx(&osinfo))
     {
-         case QSysInfo::WV_CE:
-            return prefix + "CE";
-        case QSysInfo::WV_CENET:
-            return prefix + "CE.NET";
-        case QSysInfo::WV_CE_5:
-            return prefix + "CE 5.x";
-        case QSysInfo::WV_CE_6:
-            return prefix + "CE 6.x";
-        case QSysInfo::WV_32s:
-            return prefix + "3.1";
-        case QSysInfo::WV_95:
-            return prefix + "95";
-        case QSysInfo::WV_98:
-            return prefix + "98";
-        case QSysInfo::WV_Me:
-            return prefix + "Me";
-        case QSysInfo::WV_NT:
-            return prefix + "NT";
-        case QSysInfo::WV_2000:
-            return prefix + "2000";
-        case QSysInfo::WV_XP:
-            return prefix + "XP";
-        case QSysInfo::WV_2003:
-            return prefix + "Server 2003/ XP x64";
-        case QSysInfo::WV_VISTA:
-            return prefix + "Vista";
-        case QSysInfo::WV_WINDOWS7:
-            return prefix + "7";
-        case QSysInfo::WV_WINDOWS8:
-            return prefix + "8";
-        default:
-            return "Unknown Windows";
+
+        int major = osinfo.dwMajorVersion;
+        int minor = osinfo.dwMinorVersion;
+
+        return prefix + QString("%1.%2").arg(major).arg(minor);
     }
-#else
-    return "Unsupported";
 #endif
+    return "Unknown Windows";
+
 }
 
 QString OSDetection::getMacVersion()
@@ -111,8 +91,8 @@ QString OSDetection::getOS()
 #ifdef Q_OS_LINUX
     return Sara::OSDetection::getLinuxVersion();
 #else
-#ifdef Q_OS_WINDOWS
-    return Sara::OSDetection::getMacVersion();
+#ifdef Q_OS_WIN
+    return Sara::OSDetection::getWindowsVersion();
 #else
 #ifdef Q_OS_MAC
     return Sara::OSDetection::getMacVersion();
@@ -123,3 +103,19 @@ QString OSDetection::getOS()
 #endif
 }
 
+QString OSDetection::getArch()
+{
+#ifdef Q_OS_WIN
+    return QProcessEnvironment::systemEnvironment().value("PROCESSOR_ARCHITECTURE", "x86");
+#else
+    QProcess proc;
+    proc.start("uname -p");
+
+    proc.waitForFinished(-1);
+
+    if(proc.exitCode()==0)
+        return QString(proc.readAll());
+    else
+        return "unknown";
+#endif
+}

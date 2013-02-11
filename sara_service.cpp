@@ -45,6 +45,7 @@ bool Service::checkForUpdates()
     url.addQueryItem("key", config->getKey());
     url.addQueryItem("id", settings.uuid());
     url.addQueryItem("os", Sara::OSDetection::getOS());
+    url.addQueryItem("arch", Sara::OSDetection::getArch());
 
     if(settings.getVersionCode().isEmpty())
     {
