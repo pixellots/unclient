@@ -3,6 +3,7 @@
 #include <QProcess>
 #include <QStringList>
 #include <QProcessEnvironment>
+#include <QSettings>
 #include <stdlib.h>
 #ifdef Q_OS_WIN
 #include <Windows.h>
@@ -34,33 +35,17 @@ QString OSDetection::getWindowsVersion()
 
 QString OSDetection::getMacVersion()
 {
-#ifdef Q_WS_MAC
-    switch(QSysInfo::MacintoshVersion())
-    {
-        QString prefix = "Mac OSX ";
+    QString prefix = "Mac OSX ";
+    QString version;
 
-        case QSysInfo::MV_CEETAH:
-            return prefix + "Ceetah (10.0)";
-        case QSysInfo::MV_PUMA:
-            return prefix + "Puma (10.1)";
-        case QSysInfo::MV_JAGUAR:
-            return prefix + "Jaguar (10.2)";
-        case QSysInfo::MV_PANTHER:
-            return prefix + "Panther (10.3)";
-        case QSysInfo::MV_TIGER:
-            return prefix + "Tiger (10.4)";
-        case QSysInfo::MV_LEOPARD:
-            return prefix + "Leopard (10.5)";
-        case QSysInfo::MV_SNOWLEOPARD:
-            return prefix + "Snow Leopard (10.6)";
-        case QSysInfo::MV_LION:
-            return prefix + "LION (10.7)";
-        default:
-            return "Unknown Mac";
-    }
-#else
-    return "Unsupported";
-#endif
+    QSettings settings("/System/Library/CoreServices/SystemVersion.plist", QSettings::NativeFormat);
+
+    version = settings.value("ProductVersion", "unknown").toString();
+
+    if(version != "unknown")
+        return prefix + version;
+    else
+        return version;
 }
 
 QString OSDetection::getLinuxVersion()
@@ -94,7 +79,7 @@ QString OSDetection::getOS()
 #ifdef Q_OS_WIN
     return Sara::OSDetection::getWindowsVersion();
 #else
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACX
     return Sara::OSDetection::getMacVersion();
 #else
     return Sara::OSDetection::getOthersVersion();
