@@ -93,6 +93,17 @@ QString OSDetection::getArch()
 #ifdef Q_OS_WIN
     return QProcessEnvironment::systemEnvironment().value("PROCESSOR_ARCHITECTURE", "x86");
 #else
+#ifdef Q_OS_LINUX
+    QProcess proc;
+    proc.start("uname -m");
+
+    proc.waitForFinished(-1);
+
+    if(proc.exitCode()==0)
+        return QString(proc.readAll());
+    else
+        return "unknown";
+#else
     QProcess proc;
     proc.start("uname -p");
 
@@ -102,5 +113,6 @@ QString OSDetection::getArch()
         return QString(proc.readAll());
     else
         return "unknown";
+#endif
 #endif
 }
