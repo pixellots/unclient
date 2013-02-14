@@ -33,7 +33,7 @@ namespace Sara
             QString getFileSize() const;
 
             void setType(int aType);
-            int getType();
+            int getType() const;
             Type getTypeEnum();
 
             void setRequiresAdmin(bool aAdminRequired);

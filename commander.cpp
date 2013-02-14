@@ -5,6 +5,8 @@
 #include <QProcessEnvironment>
 #include <QSettings>
 #include "commander.h"
+#include "settings.h"
+#include "localfile.h"
 
 using namespace Sara;
 
@@ -50,10 +52,11 @@ bool Commander::run(const Sara::Update& aUpdate)
 
     command = setCommandBasedOnOS();
 
-    QString filename = QDir::tempPath() + QDir::separator() + "Sara" + QDir::separator() + QFileInfo(m_oUpdate.getDownloadLink()).fileName();
+    QString filename = Sara::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink());
     QFile file(filename);
     file.setPermissions(QFile::ExeUser | QFile::ReadUser | QFile::WriteUser);
-        if(command.isEmpty())
+
+    if(command.isEmpty())
     {
         command = resolve(m_oUpdate.getCommand());
         if(!m_oUpdate.getCommandLine().isEmpty())
@@ -97,6 +100,16 @@ QString Commander::readStdOut() const
 QString Commander::resolve(const QString& aString) const
 {
     QString theString = aString;
+
+    // replace internals
+    theString = theString.replace("[SARA_UP_CODE]", m_oUpdate.getCode());
+    theString = theString.replace("[SARA_UP_LINK]", m_oUpdate.getDownloadLink());
+    theString = theString.replace("[SARA_UP_SIZE]", m_oUpdate.getFileSize());
+    theString = theString.replace("[SARA_UP_TARGETVERSION]", m_oUpdate.getTargetVersion().getVersion());
+    theString = theString.replace("[SARA_UP_TARGETCODE]", m_oUpdate.getTargetVersion().getCode());
+    theString = theString.replace("[SARA_UP_TYPE]", QString::number(m_oUpdate.getType()));
+    theString = theString.replace("[SARA_FILE]", Sara::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink()));
+    theString = theString.replace("[SARA_PATH]", Sara::LocalFile::getDownloadPath());
 
     // replace environment vars
     QStringList env = QProcessEnvironment::systemEnvironment().toStringList();

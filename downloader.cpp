@@ -1,5 +1,6 @@
 #include <QDir>
 #include "downloader.h"
+#include "localfile.h"
 
 using namespace Sara;
 
@@ -84,11 +85,8 @@ void Downloader::downloadFinished(QNetworkReply *reply)
         QString filename;
         if(!getTarget().isEmpty())
             filename = m_strTarget;
-        {
-            if(!QDir(QDir::tempPath() + QDir::separator() + "Sara").exists())
-                QDir(QDir::tempPath()).mkdir("Sara");
-            filename = QDir::tempPath() + QDir::separator() + "Sara" + QDir::separator() + QFileInfo(url.toString()).fileName();
-        }
+        else
+            filename = Sara::LocalFile::getDownloadLocation(url.toString());
 
         if (saveToDisk(filename, reply))
             printf("Download of %s succeeded (saved to %s)\n",

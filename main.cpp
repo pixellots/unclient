@@ -33,7 +33,6 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     Sara::Config* config = Sara::Config::Instance();
     Sara::Service* service = new Sara::Service(0);
-    Sara::Settings settings;
 
     QStringList arguments = QCoreApplication::arguments();
     for (int i = 0; i < arguments.size(); ++i)

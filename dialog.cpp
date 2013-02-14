@@ -9,6 +9,7 @@
 #include "product.h"
 #include "productversion.h"
 #include "config.h"
+#include "localfile.h"
 #include "downloader.h"
 #include "settings.h"
 
@@ -399,7 +400,7 @@ void Dialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
         qDebug() << m_oCurrentUpdate.getTitle() << " carshed!";
     }
 
-    settings.setUpdate(m_oCurrentUpdate, "TBD", aExitCode);
+    settings.setUpdate(m_oCurrentUpdate, Sara::LocalFile::getDownloadLocation(m_oCurrentUpdate.getDownloadLink()), aExitCode);
 }
 
 void Dialog::messageLoaded(bool aSuccess)

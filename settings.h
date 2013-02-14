@@ -18,6 +18,9 @@ namespace Sara
             Settings();
 
         public:
+            void setDownloadPath(const QString& aPath);
+            QString getDownloadPath() const;
+
             QString uuid();
 
             void setUpdate(Sara::Update aUpdate, const QString& aLocalFile, int aResult);
@@ -41,6 +44,8 @@ namespace Sara
 
 
         private:
+            QString m_strDownloadPath;
+
             QString m_strUUID;
             QString m_strUpdate;
             QString m_strMessage;

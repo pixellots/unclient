@@ -81,7 +81,7 @@ void Update::setType(int aType)
     m_iType = aType;
 }
 
-int Update::getType()
+int Update::getType() const
 {
     return m_iType;
 }

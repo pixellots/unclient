@@ -3,6 +3,7 @@
 #include <QStringList>
 #include <QSettings>
 #include <QUuid>
+#include <QDir>
 #include "settings.h"
 #include "config.h"
 
@@ -11,10 +12,27 @@ using namespace Sara;
 Settings::Settings()
     : QSettings(SARA_COMPANY_STR, SARA_APPLICATION_STR, 0)
 {
+    QString id = Sara::Config::Instance()->getKey();
+
+    if(!id.isEmpty())
+        id += "/";
+
     m_strUUID = QString("uuid");
-    m_strUpdate = QString("Update/");
-    m_strMessage = QString("Message/");
-    m_strCurrentVersion = QString("CurrentVersion/");
+
+    m_strDownloadPath   = id + QString("DownloadPath");
+    m_strUpdate         = id + QString("Update/");
+    m_strMessage        = id + QString("Message/");
+    m_strCurrentVersion = id + QString("CurrentVersion/");
+}
+
+void Settings::setDownloadPath(const QString& aPath)
+{
+    this->setValue(m_strDownloadPath, aPath);
+}
+
+QString Settings::getDownloadPath() const
+{
+    return this->value(m_strDownloadPath, QDir::tempPath()).toString();
 }
 
 QString Settings::uuid()
