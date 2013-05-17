@@ -135,6 +135,16 @@ void Config::setMainIcon(const QString& aIcon)
     m_strMainIcon = aIcon;
 }
 
+void Config::setLanguage(const QString& aLanguage)
+{
+    m_strLanguage = aLanguage;
+}
+
+QString Config::getLanguage() const
+{
+    return m_strLanguage;
+}
+
 void Config::clear()
 {
     m_listUpdates.clear();

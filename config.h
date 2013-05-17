@@ -27,6 +27,8 @@ namespace Sara
             QString getProductCode() const;
             void setVersion(const QString& aVersion);
             QString getVersion() const;
+            void setLanguage(const QString& aLanguage);
+            QString getLanguage() const;
 
             void setSilent(bool aSilent);
             bool isSilent();
@@ -70,6 +72,7 @@ namespace Sara
             QString m_strVersionCode;
             QString m_strProductCode;
             QString m_strVersion;
+            QString m_strLanguage;
 
             Sara::Product m_oProduct;
             Sara::ProductVersion m_oCurrentVersion;

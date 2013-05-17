@@ -2,6 +2,7 @@
 #include <QtDebug>
 #include <QUrl>
 #include <QNetworkReply>
+#include <QLocale>
 
 #include "sara_service.h"
 #include "config.h"
@@ -46,6 +47,11 @@ bool Service::checkForUpdates()
     url.addQueryItem("id", settings.uuid());
     url.addQueryItem("os", Sara::OSDetection::getOS());
     url.addQueryItem("arch", Sara::OSDetection::getArch());
+
+    if(!config->getLanguage().isEmpty())
+        url.addQueryItem("lang", config->getLanguage());
+    else
+        url.addQueryItem("lang", QLocale::system().name());
 
     if(settings.getVersionCode().isEmpty())
     {

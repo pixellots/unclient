@@ -18,14 +18,16 @@ int printHelp()
 
     QString message = QString("Command Line Parameters:")
             + "\n\n"
-            + "-k <key>    \tUnique Sara key\n"
-            + "-vc <code>  \tProduct Version Code\n"
-            + "-pc <code>  \tProduct Code\n"
-            + "-v <version>\tProduct Version\n"
-            + "-i <file>   \tMain Icon\n"
-            + "-s          \tSilent check only\n"
-            + "-d          \tDialog when updates available\n"
-            + "-t          \tSystem Tray Icon\n";
+            + "-k <key>       \tUnique Sara key\n"
+            + "-vc <code>     \tProduct Version Code\n"
+            + "-pc <code>     \tProduct Code\n"
+            + "-v <version>   \tProduct Version\n"
+            + "-i <file>      \tMain Icon\n"
+            + "-l <lang-code> \tLanguage Code\n"
+            + "-s             \tSilent check only\n"
+            + "-d             \tDialog when updates available\n"
+            + "-t             \tSystem Tray Icon\n"
+            + "-l <lang-code> \tLanguage Code\n";
 
     QMessageBox::information(NULL, appName, message);
     return 1;
@@ -59,7 +61,9 @@ int main(int argc, char *argv[])
             config->setMainIcon(arguments.at(i+1));
         else if(argument == "-n")
             config->setUpdateInterval(arguments.at(i+1).toInt());
-        else if(argument == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help")
+        else if(arguments.at(i) == "-l")
+            config->setLanguage(arguments.at(i+1));
+        else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help")
             return printHelp();
     }
 
