@@ -31,6 +31,12 @@ namespace Sara
             void setSilent(bool aSilent);
             bool isSilent();
 
+            void setSystemTray(bool aTray);
+            bool isSystemTray();
+
+            int getUpdateInterval();
+            void setUpdateInterval(int aInterval);
+
             QString getOS() const;
 
             void setProduct(const Product& aProduct);
@@ -55,6 +61,9 @@ namespace Sara
             static Config* m_pInstance;
 
             bool m_bSilent;
+            bool m_bSytemTray;
+
+            int m_iUpdateInterval;
 
             QString m_strMainIcon;
             QString m_strKey;

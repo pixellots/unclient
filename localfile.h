@@ -1,6 +1,8 @@
 #ifndef LOCALFILE_H
 #define LOCALFILE_H
 
+#include <QString>
+
 namespace Sara
 {
     class LocalFile

@@ -16,6 +16,7 @@ Config* Config::Instance()
 Config::Config()
 {
     m_bSilent = false;
+    m_bSytemTray = false;
 }
 
 Config::Config(Config const&)
@@ -139,3 +140,24 @@ void Config::clear()
     m_listUpdates.clear();
     m_listMessages.clear();
 }
+
+void Config::setSystemTray(bool aTray)
+{
+    m_bSytemTray = aTray;
+}
+
+bool Config::isSystemTray()
+{
+    return m_bSytemTray;
+}
+
+int Config::getUpdateInterval()
+{
+    return m_iUpdateInterval;
+}
+
+void Config::setUpdateInterval(int aInterval)
+{
+    m_iUpdateInterval = aInterval;
+}
+

@@ -26,11 +26,12 @@ namespace Sara
 
         private:
             QString setCommandBasedOnOS() const;
-            QString resolve(const QString& aString) const;
+            QString resolve(const QString& aString);
 
         private:
             QProcess* m_pProcess;
             Sara::Update m_oUpdate;
+            bool m_bCopy;
     };
 }
 

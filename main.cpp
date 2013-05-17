@@ -1,5 +1,6 @@
 #include <QtGui/QApplication>
 #include <QtGui/QMessageBox>
+#include <QSystemTrayIcon>
 #include <QDebug>
 #include "dialog.h"
 #include "config.h"
@@ -22,7 +23,9 @@ int printHelp()
             + "-pc <code>  \tProduct Code\n"
             + "-v <version>\tProduct Version\n"
             + "-i <file>   \tMain Icon\n"
-            + "-s          \tSilent check\n";
+            + "-s          \tSilent check only\n"
+            + "-d          \tDialog when updates available\n"
+            + "-t          \tSystem Tray Icon\n";
 
     QMessageBox::information(NULL, appName, message);
     return 1;
@@ -34,22 +37,29 @@ int main(int argc, char *argv[])
     Sara::Config* config = Sara::Config::Instance();
     Sara::Service* service = new Sara::Service(0);
 
+    QString argument;
     QStringList arguments = QCoreApplication::arguments();
     for (int i = 0; i < arguments.size(); ++i)
     {
-        if(arguments.at(i) == "-k")
+        argument = arguments.at(i);
+        
+        if(argument == "-k")
             config->setKey(arguments.at(i+1));
-        else if(arguments.at(i) == "-vc")
+        else if(argument == "-vc")
             config->setVersionCode(arguments.at(i+1));
-        else if(arguments.at(i) == "-pc")
+        else if(argument == "-pc")
             config->setProductCode(arguments.at(i+1));
-        else if(arguments.at(i) == "-v")
+        else if(argument == "-v")
             config->setVersion(arguments.at(i+1));
-        else if(arguments.at(i) == "-s")
+        else if(argument == "-s")
             config->setSilent(TRUE);
-        else if(arguments.at(i) == "-i")
+        else if(argument == "-t")
+            config->setSystemTray(true);
+        else if(argument == "-i")
             config->setMainIcon(arguments.at(i+1));
-        else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help")
+        else if(argument == "-n")
+            config->setUpdateInterval(arguments.at(i+1).toInt());
+        else if(argument == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help")
             return printHelp();
     }
 
@@ -66,6 +76,16 @@ int main(int argc, char *argv[])
     }
     else
         QObject::connect(service, SIGNAL(done()), &a, SLOT(quit()));
+
+    /*
+    if(config->isSystemTray())
+    {
+        QSystemTrayIcon* tray = new QSystemTrayIcon(0);
+        tray->setIcon(QIcon(config->mainIcon()));
+        tray->show();
+        tray->showMessage("Sara Update Client", "Checking for updates...");
+    }
+    */
 
     service->checkForUpdates();
 
