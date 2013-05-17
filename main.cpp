@@ -17,12 +17,13 @@ int printHelp()
 
     QString message = QString("Command Line Parameters:")
             + "\n\n"
-            + "-k <key>    \tUnique Sara key\n"
-            + "-vc <code>  \tProduct Version Code\n"
-            + "-pc <code>  \tProduct Code\n"
-            + "-v <version>\tProduct Version\n"
-            + "-i <file>   \tMain Icon\n"
-            + "-s          \tSilent check\n";
+            + "-k <key>         \tUnique Sara key\n"
+            + "-vc <code>       \tProduct Version Code\n"
+            + "-pc <code>       \tProduct Code\n"
+            + "-v <version>     \tProduct Version\n"
+            + "-i <file>        \tMain Icon\n"
+            + "-l <lang-code>   \tLanguage Code\n"
+            + "-s               \tSilent check\n";
 
     QMessageBox::information(NULL, appName, message);
     return 1;
@@ -49,6 +50,8 @@ int main(int argc, char *argv[])
             config->setSilent(TRUE);
         else if(arguments.at(i) == "-i")
             config->setMainIcon(arguments.at(i+1));
+        else if(arguments.at(i) == "-l")
+            config->setLanguage(arguments.at(i+1));
         else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help")
             return printHelp();
     }
