@@ -77,12 +77,15 @@ int main(int argc, char *argv[])
             return printHelp();
     }
 
-    if((config->getVersionCode().isEmpty()
-            || (config->getVersion().isEmpty() && config->getProductCode().isEmpty()))
-            && config->getKey().isEmpty())
+    if(config->getKey().isEmpty())
+        return SARA_PROCERROR_WRONG_PARAMETER;
+    else if(!config->getVersion().isEmpty() && config->getProductCode().isEmpty())
+        return SARA_PROCERROR_WRONG_PARAMETER;
+    else if(config->getVersion().isEmpty() && !config->getProductCode().isEmpty())
         return SARA_PROCERROR_WRONG_PARAMETER;
 
     SingleAppDialog singleDialog;
+    Dialog manageDialog;
 
     if(!config->isSilent())
     {
@@ -91,9 +94,14 @@ int main(int argc, char *argv[])
             singleDialog.init(service);
             singleDialog.hide();
         }
+        else
+        {
+            manageDialog.init(service);
+            manageDialog.hide();
+        }
     }
     /*
-    Dialog w;
+
     if(!config->isSilent())
     {
         w.init(service);
