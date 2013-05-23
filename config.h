@@ -33,6 +33,9 @@ namespace Sara
             void setSilent(bool aSilent);
             bool isSilent();
 
+            void setSingleMode(bool aSingleMode);
+            bool isSingleMode();
+
             void setSystemTray(bool aTray);
             bool isSystemTray();
 
@@ -64,6 +67,7 @@ namespace Sara
 
             bool m_bSilent;
             bool m_bSytemTray;
+            bool m_bSingleMode;
 
             int m_iUpdateInterval;
 

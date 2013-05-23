@@ -3,6 +3,7 @@
 #include <QSystemTrayIcon>
 #include <QDebug>
 #include "dialog.h"
+#include "singleappdialog.h"
 #include "config.h"
 #include "settings.h"
 #include "sara_service.h"
@@ -48,11 +49,20 @@ int main(int argc, char *argv[])
         if(argument == "-k")
             config->setKey(arguments.at(i+1));
         else if(argument == "-vc")
+        {
+            config->setSingleMode(true);
             config->setVersionCode(arguments.at(i+1));
+        }
         else if(argument == "-pc")
+        {
+            config->setSingleMode(true);
             config->setProductCode(arguments.at(i+1));
+        }
         else if(argument == "-v")
+        {
+            config->setSingleMode(true);
             config->setVersion(arguments.at(i+1));
+        }
         else if(argument == "-s")
             config->setSilent(TRUE);
         else if(argument == "-t")
@@ -72,6 +82,17 @@ int main(int argc, char *argv[])
             && config->getKey().isEmpty())
         return SARA_PROCERROR_WRONG_PARAMETER;
 
+    SingleAppDialog singleDialog;
+
+    if(!config->isSilent())
+    {
+        if(config->isSingleMode())
+        {
+            singleDialog.init(service);
+            singleDialog.hide();
+        }
+    }
+    /*
     Dialog w;
     if(!config->isSilent())
     {

@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     downloader.cpp \
     osdetection.cpp \
     commander.cpp \
-    localfile.cpp
+    localfile.cpp \
+    singleappdialog.cpp
 HEADERS += dialog.h \
     config.h \
     settings.h \
@@ -36,6 +37,8 @@ HEADERS += dialog.h \
     downloader.h \
     osdetection.h \
     commander.h \
-    localfile.h
+    localfile.h \
+    singleappdialog.h
 FORMS += dialog.ui \
-    settingsdialog.ui
+    settingsdialog.ui \
+    singleappdialog.ui

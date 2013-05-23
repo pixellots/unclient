@@ -17,6 +17,7 @@ Config::Config()
 {
     m_bSilent = false;
     m_bSytemTray = false;
+    m_bSingleMode = false;
 }
 
 Config::Config(Config const&)
@@ -159,6 +160,16 @@ void Config::setSystemTray(bool aTray)
 bool Config::isSystemTray()
 {
     return m_bSytemTray;
+}
+
+void Config::setSingleMode(bool aSingleMode)
+{
+    m_bSingleMode = aSingleMode;
+}
+
+bool Config::isSingleMode()
+{
+    return m_bSingleMode;
 }
 
 int Config::getUpdateInterval()
