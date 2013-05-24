@@ -19,10 +19,19 @@ class SingleAppDialog : public QDialog
         ~SingleAppDialog();
 
         void init(Sara::Service* aService);
+        void download();
+        void install();
 
     public slots:
         void serviceDone();
         void onDetailsCheck();
+
+        void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
+        void downloadDone(const Sara::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString);
+
+        void processError();
+        void processOutput();
+        void updateExit(int aExitCode, QProcess::ExitStatus aExitStatus);
 
     private:
         Ui::SingleAppDialog* m_pUi;

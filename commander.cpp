@@ -90,7 +90,7 @@ bool Commander::run(const Sara::Update& aUpdate)
             return false;
         }
 
-        if(destFile.exists())
+        if(QFileInfo(destFile).isFile() && destFile.exists())
             if(!destFile.remove())
             {
                 emit updateExit(-2, QProcess::NormalExit);
