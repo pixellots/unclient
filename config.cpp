@@ -33,6 +33,16 @@ QString Config::getKey() const
     return m_strKey;
 }
 
+void Config::setTestKey(const QString& aTestKey)
+{
+    m_strTestKey = aTestKey;
+}
+
+QString Config::getTestKey() const
+{
+    return m_strTestKey;
+}
+
 void Config::setVersionCode(const QString& aVersionCode)
 {
     m_strVersionCode = aVersionCode;

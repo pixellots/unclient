@@ -21,6 +21,8 @@ namespace Sara
 
             void setKey(const QString& aKey);
             QString getKey() const;
+            void setTestKey(const QString& aTestKey);
+            QString getTestKey() const;
             void setVersionCode(const QString& aVersionCode);
             QString getVersionCode() const;
             void setProductCode(const QString& aProductCode);
@@ -73,6 +75,7 @@ namespace Sara
 
             QString m_strMainIcon;
             QString m_strKey;
+            QString m_strTestKey;
             QString m_strVersionCode;
             QString m_strProductCode;
             QString m_strVersion;

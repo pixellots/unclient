@@ -44,6 +44,10 @@ bool Service::checkForUpdates()
     QUrl url(SARA_SERVICE_URL);
 
     url.addQueryItem("key", config->getKey());
+
+    if(!config->getTestKey().isEmpty())
+        url.addQueryItem("test", config->getTestKey());
+
     url.addQueryItem("id", settings.uuid());
     url.addQueryItem("os", Sara::OSDetection::getOS());
     url.addQueryItem("arch", Sara::OSDetection::getArch());

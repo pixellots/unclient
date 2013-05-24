@@ -20,6 +20,7 @@ int printHelp()
     QString message = QString("Command Line Parameters:")
             + "\n\n"
             + "-k <key>       \tUnique Sara key\n"
+            + "-t <key>       \tUnique Sara test key\n"
             + "-vc <code>     \tProduct Version Code\n"
             + "-pc <code>     \tProduct Code\n"
             + "-v <version>   \tProduct Version\n"
@@ -27,7 +28,7 @@ int printHelp()
             + "-l <lang-code> \tLanguage Code\n"
             + "-s             \tSilent check only\n"
             + "-d             \tDialog when updates available\n"
-            + "-t             \tSystem Tray Icon\n"
+            + "-st            \tSystem Tray Icon\n"
             + "-l <lang-code> \tLanguage Code\n";
 
     QMessageBox::information(NULL, appName, message);
@@ -48,6 +49,8 @@ int main(int argc, char *argv[])
         
         if(argument == "-k")
             config->setKey(arguments.at(i+1));
+        else if(argument == "-t")
+            config->setTestKey(arguments.at(i+1));
         else if(argument == "-vc")
         {
             config->setSingleMode(true);
@@ -65,7 +68,7 @@ int main(int argc, char *argv[])
         }
         else if(argument == "-s")
             config->setSilent(TRUE);
-        else if(argument == "-t")
+        else if(argument == "-st")
             config->setSystemTray(true);
         else if(argument == "-i")
             config->setMainIcon(arguments.at(i+1));
