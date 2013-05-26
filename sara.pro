@@ -6,7 +6,6 @@ QT = network \
     gui \
     core \
     webkit
-
 TARGET = sara
 TEMPLATE = app
 SOURCES += main.cpp \
@@ -23,7 +22,8 @@ SOURCES += main.cpp \
     osdetection.cpp \
     commander.cpp \
     localfile.cpp \
-    singleappdialog.cpp
+    singleappdialog.cpp \
+    usernotofication.cpp
 HEADERS += dialog.h \
     config.h \
     settings.h \
@@ -38,7 +38,11 @@ HEADERS += dialog.h \
     osdetection.h \
     commander.h \
     localfile.h \
-    singleappdialog.h
+    singleappdialog.h \
+    status.h \
+    usernotofication.h
 FORMS += dialog.ui \
     settingsdialog.ui \
-    singleappdialog.ui
+    singleappdialog.ui \
+    usernotofication.ui
+RESOURCES += res.qrc

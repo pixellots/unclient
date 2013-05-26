@@ -8,10 +8,7 @@
 #include "settings.h"
 #include "sara_service.h"
 #include "version.h"
-
-#define SARA_PROCERROR_START            2000
-#define SARA_PROCERROR_NO_UPDATES       SARA_PROCERROR_START + 1
-#define SARA_PROCERROR_WRONG_PARAMETER  SARA_PROCERROR_START + 2
+#include "status.h"
 
 int printHelp()
 {
@@ -27,6 +24,7 @@ int printHelp()
             + "-i <file>      \tMain Icon\n"
             + "-l <lang-code> \tLanguage Code\n"
             + "-s             \tSilent check only\n"
+            + "-q             \tDo not show any question dialog before\n"
             + "-d             \tDialog when updates available\n"
             + "-st            \tSystem Tray Icon\n"
             + "-l <lang-code> \tLanguage Code\n";
@@ -103,13 +101,6 @@ int main(int argc, char *argv[])
             manageDialog.hide();
         }
     }
-    /*
-
-    if(!config->isSilent())
-    {
-        w.init(service);
-        w.hide();
-    }
     else
         QObject::connect(service, SIGNAL(done()), &a, SLOT(quit()));
 
@@ -125,5 +116,10 @@ int main(int argc, char *argv[])
 
     service->checkForUpdates();
 
-    return a.exec();
+    int result = a.exec();
+
+    if(!config->isSilent())
+        return result;
+    else
+        return service->returnCode();
 }

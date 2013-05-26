@@ -4,6 +4,7 @@
 #include "settings.h"
 #include "product.h"
 #include "localfile.h"
+#include "usernotofication.h"
 
 #include <QtDebug>
 #include <QMessageBox>
@@ -86,15 +87,15 @@ void SingleAppDialog::serviceDone()
             setWindowIcon(QPixmap(config->product().getLocalIcon()).scaledToHeight(64, Qt::SmoothTransformation));
     }
 
-    if(config->updates().size() == 1)
-        QMessageBox::question(this, tr("%1 - Update available").arg(config->product().getName()), config->updates().at(0).getTitle());
-    else if(config->updates().size() > 1)
-        QMessageBox::question(this, tr("%1 - %2 Updates available").arg(config->product().getName()).arg(config->updates().size()), "TODO");
-    else
+    UserNotofication userNotify;
+
+    userNotify.updateView();
+    if(userNotify.exec() != QDialog::Accepted)
     {
         reject();
         return;
     }
+
     adjustSize();
     show();
 

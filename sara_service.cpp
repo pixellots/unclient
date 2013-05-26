@@ -120,3 +120,25 @@ void Service::requestReceived(QNetworkReply* reply)
     else
         emit done();
 }
+
+int Service::returnCode()
+{
+    if(Sara::Config::Instance()->updates().size() == 0 && Sara::Config::Instance()->messages().size() == 0)
+        return 0; // nothing
+    else if(Sara::Config::Instance()->updates().size() == 1 && Sara::Config::Instance()->messages().size() == 0)
+        return 1; // one update
+    else if(Sara::Config::Instance()->updates().size() == 0 && Sara::Config::Instance()->messages().size() == 1)
+        return 2; // one message
+    else if(Sara::Config::Instance()->updates().size() > 1 && Sara::Config::Instance()->messages().size() == 0)
+        return 3; // multiple updates
+    else if(Sara::Config::Instance()->updates().size() == 0 && Sara::Config::Instance()->messages().size() > 1)
+        return 4; // multiple messages
+    else if(Sara::Config::Instance()->updates().size() == 1 && Sara::Config::Instance()->messages().size() == 1)
+        return 5; // one update & one message
+    else if(Sara::Config::Instance()->updates().size() == 1 && Sara::Config::Instance()->messages().size() > 1)
+        return 6; // one update & multiple messages
+    else if(Sara::Config::Instance()->updates().size() > 1 && Sara::Config::Instance()->messages().size() == 1)
+        return 7; // multiple updates & one message
+    else
+        return 8; // multiple updates & messages
+}

@@ -20,6 +20,7 @@ namespace Sara
             ~Service();
 
             bool checkForUpdates();
+            int  returnCode();
 
         public slots:
             void requestReceived(QNetworkReply* reply);
