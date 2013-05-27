@@ -23,7 +23,8 @@ SOURCES += main.cpp \
     commander.cpp \
     localfile.cpp \
     singleappdialog.cpp \
-    usernotofication.cpp
+    usernotofication.cpp \
+    usermessages.cpp
 HEADERS += dialog.h \
     config.h \
     settings.h \
@@ -40,9 +41,11 @@ HEADERS += dialog.h \
     localfile.h \
     singleappdialog.h \
     status.h \
-    usernotofication.h
+    usernotofication.h \
+    usermessages.h
 FORMS += dialog.ui \
     settingsdialog.ui \
     singleappdialog.ui \
-    usernotofication.ui
+    usernotofication.ui \
+    usermessages.ui
 RESOURCES += res.qrc

@@ -80,7 +80,7 @@ void UserNotofication::updateView()
             QTreeWidgetItem* parent = new QTreeWidgetItem(ui->treeWidget);
             parent->setData(0, Qt::UserRole, QVariant::fromValue(update_list.at(i)));
             parent->setCheckState(1, Qt::Checked);
-            parent->setIcon(0, QPixmap(":/images/updates.png"));
+            //parent->setIcon(0, QPixmap(":/images/updates.png"));
             parent->setText(2, update_list.at(i).getTitle());
             parent->setText(3, update_list.at(i).getTargetVersion().getVersion());
             parent->setText(4, update_list.at(i).getFileSize());

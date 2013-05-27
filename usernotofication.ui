@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>473</width>
-    <height>432</height>
+    <width>500</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -90,7 +90,7 @@
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>100</height>
+       <height>125</height>
       </size>
      </property>
      <property name="iconSize">
@@ -110,7 +110,7 @@
      </attribute>
      <column>
       <property name="text">
-       <string>     </string>
+       <string/>
       </property>
      </column>
      <column>
@@ -140,7 +140,7 @@
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>200</height>
+       <height>250</height>
       </size>
      </property>
      <property name="url">
@@ -198,18 +198,6 @@
     </layout>
    </item>
   </layout>
-  <zorder>labelText</zorder>
-  <zorder>labelDescription</zorder>
-  <zorder>pshYes</zorder>
-  <zorder>treeWidget</zorder>
-  <zorder>pshNo</zorder>
-  <zorder>pshDetails</zorder>
-  <zorder>webView</zorder>
-  <zorder>verticalSpacer</zorder>
-  <zorder>horizontalSpacer</zorder>
-  <zorder>horizontalSpacer</zorder>
-  <zorder>labelLogo</zorder>
-  <zorder>horizontalSpacer_2</zorder>
  </widget>
  <customwidgets>
   <customwidget>
@@ -227,8 +215,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>468</x>
-     <y>363</y>
+     <x>462</x>
+     <y>453</y>
     </hint>
     <hint type="destinationlabel">
      <x>435</x>
@@ -243,8 +231,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>346</x>
-     <y>363</y>
+     <x>381</x>
+     <y>453</y>
     </hint>
     <hint type="destinationlabel">
      <x>184</x>

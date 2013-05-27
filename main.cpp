@@ -9,25 +9,33 @@
 #include "sara_service.h"
 #include "version.h"
 #include "status.h"
+#include "usermessages.h"
 
 int printHelp()
 {
     QString appName = QString("%1 %2 %3").arg(SARA_COMPANY_STR).arg(SARA_APPLICATION_STR).arg(SARA_CLIENT_VERSION);
 
-    QString message = QString("Command Line Parameters:")
+    QString message = QString("Command Line Parameters: \n\n%1 <options> mode").arg(QFileInfo(qApp->arguments().at(0)).fileName())
             + "\n\n"
-            + "-k <key>       \tUnique Sara key\n"
-            + "-t <key>       \tUnique Sara test key\n"
-            + "-vc <code>     \tProduct Version Code\n"
-            + "-pc <code>     \tProduct Code\n"
-            + "-v <version>   \tProduct Version\n"
-            + "-i <file>      \tMain Icon\n"
-            + "-l <lang-code> \tLanguage Code\n"
-            + "-s             \tSilent check only\n"
-            + "-q             \tDo not show any question dialog before\n"
-            + "-d             \tDialog when updates available\n"
-            + "-st            \tSystem Tray Icon\n"
-            + "-l <lang-code> \tLanguage Code\n";
+            + "Mode:\n\n"
+            + "  check          \tchecks for update\n"
+            + "  update         \truns update mode only\n"
+            + "  messages       \truns message mode only\n"
+            + "  manager        \truns update & message mode\n"
+            + "\n\n"
+            + "Options:\n\n"
+            + "  -k <key>       \tUnique Sara key\n"
+            + "  -t <key>       \tUnique Sara test key\n"
+            + "  -vc <code>     \tProduct Version Code\n"
+            + "  -pc <code>     \tProduct Code\n"
+            + "  -v <version>   \tProduct Version\n"
+            + "  -i <file>      \tMain Icon\n"
+            + "  -l <lang-code> \tLanguage Code\n"
+            + "  -s             \tSilent check only\n"
+            + "  -q             \tDo not show any question dialog before\n"
+            + "  -d             \tDialog when updates available\n"
+            + "  -st            \tSystem Tray Icon\n"
+            + "  -l <lang-code> \tLanguage Code\n";
 
     QMessageBox::information(NULL, appName, message);
     return 1;
@@ -39,6 +47,7 @@ int main(int argc, char *argv[])
     Sara::Config* config = Sara::Config::Instance();
     Sara::Service* service = new Sara::Service(0);
 
+    QString mode;
     QString argument;
     QStringList arguments = QCoreApplication::arguments();
     for (int i = 0; i < arguments.size(); ++i)
@@ -76,6 +85,8 @@ int main(int argc, char *argv[])
             config->setLanguage(arguments.at(i+1));
         else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help")
             return printHelp();
+        else if(argument == "updates" || argument == "messages")
+            mode = argument;
     }
 
     if(config->getKey().isEmpty())
@@ -85,6 +96,7 @@ int main(int argc, char *argv[])
     else if(config->getVersion().isEmpty() && !config->getProductCode().isEmpty())
         return SARA_PROCERROR_WRONG_PARAMETER;
 
+    UserMessages messageDialog;
     SingleAppDialog singleDialog;
     Dialog manageDialog;
 
@@ -92,8 +104,17 @@ int main(int argc, char *argv[])
     {
         if(config->isSingleMode())
         {
-            singleDialog.init(service);
-            singleDialog.hide();
+            if(mode == "updates")
+            {
+                singleDialog.init(service);
+                singleDialog.hide();
+            }
+            else if(mode == "messages")
+            {
+                messageDialog.init(service);
+                messageDialog.show();
+            }
+
         }
         else
         {
