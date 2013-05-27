@@ -2,6 +2,7 @@
 #define USERNOTOFICATION_H
 
 #include <QDialog>
+#include <QUrl>
 
 namespace Ui {
     class UserNotofication;
@@ -15,6 +16,12 @@ public:
 
 public:
     void updateView();
+
+public slots:
+    void openLink(const QUrl& aUrl);
+    void updateSelectedUpdate();
+    void checkSelection();
+    void detailsClicked();
 
 protected:
     void changeEvent(QEvent *e);
