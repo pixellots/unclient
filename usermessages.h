@@ -2,6 +2,10 @@
 #define USERMESSAGES_H
 
 #include <QDialog>
+#include <QList>
+#include <QUrl>
+
+#include "message.h"
 #include "sara_service.h"
 
 namespace Ui {
@@ -20,10 +24,20 @@ public:
 
 public slots:
     void serviceDone();
+    void onLeft();
+    void onRight();
+    void onRead();
+    void openLink(const QUrl&);
+
+private:
+    void showMessage();
 
 private:
     Ui::UserMessages *ui;
     Sara::Service* m_pService;
+    QList<Sara::Message> m_listMessages;
+
+    int m_iCurrentIndex;
 };
 
 #endif // USERMESSAGES_H

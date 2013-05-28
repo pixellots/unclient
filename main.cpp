@@ -112,9 +112,8 @@ int main(int argc, char *argv[])
             else if(mode == "messages")
             {
                 messageDialog.init(service);
-                messageDialog.show();
+                messageDialog.hide();
             }
-
         }
         else
         {
