@@ -23,6 +23,10 @@ namespace Sara
 
             QString uuid();
 
+            bool registerVersion();
+            bool unRegisterVersion();
+            bool getRegisteredVersion();
+
             void setUpdate(Sara::Update aUpdate, const QString& aLocalFile, int aResult);
             void setMessage(Sara::Message aMessage, bool aShown, bool aLoaded);
             void setMessage(Sara::Message aMessage, bool aShown);
@@ -50,6 +54,7 @@ namespace Sara
             QString m_strUpdate;
             QString m_strMessage;
             QString m_strCurrentVersion;
+            QString m_strRegistrations;
 
             QString m_strMappedProductCode;
             QString m_strMappedVersionCode;

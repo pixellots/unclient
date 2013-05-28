@@ -23,6 +23,7 @@ Settings::Settings()
     m_strUpdate         = id + QString("Update/");
     m_strMessage        = id + QString("Message/");
     m_strCurrentVersion = id + QString("CurrentVersion/");
+    m_strRegistrations  = id + QString("Registered/");
 }
 
 void Settings::setDownloadPath(const QString& aPath)
@@ -46,6 +47,61 @@ QString Settings::uuid()
     }
 
     return id;
+}
+
+bool Settings::registerVersion()
+{
+    QString id;
+    Sara::Config* config = Sara::Config::Instance();
+
+    if(!config->getVersionCode().isEmpty())
+        id = m_strRegistrations + config->getVersionCode() + "/";
+    else if(!config->getVersion().isEmpty()
+            && !config->getProductCode().isEmpty())
+        id = m_strRegistrations + config->getProductCode() + "/" + config->getVersion();
+    else
+        return false;
+
+    this->setValue( id + "Registered" , true);
+
+    return true;
+}
+
+bool Settings::unRegisterVersion()
+{
+    QString id;
+    Sara::Config* config = Sara::Config::Instance();
+
+    if(!config->getVersionCode().isEmpty())
+        id = m_strRegistrations + config->getVersionCode() + "/";
+    else if(!config->getVersion().isEmpty()
+            && !config->getProductCode().isEmpty())
+        id = m_strRegistrations + config->getProductCode() + "/" + config->getVersion();
+    else
+        return false;
+
+    this->remove(id);
+
+    return true;
+}
+
+bool Settings::getRegisteredVersion()
+{
+    Sara::Config* config = Sara::Config::Instance();
+
+    QStringList codes;
+
+    beginGroup(m_strRegistrations);
+    codes = childGroups();
+    endGroup();
+
+    for(int i = 0; i < codes.size(); i++)
+    {
+        QString id = m_strRegistrations + codes.at(i) + "/";
+        if(this->value(id + "Registered", false).toBool())
+            config->setVersionCode(codes.at(i));
+    }
+    return true;
 }
 
 void Settings::setUpdate(Sara::Update aUpdate, const QString& aLocalFile, int aResult)

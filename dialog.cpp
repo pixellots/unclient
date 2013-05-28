@@ -397,7 +397,7 @@ void Dialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
     }
     else
     {
-        qDebug() << m_oCurrentUpdate.getTitle() << " carshed!";
+        qDebug() << m_oCurrentUpdate.getTitle() << " crashed!";
     }
 
     settings.setUpdate(m_oCurrentUpdate, Sara::LocalFile::getDownloadLocation(m_oCurrentUpdate.getDownloadLink()), aExitCode);

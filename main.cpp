@@ -18,10 +18,12 @@ int printHelp()
     QString message = QString("Command Line Parameters: \n\n%1 <options> mode").arg(QFileInfo(qApp->arguments().at(0)).fileName())
             + "\n\n"
             + "Mode:\n\n"
-            + "  check          \tchecks for update\n"
-            + "  update         \truns update mode only\n"
-            + "  messages       \truns message mode only\n"
-            + "  manager        \truns update & message mode\n"
+            + "  -check          \tchecks for update\n"
+            + "  -update         \truns update mode only\n"
+            + "  -messages       \truns message mode only\n"
+            + "  -manager        \truns update & message mode\n"
+            + "  -register       \tregistrates the current version\n"
+            + "  -unregister     \tunregistrates the current version\n"
             + "\n\n"
             + "Options:\n\n"
             + "  -k <key>       \tUnique Sara key\n"
@@ -85,7 +87,8 @@ int main(int argc, char *argv[])
             config->setLanguage(arguments.at(i+1));
         else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help")
             return printHelp();
-        else if(argument == "updates" || argument == "messages")
+        else if(argument == "-updates" || argument == "-messages"
+                || argument == "-register" || argument == "-unregister")
             mode = argument;
     }
 
@@ -96,6 +99,19 @@ int main(int argc, char *argv[])
     else if(config->getVersion().isEmpty() && !config->getProductCode().isEmpty())
         return SARA_PROCERROR_WRONG_PARAMETER;
 
+    Sara::Settings settings;
+    if(mode == "-register" || mode == "-unregister")
+    {
+        if(mode == "-register")
+            return settings.registerVersion() ? 0 : 1;
+        else
+            return settings.unRegisterVersion() ? 0 : 1;
+    }
+    else if(mode == "-manager" || mode.isEmpty())
+    {
+        if(config->getVersion().isEmpty() && config->getVersionCode().isEmpty() && config->getProductCode().isEmpty())
+            settings.getRegisteredVersion();
+    }
     UserMessages messageDialog;
     SingleAppDialog singleDialog;
     Dialog manageDialog;
@@ -104,12 +120,12 @@ int main(int argc, char *argv[])
     {
         if(config->isSingleMode())
         {
-            if(mode == "updates")
+            if(mode == "-updates")
             {
                 singleDialog.init(service);
                 singleDialog.hide();
             }
-            else if(mode == "messages")
+            else if(mode == "-messages")
             {
                 messageDialog.init(service);
                 messageDialog.hide();
