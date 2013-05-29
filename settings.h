@@ -6,6 +6,7 @@
 #include "update.h"
 #include "message.h"
 #include "product.h"
+#include "config.h"
 
 #define SARA_COMPANY_STR        "Sara"
 #define SARA_APPLICATION_STR    "Client"
@@ -32,8 +33,8 @@ namespace Sara
             void setMessage(Sara::Message aMessage, bool aShown);
             void setNewVersion(Sara::Product aProduct, Sara::ProductVersion aVersion);
 
-            QString getProductCode();
-            QString getProductVersion();
+            QString getProductCode(Sara::Config* aConfig = NULL);
+            QString getProductVersion(Sara::Config* aConfig = NULL);
             QString getVersionCode();
 
             QString getMappedProductCode() const;
@@ -59,8 +60,6 @@ namespace Sara
             QString m_strMappedProductCode;
             QString m_strMappedVersionCode;
             QString m_strMappedVersion;
-
-
     };
 }
 

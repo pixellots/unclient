@@ -4,14 +4,14 @@
 #include <QDomElement>
 
 #include "xmlparser.h"
-#include "config.h"
 
 using namespace Sara;
 
-XmlParser::XmlParser(QObject* parent)
+XmlParser::XmlParser(QObject* parent, Sara::Config* aConfig)
     : QObject(parent)
 {
     m_pDocument = NULL;
+    m_pConfig = aConfig;
 }
 
 XmlParser::~XmlParser()
@@ -92,7 +92,7 @@ bool XmlParser::parseProduct()
         n = n.nextSibling();
     }
 
-    Sara::Config::Instance()->setProduct(product);
+    m_pConfig->setProduct(product);
 
     return true;
 }
@@ -130,7 +130,7 @@ bool XmlParser::parseVersion()
 
     Sara::ProductVersion version = parseVersion(versionNode);
 
-    Sara::Config::Instance()->setVersion(version);
+    m_pConfig->setVersion(version);
 
     return true;
 }
@@ -208,7 +208,7 @@ bool XmlParser::parseUpdates()
         QDomElement e = n.toElement();
 
         if(e.tagName()=="update")
-            Sara::Config::Instance()->addUpdate(parseUpdate(n));
+            m_pConfig->addUpdate(parseUpdate(n));
 
         n = n.nextSibling();
     }
@@ -229,7 +229,7 @@ bool XmlParser::parseMessages()
         QDomElement e = n.toElement();
 
         if(e.tagName()=="message")
-            Sara::Config::Instance()->addMessage(parseMessage(n));
+            m_pConfig->addMessage(parseMessage(n));
 
         n = n.nextSibling();
     }

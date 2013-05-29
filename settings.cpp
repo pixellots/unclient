@@ -54,15 +54,13 @@ bool Settings::registerVersion()
     QString id;
     Sara::Config* config = Sara::Config::Instance();
 
-    if(!config->getVersionCode().isEmpty())
-        id = m_strRegistrations + config->getVersionCode() + "/";
-    else if(!config->getVersion().isEmpty()
+    if(!config->getVersion().isEmpty()
             && !config->getProductCode().isEmpty())
-        id = m_strRegistrations + config->getProductCode() + "/" + config->getVersion();
+        id = m_strRegistrations + config->getProductCode() + "/";
     else
         return false;
 
-    this->setValue( id + "Registered" , true);
+    this->setValue( id + "Version" , config->getVersion());
 
     return true;
 }
@@ -72,11 +70,9 @@ bool Settings::unRegisterVersion()
     QString id;
     Sara::Config* config = Sara::Config::Instance();
 
-    if(!config->getVersionCode().isEmpty())
-        id = m_strRegistrations + config->getVersionCode() + "/";
-    else if(!config->getVersion().isEmpty()
+    if(!config->getVersion().isEmpty()
             && !config->getProductCode().isEmpty())
-        id = m_strRegistrations + config->getProductCode() + "/" + config->getVersion();
+        id = m_strRegistrations + config->getProductCode();
     else
         return false;
 
@@ -98,8 +94,14 @@ bool Settings::getRegisteredVersion()
     for(int i = 0; i < codes.size(); i++)
     {
         QString id = m_strRegistrations + codes.at(i) + "/";
-        if(this->value(id + "Registered", false).toBool())
-            config->setVersionCode(codes.at(i));
+        if(!this->value(id + "Version", "").toString().isEmpty())
+        {
+            Sara::Config* poolConfig = new Sara::Config();
+            poolConfig->setProductCode(codes.at(i));
+            poolConfig->setVersion(this->value(id + "Version", "").toString());
+
+            config->addConfiguration(poolConfig);
+        }
     }
     return true;
 }
@@ -204,20 +206,34 @@ QString Settings::getMappedVersion() const
     return m_strMappedVersion;
 }
 
-QString Settings::getProductCode()
+QString Settings::getProductCode(Sara::Config* aConfig /* = null */)
 {
-    if(isVersionMapped(Sara::Config::Instance()->getProductCode(), Sara::Config::Instance()->getVersion()))
+    Sara::Config* config;
+
+    if(aConfig)
+        config = aConfig;
+    else
+        config = Sara::Config::Instance();
+
+    if(isVersionMapped(config->getProductCode(), config->getVersion()))
         return getMappedProductCode();
     else
-        return Sara::Config::Instance()->getProductCode();
+        return config->getProductCode();
 }
 
-QString Settings::getProductVersion()
+QString Settings::getProductVersion(Sara::Config* aConfig /* = null */)
 {
-    if(isVersionMapped(Sara::Config::Instance()->getProductCode(), Sara::Config::Instance()->getVersion()))
+    Sara::Config* config;
+
+    if(aConfig)
+        config = aConfig;
+    else
+        config = Sara::Config::Instance();
+
+    if(isVersionMapped(config->getProductCode(), config->getVersion()))
         return getMappedVersion();
     else
-        return Sara::Config::Instance()->getVersion();
+        return config->getVersion();
 }
 
 QString Settings::getVersionCode()

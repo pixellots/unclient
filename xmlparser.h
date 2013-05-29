@@ -7,6 +7,7 @@
 
 #include "update.h"
 #include "message.h"
+#include "config.h"
 
 namespace Sara
 {
@@ -15,7 +16,7 @@ namespace Sara
         Q_OBJECT
 
         public:
-            XmlParser(QObject* parent);
+        XmlParser(QObject* parent, Sara::Config* aConfig);
             ~XmlParser();
 
         public:
@@ -40,6 +41,7 @@ namespace Sara
 
             int m_iStatus;
             QString m_strStatus;
+            Sara::Config* m_pConfig;
     };
 }
 

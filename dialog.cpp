@@ -66,6 +66,7 @@ void Dialog::init(Sara::Service* aService)
     m_pService = aService;
 
     connect(m_pService, SIGNAL(done()), SLOT(serviceDone()));
+    connect(m_pService, SIGNAL(doneManager()), SLOT(serviceDoneManager()));
 }
 
 void Dialog::changeEvent(QEvent *e)
@@ -124,6 +125,7 @@ void Dialog::updateSelectedMessage()
 void Dialog::serviceDone()
 {
     Sara::Config* config = Sara::Config::Instance();
+    
     setWindowTitle(config->product().getName() + tr(" - Update Manager"));
 
     m_iNewMessages = 0;
@@ -150,11 +152,46 @@ void Dialog::serviceDone()
     else
         m_pUI->labelLogo->hide();
 
+    m_pUI->labelVersion->show();
     m_pUI->labelVersion->setDisabled(true);
     m_pUI->labelVersion->setText(tr("Current Version: %1").arg(config->version().getVersion()));
 
     updateUpdateView();
     updateMessageView();
+    updateTabCounter();
+
+    m_pUI->pshUpdate->setFocus();
+    show();
+}
+
+void Dialog::serviceDoneManager()
+{
+    Sara::Config* globalConfig = Sara::Config::Instance();
+
+    m_iNewMessages = 0;
+    m_iNewUpdates = 0;
+    m_pUI->treeUpdate->clear();
+    m_pUI->treeMessage->clear();
+    m_pUI->webView->setContent("");
+    m_pUI->webViewMessage->setContent("");
+
+    if(!globalConfig->mainIcon().isEmpty())
+    {
+        m_pUI->labelLogo->setPixmap(QPixmap(globalConfig->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
+        m_pUI->labelLogo->show();
+        setWindowIcon(QPixmap(globalConfig->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
+    }
+    else
+        m_pUI->labelLogo->hide();
+
+    m_pUI->labelVersion->hide();
+    m_pUI->pshCheck->hide();
+
+    for(int i = 0; i < globalConfig->configurations().size();i++)
+    {
+        updateUpdateView(globalConfig->configurations().at(i));
+        updateMessageView(globalConfig->configurations().at(i));
+    }
     updateTabCounter();
 
     m_pUI->pshUpdate->setFocus();
@@ -167,9 +204,14 @@ void Dialog::cancelProgress()
         m_pDownloader->cancel();
 }
 
-void Dialog::updateUpdateView()
+void Dialog::updateUpdateView(Sara::Config* aConfig /* = NULL */)
 {
-    Sara::Config* config = Sara::Config::Instance();
+    Sara::Config* config;
+
+    if(aConfig)
+        config = aConfig;
+    else
+        config = Sara::Config::Instance();
 
     QFont font;
     font.setPointSize(qApp->font().pointSize()+1);
@@ -203,10 +245,15 @@ void Dialog::updateUpdateView()
 
 }
 
-void Dialog::updateMessageView()
+void Dialog::updateMessageView(Sara::Config* aConfig /* = NULL */)
 {
     Sara::Settings settings;
-    Sara::Config* config = Sara::Config::Instance();
+    Sara::Config* config;
+
+    if(aConfig)
+        config = aConfig;
+    else
+        config = Sara::Config::Instance();
 
     QTreeWidgetItem* product= new QTreeWidgetItem(m_pUI->treeMessage);
     product->setText(0, config->product().getName());

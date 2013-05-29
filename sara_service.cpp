@@ -30,7 +30,6 @@ Service::~Service()
 bool Service::checkForUpdates()
 {
     Sara::Config* config = Sara::Config::Instance();
-    Sara::Settings settings;
 
     if(!m_pManager)
     {
@@ -40,39 +39,61 @@ bool Service::checkForUpdates()
                 this, SLOT(requestReceived(QNetworkReply*)));
     }
 
+    m_mapConfig.clear();
+
+    if(config->isSingleMode())
+        return checkForUpdates(config);
+    else
+    {
+        bool result = true;
+        for(int i = 0; i < config->configurations().size(); i++)
+            result = result && checkForUpdates(config->configurations().at(i));
+        return result;
+    }
+
+    return true;
+}
+
+bool Service::checkForUpdates(Sara::Config* aConfig)
+{
+    Sara::Config* globalConfig = Sara::Config::Instance();
+    Sara::Settings settings;
+
     QNetworkRequest request;
     QUrl url(SARA_SERVICE_URL);
 
-    if(!config->getHost().isEmpty())
-        url.setHost(config->getHost());
+    if(!globalConfig->getHost().isEmpty())
+        url.setHost(globalConfig->getHost());
 
-    url.addQueryItem("key", config->getKey());
+    url.addQueryItem("key", globalConfig->getKey());
 
-    if(!config->getTestKey().isEmpty())
-        url.addQueryItem("test", config->getTestKey());
+    if(!globalConfig->getTestKey().isEmpty())
+        url.addQueryItem("test", globalConfig->getTestKey());
 
     url.addQueryItem("id", settings.uuid());
     url.addQueryItem("os", Sara::OSDetection::getOS());
     url.addQueryItem("arch", Sara::OSDetection::getArch());
 
-    if(!config->getLanguage().isEmpty())
-        url.addQueryItem("lang", config->getLanguage());
+    if(!globalConfig->getLanguage().isEmpty())
+        url.addQueryItem("lang", globalConfig->getLanguage());
     else
         url.addQueryItem("lang", QLocale::system().name());
 
     if(settings.getVersionCode().isEmpty())
     {
-        url.addQueryItem("productCode", settings.getProductCode());
-        url.addQueryItem("productVersion", settings.getProductVersion());
+        url.addQueryItem("productCode", settings.getProductCode(aConfig));
+        url.addQueryItem("productVersion", settings.getProductVersion(aConfig));
     }
     else
         url.addQueryItem("versionCode", settings.getVersionCode());
 
     qDebug() << "REQUEST: " << url.toString();
     request.setUrl(url);
-    request.setRawHeader("User-Agent", QString("SaraClient %1 (%2)").arg(SARA_CLIENT_VERSION).arg(config->getOS()).toAscii());
+    request.setRawHeader("User-Agent", QString("SaraClient %1 (%2)").arg(SARA_CLIENT_VERSION).arg(globalConfig->getOS()).toAscii());
 
-    m_pManager->get(request);
+    QNetworkReply* reply = m_pManager->get(request);
+
+    m_mapConfig[reply] = aConfig;
 
     return true;
 }
@@ -81,6 +102,8 @@ void Service::requestReceived(QNetworkReply* reply)
 {
     reply->deleteLater();
 
+    Sara::Config* config = m_mapConfig[reply];
+
     if(reply->error() == QNetworkReply::NoError)
     {
         int v = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
@@ -88,7 +111,7 @@ void Service::requestReceived(QNetworkReply* reply)
         {
             QString replyText = reply->readAll();
 
-            Sara::XmlParser* parser = new Sara::XmlParser(this);
+            Sara::XmlParser* parser = new Sara::XmlParser(this, config);
             parser->parse(replyText);
 
             qDebug() << "RESULT: " << parser->getStatusString() << "(" << parser->getStatus() << ")";
@@ -111,17 +134,28 @@ void Service::requestReceived(QNetworkReply* reply)
         qDebug() << "ERROR: " << reply->errorString();
     }
 
-    if(!Sara::Config::Instance()->product().getIconUrl().isEmpty())
+    if(!config->product().getIconUrl().isEmpty())
     {
         if(!m_pDownloader)
-            m_pDownloader = new Sara::Downloader(Sara::Config::Instance()->product().getLocalIcon());
+            m_pDownloader = new Sara::Downloader();
 
-        connect(m_pDownloader, SIGNAL(done(const Sara::Update&, QNetworkReply::NetworkError, const QString&)), this, SIGNAL(done()));
+        m_pDownloader->setTarget(config->product().getLocalIcon());
 
-        m_pDownloader->doDownload(Sara::Config::Instance()->product().getIconUrl(), Sara::Update());
+        if(Sara::Config::Instance()->isSingleMode())
+            connect(m_pDownloader, SIGNAL(done(const Sara::Update&, QNetworkReply::NetworkError, const QString&)), this, SIGNAL(done()));
+        else
+            connect(m_pDownloader, SIGNAL(done(const Sara::Update&, QNetworkReply::NetworkError, const QString&)), this, SIGNAL(doneManager()));
+
+        m_pDownloader->doDownload(config->product().getIconUrl(), Sara::Update());
+
     }
     else
-        emit done();
+    {
+        if(Sara::Config::Instance()->isSingleMode())
+            emit done();
+        else
+            emit doneManager();
+    }
 }
 
 int Service::returnCode()

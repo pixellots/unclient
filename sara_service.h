@@ -5,6 +5,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 
+#include "config.h"
 #include "downloader.h"
 
 #define SARA_SERVICE_URL            "http://10.20.2.199/sara/service"
@@ -20,6 +21,7 @@ namespace Sara
             ~Service();
 
             bool checkForUpdates();
+            bool checkForUpdates(Sara::Config* aConfig);
             int  returnCode();
 
         public slots:
@@ -27,10 +29,12 @@ namespace Sara
 
         signals:
             void done();
+            void doneManager();
 
         private:
             QNetworkAccessManager* m_pManager;
             Sara::Downloader* m_pDownloader;
+            QMap<QNetworkReply*, Config*> m_mapConfig;
     };
 }
 

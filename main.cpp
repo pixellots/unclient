@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
         else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help")
             return printHelp();
         else if(argument == "-updates" || argument == "-messages"
-                || argument == "-register" || argument == "-unregister")
+                || argument == "-register" || argument == "-unregister" || argument == "-manager")
             mode = argument;
     }
 
@@ -131,6 +131,11 @@ int main(int argc, char *argv[])
             {
                 messageDialog.init(service);
                 messageDialog.hide();
+            }
+            else
+            {
+                manageDialog.init(service);
+                manageDialog.hide();
             }
         }
         else

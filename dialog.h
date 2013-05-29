@@ -24,8 +24,8 @@ class Dialog : public QDialog
 
     private:
         void install();
-        void updateUpdateView();
-        void updateMessageView();
+        void updateUpdateView(Sara::Config* aConfig = NULL);
+        void updateMessageView(Sara::Config* aConfig = NULL);
         void updateTabCounter(bool aChangeTab = true);
         void resetMessageItem(QTreeWidgetItem* aItem);
 
@@ -34,6 +34,7 @@ class Dialog : public QDialog
 
     public slots:
         void serviceDone();
+        void serviceDoneManager();
         void refresh();
         void cancelProgress();
         void openLink(const QUrl& aUrl);

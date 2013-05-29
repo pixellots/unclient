@@ -20,9 +20,6 @@ Config::Config()
     m_bSingleMode = false;
 }
 
-Config::Config(Config const&)
-{}
-
 void Config::setKey(const QString& aKey)
 {
     m_strKey = aKey;
@@ -200,6 +197,16 @@ void Config::setHost(const QString& aHost)
 QString Config::getHost() const
 {
     return m_strHost;
+}
+
+void Config::addConfiguration(Sara::Config* aConfig)
+{
+    m_listConfigs.append(aConfig);
+}
+
+QList<Sara::Config*> Config::configurations()
+{
+    return m_listConfigs;
 }
 
 

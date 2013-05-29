@@ -63,9 +63,11 @@ namespace Sara
 
             void clear();
 
-        private:
+            QList<Sara::Config*> configurations();
+            void addConfiguration(Sara::Config* aConfig);
+
+        public:
             Config();
-            Config(Config const&);
 
         private:
             static Config* m_pInstance;
@@ -90,6 +92,7 @@ namespace Sara
 
             QList<Sara::Update> m_listUpdates;
             QList<Sara::Message> m_listMessages;
+            QList<Sara::Config*> m_listConfigs;
 
     };
 }
