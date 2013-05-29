@@ -75,6 +75,8 @@ int main(int argc, char *argv[])
             config->setSingleMode(true);
             config->setVersion(arguments.at(i+1));
         }
+        else if(argument == "-host")
+            config->setHost(arguments.at(i+1));
         else if(argument == "-s")
             config->setSilent(TRUE);
         else if(argument == "-st")

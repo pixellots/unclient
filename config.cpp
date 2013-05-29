@@ -192,3 +192,14 @@ void Config::setUpdateInterval(int aInterval)
     m_iUpdateInterval = aInterval;
 }
 
+void Config::setHost(const QString& aHost)
+{
+    m_strHost = aHost;
+}
+
+QString Config::getHost() const
+{
+    return m_strHost;
+}
+
+

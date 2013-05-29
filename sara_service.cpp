@@ -43,6 +43,9 @@ bool Service::checkForUpdates()
     QNetworkRequest request;
     QUrl url(SARA_SERVICE_URL);
 
+    if(!config->getHost().isEmpty())
+        url.setHost(config->getHost());
+
     url.addQueryItem("key", config->getKey());
 
     if(!config->getTestKey().isEmpty())

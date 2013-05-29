@@ -19,6 +19,9 @@ namespace Sara
             QString mainIcon() const;
             void setMainIcon(const QString& aIcon);
 
+            void setHost(const QString& aHost);
+            QString getHost() const;
+
             void setKey(const QString& aKey);
             QString getKey() const;
             void setTestKey(const QString& aTestKey);
@@ -73,6 +76,7 @@ namespace Sara
 
             int m_iUpdateInterval;
 
+            QString m_strHost;
             QString m_strMainIcon;
             QString m_strKey;
             QString m_strTestKey;
