@@ -113,7 +113,7 @@ void UserNotofication::updateSelectedUpdate()
         QTreeWidgetItem* item = ui->treeWidget->selectedItems().at(0);
 
         Sara::Update update = item->data(0, Qt::UserRole).value<Sara::Update>();
-        ui->webView->setContent(update.getDescription().toUtf8());
+        ui->webView->setHtml(update.getDescription());
     }
 }
 

@@ -89,6 +89,7 @@ bool Service::checkForUpdates(Sara::Config* aConfig)
 
     qDebug() << "REQUEST: " << url.toString();
     request.setUrl(url);
+    request.setRawHeader("charset", "utf-8" );
     request.setRawHeader("User-Agent", QString("SaraClient %1 (%2)").arg(SARA_CLIENT_VERSION).arg(globalConfig->getOS()).toAscii());
 
     QNetworkReply* reply = m_pManager->get(request);
@@ -109,11 +110,10 @@ void Service::requestReceived(QNetworkReply* reply)
         int v = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
         if (v >= 200 && v < 300) // Success
         {
-            QString replyText = reply->readAll();
+            QString replyText = QString::fromUtf8(reply->readAll());
 
             Sara::XmlParser* parser = new Sara::XmlParser(this, config);
             parser->parse(replyText);
-
             qDebug() << "RESULT: " << parser->getStatusString() << "(" << parser->getStatus() << ")";
         }
         else if (v >= 300 && v < 400) // Redirection

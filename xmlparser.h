@@ -35,7 +35,6 @@ namespace Sara
             Sara::ProductVersion parseVersion(QDomNode aNode);
             Sara::Update parseUpdate(QDomNode aNode);
             Sara::Message parseMessage(QDomNode aNode);
-
         private:
             QDomDocument* m_pDocument;
 

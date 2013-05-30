@@ -2,7 +2,6 @@
 #include <QString>
 #include <QDebug>
 #include <QDomElement>
-
 #include "xmlparser.h"
 
 using namespace Sara;
@@ -38,6 +37,7 @@ bool XmlParser::parse(const QString& aXmlData)
         qDebug() << "ERROR: " << errorMsg << "(Line " << errorLine << " - Column " << errorColumn << ")";
         return false;
     }
+
     return true;
 }
 
