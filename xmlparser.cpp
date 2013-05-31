@@ -86,7 +86,7 @@ bool XmlParser::parseProduct()
             product.setCode(e.text());
         else if(e.tagName()=="name")
             product.setName(e.text());
-        else if(e.tagName()=="icon_url")
+        else if(e.tagName()=="image")
             product.setIconUrl(e.text());
 
         n = n.nextSibling();
