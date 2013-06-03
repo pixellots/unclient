@@ -99,6 +99,8 @@ void UserNotofication::updateView()
     ui->treeWidget->resizeColumnToContents(1);
     ui->treeWidget->resizeColumnToContents(3);
     ui->treeWidget->resizeColumnToContents(4);
+
+    adjustSize();
 }
 
 void UserNotofication::openLink(const QUrl& aUrl)
