@@ -19,7 +19,7 @@ int printHelp()
             + "\n\n"
             + "Mode:\n\n"
             + "  -check          \tchecks for update\n"
-            + "  -update         \truns update mode only\n"
+            + "  -updates        \truns update mode only\n"
             + "  -messages       \truns message mode only\n"
             + "  -manager        \truns update & message mode\n"
             + "  -register       \tregistrates the current version\n"
