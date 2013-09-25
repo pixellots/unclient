@@ -113,8 +113,8 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
     {
         m_pProcess->start(command, commandParameters);
 
-        // wait 5 minutes for process start
-        if(!m_pProcess->waitForStarted(1000 * 60 * 5))
+        // wait 3 minutes for process start
+        if(!m_pProcess->waitForStarted(1000 * 60 * 3))
         {
             emit progressText(tr("Error: Update '%1' failed to start").arg(m_oUpdate.getTitle()));
             m_pProcess->kill();
@@ -140,18 +140,18 @@ QString Commander::resolve(const QString& aString)
     QString theString = aString;
 
     // replace internals
-    theString = theString.replace("[UPDATENODE_UP_CODE]", m_oUpdate.getCode());
-    theString = theString.replace("[UPDATENODE_UP_LINK]", m_oUpdate.getDownloadLink());
-    theString = theString.replace("[UPDATENODE_UP_SIZE]", m_oUpdate.getFileSize());
-    theString = theString.replace("[UPDATENODE_UP_TARGETVERSION]", m_oUpdate.getTargetVersion().getVersion());
-    theString = theString.replace("[UPDATENODE_UP_TARGETCODE]", m_oUpdate.getTargetVersion().getCode());
-    theString = theString.replace("[UPDATENODE_UP_TYPE]", QString::number(m_oUpdate.getType()));
-    theString = theString.replace("[UPDATENODE_FILE]", UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink()));
-    theString = theString.replace("[UPDATENODE_FILENAME]", QFileInfo(UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink())).fileName());
-    theString = theString.replace("[UPDATENODE_FILEEXT]", QFileInfo(UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink())).completeSuffix());
-    theString = theString.replace("[UPDATENODE_SEP]", QDir::separator());
-    theString = theString.replace("[UPDATENODE_PATH]", UpdateNode::LocalFile::getDownloadPath());
-    theString = theString.replace("[UPDATENODE_VERSION]", UPDATENODE_CLIENT_VERSION);
+    theString = theString.replace("[UN_UP_CODE]", m_oUpdate.getCode());
+    theString = theString.replace("[UN_UP_LINK]", m_oUpdate.getDownloadLink());
+    theString = theString.replace("[UN_UP_SIZE]", m_oUpdate.getFileSize());
+    theString = theString.replace("[UN_UP_TARGETVERSION]", m_oUpdate.getTargetVersion().getVersion());
+    theString = theString.replace("[UN_UP_TARGETCODE]", m_oUpdate.getTargetVersion().getCode());
+    theString = theString.replace("[UN_UP_TYPE]", QString::number(m_oUpdate.getType()));
+    theString = theString.replace("[UN_FILE]", UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink()));
+    theString = theString.replace("[UN_FILENAME]", QFileInfo(UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink())).fileName());
+    theString = theString.replace("[UN_FILEEXT]", QFileInfo(UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink())).completeSuffix());
+    theString = theString.replace("[UN_SEP]", QDir::separator());
+    theString = theString.replace("[UN_PATH]", UpdateNode::LocalFile::getDownloadPath());
+    theString = theString.replace("[UN_VERSION]", UPDATENODE_CLIENT_VERSION);
 
     // replace environment vars
     QStringList env = QProcessEnvironment::systemEnvironment().toStringList();
@@ -196,7 +196,7 @@ QString Commander::resolve(const QString& aString)
         pos = theString.indexOf(QString("[@"), pos+1);
     }
 
-    if(theString.indexOf("[UPDATENODE_COPY_COMMAND]")>-1)
+    if(theString.indexOf("[UN_COPY_COMMAND]")>-1)
         m_bCopy = true;
 
     // remove letfovers
