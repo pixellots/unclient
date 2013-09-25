@@ -6,7 +6,7 @@
 #include <QUrl>
 
 #include "message.h"
-#include "sara_service.h"
+#include "updatenode_service.h"
 
 namespace Ui {
 class UserMessages;
