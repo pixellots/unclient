@@ -23,10 +23,10 @@ SingleAppDialog::SingleAppDialog(QWidget *parent) :
     connect(&m_oCommander, SIGNAL(processError()), this, SLOT(processOutput()));
     connect(&m_oCommander, SIGNAL(updateExit(int, QProcess::ExitStatus)), this, SLOT(updateExit(int, QProcess::ExitStatus)));
 
-    m_pDownloader = new Sara::Downloader();
+    m_pDownloader = new UpdateNode::Downloader();
 
     connect(m_pDownloader, SIGNAL(downloadProgress(qint64,qint64)), SLOT(downloadProgress(qint64, qint64)));
-    connect(m_pDownloader, SIGNAL(done(const Sara::Update&, QNetworkReply::NetworkError, const QString&)), SLOT(downloadDone(const Sara::Update&, QNetworkReply::NetworkError, const QString&)));
+    connect(m_pDownloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), SLOT(downloadDone(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)));
 
 }
 
@@ -38,7 +38,7 @@ SingleAppDialog::~SingleAppDialog()
     delete m_pUi;
 }
 
-void SingleAppDialog::init(Sara::Service* aService)
+void SingleAppDialog::init(UpdateNode::Service* aService)
 {
     m_pService = aService;
     connect(m_pService, SIGNAL(done()), SLOT(serviceDone()));
@@ -46,7 +46,7 @@ void SingleAppDialog::init(Sara::Service* aService)
 
 void SingleAppDialog::download()
 {
-    QList<Sara::Update> update_list = Sara::Config::Instance()->updates();
+    QList<UpdateNode::Update> update_list = UpdateNode::Config::Instance()->updates();
     for(int i = 0; i < update_list.size(); i++)
     {
         if(update_list.size() == 1)
@@ -76,7 +76,7 @@ void SingleAppDialog::install()
 
 void SingleAppDialog::serviceDone()
 {
-    Sara::Config* config = Sara::Config::Instance();
+    UpdateNode::Config* config = UpdateNode::Config::Instance();
     setWindowTitle(config->product().getName() + tr(" - Update Client"));
 
     if(!config->product().getIconUrl().isEmpty())
@@ -123,7 +123,7 @@ void SingleAppDialog::processOutput()
 
 void SingleAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
 {
-    Sara::Settings settings;
+    UpdateNode::Settings settings;
 
     if(aExitStatus == QProcess::NormalExit)
     {
@@ -132,8 +132,8 @@ void SingleAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus
             //m_pUI->labelProgress->setText(tr("Update '%1' installed successfully").arg(m_oCurrentUpdate.getTitle()));
             qDebug() << m_oCurrentUpdate.getTitle() << " updated successfully!";
 
-            if(m_oCurrentUpdate.getTypeEnum() == Sara::Update::CLIENT_SETS_VERSION)
-                settings.setNewVersion(Sara::Config::Instance()->product(), m_oCurrentUpdate.getTargetVersion());
+            if(m_oCurrentUpdate.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION)
+                settings.setNewVersion(UpdateNode::Config::Instance()->product(), m_oCurrentUpdate.getTargetVersion());
 
             //install();
         }
@@ -152,7 +152,7 @@ void SingleAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus
         qDebug() << m_oCurrentUpdate.getTitle() << " carshed!";
     }
 
-    settings.setUpdate(m_oCurrentUpdate, Sara::LocalFile::getDownloadLocation(m_oCurrentUpdate.getDownloadLink()), aExitCode);
+    settings.setUpdate(m_oCurrentUpdate, UpdateNode::LocalFile::getDownloadLocation(m_oCurrentUpdate.getDownloadLink()), aExitCode);
 }
 
 void SingleAppDialog::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
@@ -164,7 +164,7 @@ void SingleAppDialog::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
     }
 }
 
-void SingleAppDialog::downloadDone(const Sara::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString)
+void SingleAppDialog::downloadDone(const UpdateNode::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString)
 {
     m_oReadyUpdates.append(aUpdate);
 

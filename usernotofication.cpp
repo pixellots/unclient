@@ -5,8 +5,8 @@
 
 #include <QDesktopServices>
 
-Q_DECLARE_METATYPE ( Sara::Update );
-Q_DECLARE_METATYPE ( Sara::Message);
+Q_DECLARE_METATYPE ( UpdateNode::Update );
+Q_DECLARE_METATYPE ( UpdateNode::Message);
 
 UserNotofication::UserNotofication(QWidget *parent) :
     QDialog(parent, Qt::WindowCloseButtonHint),
@@ -49,8 +49,8 @@ void UserNotofication::changeEvent(QEvent *e)
 
 void UserNotofication::updateView()
 {
-    Sara::Config* config = Sara::Config::Instance();
-    Sara::Settings settings;
+    UpdateNode::Config* config = UpdateNode::Config::Instance();
+    UpdateNode::Settings settings;
 
     setWindowTitle(config->product().getName() + tr(" - Update Client"));
     if(!config->product().getIconUrl().isEmpty())
@@ -74,7 +74,7 @@ void UserNotofication::updateView()
 
     if(config->updates().size()>0)
     {
-       QList<Sara::Update> update_list = config->updates();
+       QList<UpdateNode::Update> update_list = config->updates();
         for(int i = 0; i < update_list.size(); i++)
         {
             QTreeWidgetItem* parent = new QTreeWidgetItem(ui->treeWidget);
@@ -112,7 +112,7 @@ void UserNotofication::updateSelectedUpdate()
     {
         QTreeWidgetItem* item = ui->treeWidget->selectedItems().at(0);
 
-        Sara::Update update = item->data(0, Qt::UserRole).value<Sara::Update>();
+        UpdateNode::Update update = item->data(0, Qt::UserRole).value<UpdateNode::Update>();
         ui->webView->setHtml(update.getDescription());
     }
 }

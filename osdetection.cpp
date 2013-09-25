@@ -9,7 +9,7 @@
 #include <Windows.h>
 #endif
 
-using namespace Sara;
+using namespace UpdateNode;
 
 QString OSDetection::getWindowsVersion()
 {
@@ -74,15 +74,15 @@ QString OSDetection::getOthersVersion()
 QString OSDetection::getOS()
 {
 #ifdef Q_OS_LINUX
-    return Sara::OSDetection::getLinuxVersion();
+    return UpdateNode::OSDetection::getLinuxVersion();
 #else
 #ifdef Q_OS_WIN
-    return Sara::OSDetection::getWindowsVersion();
+    return UpdateNode::OSDetection::getWindowsVersion();
 #else
 #ifdef Q_OS_MACX
-    return Sara::OSDetection::getMacVersion();
+    return UpdateNode::OSDetection::getMacVersion();
 #else
-    return Sara::OSDetection::getOthersVersion();
+    return UpdateNode::OSDetection::getOthersVersion();
 #endif
 #endif
 #endif

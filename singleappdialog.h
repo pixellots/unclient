@@ -18,7 +18,7 @@ class SingleAppDialog : public QDialog
         explicit SingleAppDialog(QWidget *parent = 0);
         ~SingleAppDialog();
 
-        void init(Sara::Service* aService);
+        void init(UpdateNode::Service* aService);
         void download();
         void install();
 
@@ -27,7 +27,7 @@ class SingleAppDialog : public QDialog
         void onDetailsCheck();
 
         void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
-        void downloadDone(const Sara::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString);
+        void downloadDone(const UpdateNode::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString);
 
         void processError();
         void processOutput();
@@ -35,12 +35,12 @@ class SingleAppDialog : public QDialog
 
     private:
         Ui::SingleAppDialog* m_pUi;
-        Sara::Service* m_pService;
-        Sara::Downloader* m_pDownloader;
+        UpdateNode::Service* m_pService;
+        UpdateNode::Downloader* m_pDownloader;
 
-        QList<Sara::Update> m_oReadyUpdates;
-        Sara::Update m_oCurrentUpdate;
-        Sara::Commander m_oCommander;
+        QList<UpdateNode::Update> m_oReadyUpdates;
+        UpdateNode::Update m_oCurrentUpdate;
+        UpdateNode::Commander m_oCommander;
 };
 
 #endif // SINGLEAPPDIALOG_H

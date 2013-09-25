@@ -7,12 +7,12 @@
 #include "settings.h"
 #include "config.h"
 
-using namespace Sara;
+using namespace UpdateNode;
 
 Settings::Settings()
-    : QSettings(SARA_COMPANY_STR, SARA_APPLICATION_STR, 0)
+    : QSettings(UPDATENODE_COMPANY_STR, UPDATENODE_APPLICATION_STR, 0)
 {
-    QString id = Sara::Config::Instance()->getKey();
+    QString id = UpdateNode::Config::Instance()->getKey();
 
     if(!id.isEmpty())
         id += "/";
@@ -52,7 +52,7 @@ QString Settings::uuid()
 bool Settings::registerVersion()
 {
     QString id;
-    Sara::Config* config = Sara::Config::Instance();
+    UpdateNode::Config* config = UpdateNode::Config::Instance();
 
     if(!config->getVersion().isEmpty()
             && !config->getProductCode().isEmpty())
@@ -68,7 +68,7 @@ bool Settings::registerVersion()
 bool Settings::unRegisterVersion()
 {
     QString id;
-    Sara::Config* config = Sara::Config::Instance();
+    UpdateNode::Config* config = UpdateNode::Config::Instance();
 
     if(!config->getVersion().isEmpty()
             && !config->getProductCode().isEmpty())
@@ -83,7 +83,7 @@ bool Settings::unRegisterVersion()
 
 bool Settings::getRegisteredVersion()
 {
-    Sara::Config* config = Sara::Config::Instance();
+    UpdateNode::Config* config = UpdateNode::Config::Instance();
 
     QStringList codes;
 
@@ -96,7 +96,7 @@ bool Settings::getRegisteredVersion()
         QString id = m_strRegistrations + codes.at(i) + "/";
         if(!this->value(id + "Version", "").toString().isEmpty())
         {
-            Sara::Config* poolConfig = new Sara::Config();
+            UpdateNode::Config* poolConfig = new UpdateNode::Config();
             poolConfig->setProductCode(codes.at(i));
             poolConfig->setVersion(this->value(id + "Version", "").toString());
 
@@ -106,7 +106,7 @@ bool Settings::getRegisteredVersion()
     return true;
 }
 
-void Settings::setUpdate(Sara::Update aUpdate, const QString& aLocalFile, int aResult)
+void Settings::setUpdate(UpdateNode::Update aUpdate, const QString& aLocalFile, int aResult)
 {
     QString id = m_strUpdate + aUpdate.getCode() + "/";
 
@@ -115,7 +115,7 @@ void Settings::setUpdate(Sara::Update aUpdate, const QString& aLocalFile, int aR
     this->setValue( id + "Type" , aUpdate.getType());
 }
 
-void  Settings::setMessage(Sara::Message aMessage, bool aShown, bool aLoaded)
+void  Settings::setMessage(UpdateNode::Message aMessage, bool aShown, bool aLoaded)
 {
     QString id = m_strMessage + aMessage.getCode() + "/";
 
@@ -123,7 +123,7 @@ void  Settings::setMessage(Sara::Message aMessage, bool aShown, bool aLoaded)
     this->setValue( id + "Loaded" , aLoaded);
 }
 
-void  Settings::setMessage(Sara::Message aMessage, bool aShown)
+void  Settings::setMessage(UpdateNode::Message aMessage, bool aShown)
 {
     QString id = m_strMessage + aMessage.getCode() + "/";
 
@@ -137,13 +137,13 @@ bool Settings::messageShownAndLoaded(const QString& aMessageCode)
     return this->value( id + "Shown" , false).toBool() && this->value( id + "Loaded" , false).toBool();
 }
 
-void Settings::setNewVersion(Sara::Product aProduct, Sara::ProductVersion aVersion)
+void Settings::setNewVersion(UpdateNode::Product aProduct, UpdateNode::ProductVersion aVersion)
 {
     QString id = m_strCurrentVersion + aProduct.getCode() + "/";
 
     this->setValue( id + "Name", aProduct.getName());
-    this->setValue( id + "Old/Version", Sara::Config::Instance()->getVersion());
-    this->setValue( id + "Old/Code", Sara::Config::Instance()->getVersionCode());
+    this->setValue( id + "Old/Version", UpdateNode::Config::Instance()->getVersion());
+    this->setValue( id + "Old/Code", UpdateNode::Config::Instance()->getVersionCode());
 
     this->setValue( id + "Version/Version", aVersion.getVersion());
     this->setValue( id + "Version/Code", aVersion.getCode());
@@ -206,14 +206,14 @@ QString Settings::getMappedVersion() const
     return m_strMappedVersion;
 }
 
-QString Settings::getProductCode(Sara::Config* aConfig /* = null */)
+QString Settings::getProductCode(UpdateNode::Config* aConfig /* = null */)
 {
-    Sara::Config* config;
+    UpdateNode::Config* config;
 
     if(aConfig)
         config = aConfig;
     else
-        config = Sara::Config::Instance();
+        config = UpdateNode::Config::Instance();
 
     if(isVersionMapped(config->getProductCode(), config->getVersion()))
         return getMappedProductCode();
@@ -221,14 +221,14 @@ QString Settings::getProductCode(Sara::Config* aConfig /* = null */)
         return config->getProductCode();
 }
 
-QString Settings::getProductVersion(Sara::Config* aConfig /* = null */)
+QString Settings::getProductVersion(UpdateNode::Config* aConfig /* = null */)
 {
-    Sara::Config* config;
+    UpdateNode::Config* config;
 
     if(aConfig)
         config = aConfig;
     else
-        config = Sara::Config::Instance();
+        config = UpdateNode::Config::Instance();
 
     if(isVersionMapped(config->getProductCode(), config->getVersion()))
         return getMappedVersion();
@@ -238,8 +238,8 @@ QString Settings::getProductVersion(Sara::Config* aConfig /* = null */)
 
 QString Settings::getVersionCode()
 {
-    if(isVersionMapped(Sara::Config::Instance()->getVersionCode()))
+    if(isVersionMapped(UpdateNode::Config::Instance()->getVersionCode()))
         return getMappedVersionCode();
     else
-        return Sara::Config::Instance()->getVersionCode();
+        return UpdateNode::Config::Instance()->getVersionCode();
 }

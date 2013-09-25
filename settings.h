@@ -8,10 +8,10 @@
 #include "product.h"
 #include "config.h"
 
-#define SARA_COMPANY_STR        "Sara"
-#define SARA_APPLICATION_STR    "Client"
+#define UPDATENODE_COMPANY_STR        "UpdateNode"
+#define UPDATENODE_APPLICATION_STR    "Client"
 
-namespace Sara
+namespace UpdateNode
 {
     class Settings : public QSettings
     {
@@ -28,13 +28,13 @@ namespace Sara
             bool unRegisterVersion();
             bool getRegisteredVersion();
 
-            void setUpdate(Sara::Update aUpdate, const QString& aLocalFile, int aResult);
-            void setMessage(Sara::Message aMessage, bool aShown, bool aLoaded);
-            void setMessage(Sara::Message aMessage, bool aShown);
-            void setNewVersion(Sara::Product aProduct, Sara::ProductVersion aVersion);
+            void setUpdate(UpdateNode::Update aUpdate, const QString& aLocalFile, int aResult);
+            void setMessage(UpdateNode::Message aMessage, bool aShown, bool aLoaded);
+            void setMessage(UpdateNode::Message aMessage, bool aShown);
+            void setNewVersion(UpdateNode::Product aProduct, UpdateNode::ProductVersion aVersion);
 
-            QString getProductCode(Sara::Config* aConfig = NULL);
-            QString getProductVersion(Sara::Config* aConfig = NULL);
+            QString getProductCode(UpdateNode::Config* aConfig = NULL);
+            QString getProductVersion(UpdateNode::Config* aConfig = NULL);
             QString getVersionCode();
 
             QString getMappedProductCode() const;

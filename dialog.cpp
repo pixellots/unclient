@@ -13,8 +13,8 @@
 #include "downloader.h"
 #include "settings.h"
 
-Q_DECLARE_METATYPE ( Sara::Update );
-Q_DECLARE_METATYPE ( Sara::Message);
+Q_DECLARE_METATYPE ( UpdateNode::Update );
+Q_DECLARE_METATYPE ( UpdateNode::Message);
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
@@ -28,10 +28,10 @@ Dialog::Dialog(QWidget *parent) :
     connect(&m_oCommander, SIGNAL(processError()), this, SLOT(processOutput()));
     connect(&m_oCommander, SIGNAL(updateExit(int, QProcess::ExitStatus)), this, SLOT(updateExit(int, QProcess::ExitStatus)));
 
-    m_pDownloader = new Sara::Downloader();
+    m_pDownloader = new UpdateNode::Downloader();
 
     connect(m_pDownloader, SIGNAL(downloadProgress(qint64,qint64)), SLOT(downloadProgress(qint64, qint64)));
-    connect(m_pDownloader, SIGNAL(done(const Sara::Update&, QNetworkReply::NetworkError, const QString&)), SLOT(downloadDone(const Sara::Update&, QNetworkReply::NetworkError, const QString&)));
+    connect(m_pDownloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), SLOT(downloadDone(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)));
 
     m_pUI->labelLogo->hide();
     m_pUI->labelProgress->hide();
@@ -61,7 +61,7 @@ Dialog::~Dialog()
     delete m_pUI;
 }
 
-void Dialog::init(Sara::Service* aService)
+void Dialog::init(UpdateNode::Service* aService)
 {
     m_pService = aService;
 
@@ -93,7 +93,7 @@ void Dialog::updateSelectedUpdate()
     {
         QTreeWidgetItem* item = m_pUI->treeUpdate->selectedItems().at(0);
 
-        Sara::Update update = item->data(0, Qt::UserRole).value<Sara::Update>();
+        UpdateNode::Update update = item->data(0, Qt::UserRole).value<UpdateNode::Update>();
         m_pUI->webView->setContent(update.getDescription().toUtf8());
     }
 }
@@ -113,7 +113,7 @@ void Dialog::updateSelectedMessage()
     {
         QTreeWidgetItem* item = m_pUI->treeMessage->selectedItems().at(0);
 
-        Sara::Message message = item->data(0, Qt::UserRole).value<Sara::Message>();
+        UpdateNode::Message message = item->data(0, Qt::UserRole).value<UpdateNode::Message>();
 
         if(!message.getMessage().isEmpty())
             m_pUI->webViewMessage->setContent(message.getMessage().toUtf8());
@@ -124,7 +124,7 @@ void Dialog::updateSelectedMessage()
 
 void Dialog::serviceDone()
 {
-    Sara::Config* config = Sara::Config::Instance();
+    UpdateNode::Config* config = UpdateNode::Config::Instance();
     
     setWindowTitle(config->product().getName() + tr(" - Update Manager"));
 
@@ -166,7 +166,7 @@ void Dialog::serviceDone()
 
 void Dialog::serviceDoneManager()
 {
-    Sara::Config* globalConfig = Sara::Config::Instance();
+    UpdateNode::Config* globalConfig = UpdateNode::Config::Instance();
 
     m_iNewMessages = 0;
     m_iNewUpdates = 0;
@@ -204,14 +204,14 @@ void Dialog::cancelProgress()
         m_pDownloader->cancel();
 }
 
-void Dialog::updateUpdateView(Sara::Config* aConfig /* = NULL */)
+void Dialog::updateUpdateView(UpdateNode::Config* aConfig /* = NULL */)
 {
-    Sara::Config* config;
+    UpdateNode::Config* config;
 
     if(aConfig)
         config = aConfig;
     else
-        config = Sara::Config::Instance();
+        config = UpdateNode::Config::Instance();
 
     QFont font;
     font.setPointSize(qApp->font().pointSize()+1);
@@ -221,7 +221,7 @@ void Dialog::updateUpdateView(Sara::Config* aConfig /* = NULL */)
     product->setText(0, config->product().getName());
     product->setIcon(0, QPixmap(config->product().getLocalIcon()));
 
-    QList<Sara::Update> update_list = config->updates();
+    QList<UpdateNode::Update> update_list = config->updates();
     for(int i = 0; i < update_list.size(); i++)
     {
 
@@ -245,20 +245,20 @@ void Dialog::updateUpdateView(Sara::Config* aConfig /* = NULL */)
 
 }
 
-void Dialog::updateMessageView(Sara::Config* aConfig /* = NULL */)
+void Dialog::updateMessageView(UpdateNode::Config* aConfig /* = NULL */)
 {
-    Sara::Settings settings;
-    Sara::Config* config;
+    UpdateNode::Settings settings;
+    UpdateNode::Config* config;
 
     if(aConfig)
         config = aConfig;
     else
-        config = Sara::Config::Instance();
+        config = UpdateNode::Config::Instance();
 
     QTreeWidgetItem* product= new QTreeWidgetItem(m_pUI->treeMessage);
     product->setText(0, config->product().getName());
 
-    QList<Sara::Message> message_list= config->messages();
+    QList<UpdateNode::Message> message_list= config->messages();
     for(int i = 0; i < message_list.size(); i++)
     {
         QTreeWidgetItem* parent = new QTreeWidgetItem(product);
@@ -319,7 +319,7 @@ void Dialog::updateTabCounter(bool aChangeTab /* = true */)
 
 void Dialog::refresh()
 {
-    Sara::Config::Instance()->clear();
+    UpdateNode::Config::Instance()->clear();
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     m_pUI->pshCheck->setDisabled(true);
@@ -345,7 +345,7 @@ void Dialog::startInstall()
     QTreeWidgetItemIterator it(m_pUI->treeUpdate, QTreeWidgetItemIterator::Checked | QTreeWidgetItemIterator::Enabled);
     while (*it)
     {
-        Sara::Update update = (*it)->data(0, Qt::UserRole).value<Sara::Update>();
+        UpdateNode::Update update = (*it)->data(0, Qt::UserRole).value<UpdateNode::Update>();
         m_pDownloader->doDownload(update.getDownloadLink(), update);
         m_pUI->labelProgress->setText("Downloading Updates...");
         ++it;
@@ -361,7 +361,7 @@ void Dialog::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
     }
 }
 
-void Dialog::downloadDone(const Sara::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString)
+void Dialog::downloadDone(const UpdateNode::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString)
 {
     m_oReadyUpdates.append(aUpdate);
 
@@ -418,7 +418,7 @@ void Dialog::processOutput()
 
 void Dialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
 {
-    Sara::Settings settings;
+    UpdateNode::Settings settings;
 
     if(aExitStatus == QProcess::NormalExit)
     {
@@ -427,8 +427,8 @@ void Dialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
             m_pUI->labelProgress->setText(tr("Update '%1' installed successfully").arg(m_oCurrentUpdate.getTitle()));
             qDebug() << m_oCurrentUpdate.getTitle() << " updated successfully!";
 
-            if(m_oCurrentUpdate.getTypeEnum() == Sara::Update::CLIENT_SETS_VERSION)
-                settings.setNewVersion(Sara::Config::Instance()->product(), m_oCurrentUpdate.getTargetVersion());
+            if(m_oCurrentUpdate.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION)
+                settings.setNewVersion(UpdateNode::Config::Instance()->product(), m_oCurrentUpdate.getTargetVersion());
 
             install();
         }
@@ -447,12 +447,12 @@ void Dialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
         qDebug() << m_oCurrentUpdate.getTitle() << " crashed!";
     }
 
-    settings.setUpdate(m_oCurrentUpdate, Sara::LocalFile::getDownloadLocation(m_oCurrentUpdate.getDownloadLink()), aExitCode);
+    settings.setUpdate(m_oCurrentUpdate, UpdateNode::LocalFile::getDownloadLocation(m_oCurrentUpdate.getDownloadLink()), aExitCode);
 }
 
 void Dialog::messageLoaded(bool aSuccess)
 {
-    Sara::Settings settings;
+    UpdateNode::Settings settings;
 
     if(m_pUI->treeMessage->selectedItems().count()==0)
         return;
@@ -461,7 +461,7 @@ void Dialog::messageLoaded(bool aSuccess)
 
     if(currentItem && currentItem->parent())
     {
-        Sara::Message message = currentItem->data(0, Qt::UserRole).value<Sara::Message>();
+        UpdateNode::Message message = currentItem->data(0, Qt::UserRole).value<UpdateNode::Message>();
 
         if(!settings.messageShownAndLoaded(message.getCode()))
         {
@@ -486,12 +486,12 @@ void Dialog::tabSelected(int aIndex)
 {
     if(aIndex == 1)
     {
-        Sara::Settings settings;
+        UpdateNode::Settings settings;
         QTreeWidgetItem* currentItem = m_pUI->treeMessage->selectedItems().at(0);
 
         if(currentItem && currentItem->parent())
         {
-            Sara::Message message = currentItem->data(0, Qt::UserRole).value<Sara::Message>();
+            UpdateNode::Message message = currentItem->data(0, Qt::UserRole).value<UpdateNode::Message>();
 
             if(!settings.messageShownAndLoaded(message.getCode()))
             {

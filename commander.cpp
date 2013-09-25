@@ -9,7 +9,7 @@
 #include "localfile.h"
 #include "version.h"
 
-using namespace Sara;
+using namespace UpdateNode;
 
 Commander::Commander(QObject *parent)
     : QObject(parent)
@@ -45,7 +45,7 @@ QString Commander::setCommandBasedOnOS() const
     return command;
 }
 
-bool Commander::run(const Sara::Update& aUpdate)
+bool Commander::run(const UpdateNode::Update& aUpdate)
 {
     QString command;
     QStringList commandParameters;
@@ -55,7 +55,7 @@ bool Commander::run(const Sara::Update& aUpdate)
 
     command = setCommandBasedOnOS();
 
-    QString filename = Sara::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink());
+    QString filename = UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink());
     QFile file(filename);
     file.setPermissions(QFile::ExeUser | QFile::ReadUser | QFile::WriteUser);
 
@@ -134,24 +134,24 @@ QString Commander::readStdOut() const
     return m_pProcess->readAllStandardOutput();
 }
 
-/// command = "ld.exe [HOME] [INI@/home/user/.config/Sara/Client.conf:uuid] [SHELL] [@[HOME]/.config/Sara/Client.conf:uuid]";
+/// command = "ld.exe [HOME] [INI@/home/user/.config/UpdateNode/Client.conf:uuid] [SHELL] [@[HOME]/.config/UpdateNode/Client.conf:uuid]";
 QString Commander::resolve(const QString& aString)
 {
     QString theString = aString;
 
     // replace internals
-    theString = theString.replace("[SARA_UP_CODE]", m_oUpdate.getCode());
-    theString = theString.replace("[SARA_UP_LINK]", m_oUpdate.getDownloadLink());
-    theString = theString.replace("[SARA_UP_SIZE]", m_oUpdate.getFileSize());
-    theString = theString.replace("[SARA_UP_TARGETVERSION]", m_oUpdate.getTargetVersion().getVersion());
-    theString = theString.replace("[SARA_UP_TARGETCODE]", m_oUpdate.getTargetVersion().getCode());
-    theString = theString.replace("[SARA_UP_TYPE]", QString::number(m_oUpdate.getType()));
-    theString = theString.replace("[SARA_FILE]", Sara::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink()));
-    theString = theString.replace("[SARA_FILENAME]", QFileInfo(Sara::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink())).fileName());
-    theString = theString.replace("[SARA_FILEEXT]", QFileInfo(Sara::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink())).completeSuffix());
-    theString = theString.replace("[SARA_SEP]", QDir::separator());
-    theString = theString.replace("[SARA_PATH]", Sara::LocalFile::getDownloadPath());
-    theString = theString.replace("[SARA_VERSION]", SARA_CLIENT_VERSION);
+    theString = theString.replace("[UPDATENODE_UP_CODE]", m_oUpdate.getCode());
+    theString = theString.replace("[UPDATENODE_UP_LINK]", m_oUpdate.getDownloadLink());
+    theString = theString.replace("[UPDATENODE_UP_SIZE]", m_oUpdate.getFileSize());
+    theString = theString.replace("[UPDATENODE_UP_TARGETVERSION]", m_oUpdate.getTargetVersion().getVersion());
+    theString = theString.replace("[UPDATENODE_UP_TARGETCODE]", m_oUpdate.getTargetVersion().getCode());
+    theString = theString.replace("[UPDATENODE_UP_TYPE]", QString::number(m_oUpdate.getType()));
+    theString = theString.replace("[UPDATENODE_FILE]", UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink()));
+    theString = theString.replace("[UPDATENODE_FILENAME]", QFileInfo(UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink())).fileName());
+    theString = theString.replace("[UPDATENODE_FILEEXT]", QFileInfo(UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink())).completeSuffix());
+    theString = theString.replace("[UPDATENODE_SEP]", QDir::separator());
+    theString = theString.replace("[UPDATENODE_PATH]", UpdateNode::LocalFile::getDownloadPath());
+    theString = theString.replace("[UPDATENODE_VERSION]", UPDATENODE_CLIENT_VERSION);
 
     // replace environment vars
     QStringList env = QProcessEnvironment::systemEnvironment().toStringList();
@@ -196,7 +196,7 @@ QString Commander::resolve(const QString& aString)
         pos = theString.indexOf(QString("[@"), pos+1);
     }
 
-    if(theString.indexOf("[SARA_COPY_COMMAND]")>-1)
+    if(theString.indexOf("[UPDATENODE_COPY_COMMAND]")>-1)
         m_bCopy = true;
 
     // remove letfovers

@@ -4,7 +4,7 @@
 #include "settings.h"
 #include "config.h"
 
-using namespace Sara;
+using namespace UpdateNode;
 
 QString LocalFile::getDownloadLocation(const QString& aFileName)
 {
@@ -13,17 +13,17 @@ QString LocalFile::getDownloadLocation(const QString& aFileName)
 
 QString LocalFile::getDownloadPath()
 {
-    Sara::Settings settings;
+    UpdateNode::Settings settings;
 
-    if(!QDir(settings.getDownloadPath() + QDir::separator() + "Sara").exists())
-        QDir(settings.getDownloadPath()).mkdir("Sara");
+    if(!QDir(settings.getDownloadPath() + QDir::separator() + "UpdateNode").exists())
+        QDir(settings.getDownloadPath()).mkdir("UpdateNode");
 
-    if(!QDir(settings.getDownloadPath() + QDir::separator() + "Sara" + QDir::separator() + Sara::Config::Instance()->getKey()).exists())
-        QDir(settings.getDownloadPath() + QDir::separator() + "Sara").mkdir(Sara::Config::Instance()->getKey());
+    if(!QDir(settings.getDownloadPath() + QDir::separator() + "UpdateNode" + QDir::separator() + UpdateNode::Config::Instance()->getKey()).exists())
+        QDir(settings.getDownloadPath() + QDir::separator() + "UpdateNode").mkdir(UpdateNode::Config::Instance()->getKey());
 
     return settings.getDownloadPath()
             + QDir::separator()
-            + "Sara"
+            + "UpdateNode"
             + QDir::separator()
-            + Sara::Config::Instance()->getKey();
+            + UpdateNode::Config::Instance()->getKey();
 }

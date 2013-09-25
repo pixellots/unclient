@@ -1,6 +1,6 @@
 #include "productversion.h"
 
-using namespace Sara;
+using namespace UpdateNode;
 
 ProductVersion::ProductVersion()
 {

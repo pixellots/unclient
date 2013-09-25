@@ -1,6 +1,6 @@
 #include "message.h"
 
-using namespace Sara;
+using namespace UpdateNode;
 
 Message::Message()
 {

@@ -17,7 +17,7 @@
 
 #include "update.h"
 
-namespace Sara
+namespace UpdateNode
 {
 
     class Downloader: public QObject
@@ -29,7 +29,7 @@ namespace Sara
              Downloader(const QString& aTarget);
 
         public:
-             void doDownload(const QUrl& url, const Sara::Update& aUpdate);
+             void doDownload(const QUrl& url, const UpdateNode::Update& aUpdate);
              bool saveToDisk(const QString &filename, QIODevice *data);
              void setTarget(const QString& aTarget);
              QString getTarget() const;
@@ -42,12 +42,12 @@ namespace Sara
              void downloadFinished(QNetworkReply *reply);
 
         signals:
-             void done(const Sara::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString);
+             void done(const UpdateNode::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString);
              void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
 
         private:
              QNetworkAccessManager m_oManager;
-             QMap<QNetworkReply*, Sara::Update> m_oCurrentDownloads;
+             QMap<QNetworkReply*, UpdateNode::Update> m_oCurrentDownloads;
 
              QString m_strTarget;
      };

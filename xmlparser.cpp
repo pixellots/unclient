@@ -4,9 +4,9 @@
 #include <QDomElement>
 #include "xmlparser.h"
 
-using namespace Sara;
+using namespace UpdateNode;
 
-XmlParser::XmlParser(QObject* parent, Sara::Config* aConfig)
+XmlParser::XmlParser(QObject* parent, UpdateNode::Config* aConfig)
     : QObject(parent)
 {
     m_pDocument = NULL;
@@ -73,7 +73,7 @@ bool XmlParser::parseProduct()
     if(list.isEmpty())
         return false;
 
-    Sara::Product product;
+    UpdateNode::Product product;
 
     QDomNode productNode = list.at(0);
 
@@ -97,9 +97,9 @@ bool XmlParser::parseProduct()
     return true;
 }
 
-Sara::ProductVersion XmlParser::parseVersion(QDomNode aNode)
+UpdateNode::ProductVersion XmlParser::parseVersion(QDomNode aNode)
 {
-    Sara::ProductVersion version;
+    UpdateNode::ProductVersion version;
 
     QDomNode n = aNode.firstChild();
     while(!n.isNull())
@@ -128,16 +128,16 @@ bool XmlParser::parseVersion()
 
     QDomNode versionNode = list.at(0);
 
-    Sara::ProductVersion version = parseVersion(versionNode);
+    UpdateNode::ProductVersion version = parseVersion(versionNode);
 
     m_pConfig->setVersion(version);
 
     return true;
 }
 
-Sara::Update XmlParser::parseUpdate(QDomNode aNode)
+UpdateNode::Update XmlParser::parseUpdate(QDomNode aNode)
 {
-    Sara::Update update;
+    UpdateNode::Update update;
 
     QDomNode n = aNode.firstChild();
     while(!n.isNull())
@@ -171,9 +171,9 @@ Sara::Update XmlParser::parseUpdate(QDomNode aNode)
     return update;
 }
 
-Sara::Message XmlParser::parseMessage(QDomNode aNode)
+UpdateNode::Message XmlParser::parseMessage(QDomNode aNode)
 {
-    Sara::Message message;
+    UpdateNode::Message message;
 
     QDomNode n = aNode.firstChild();
     while(!n.isNull())

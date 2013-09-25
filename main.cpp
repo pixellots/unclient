@@ -13,7 +13,7 @@
 
 int printHelp()
 {
-    QString appName = QString("%1 %2 %3").arg(SARA_COMPANY_STR).arg(SARA_APPLICATION_STR).arg(SARA_CLIENT_VERSION);
+    QString appName = QString("%1 %2 %3").arg(UPDATENODE_COMPANY_STR).arg(UPDATENODE_APPLICATION_STR).arg(UPDATENODE_CLIENT_VERSION);
 
     QString message = QString("Command Line Parameters: \n\n%1 <options> mode").arg(QFileInfo(qApp->arguments().at(0)).fileName())
             + "\n\n"
@@ -26,8 +26,8 @@ int printHelp()
             + "  -unregister     \tunregistrates the current version\n"
             + "\n\n"
             + "Options:\n\n"
-            + "  -k <key>       \tUnique Sara key\n"
-            + "  -t <key>       \tUnique Sara test key\n"
+            + "  -k <key>       \tUnique UpdateNode key\n"
+            + "  -t <key>       \tUnique UpdateNode test key\n"
             + "  -vc <code>     \tProduct Version Code\n"
             + "  -pc <code>     \tProduct Code\n"
             + "  -v <version>   \tProduct Version\n"
@@ -46,8 +46,8 @@ int printHelp()
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    Sara::Config* config = Sara::Config::Instance();
-    Sara::Service* service = new Sara::Service(0);
+    UpdateNode::Config* config = UpdateNode::Config::Instance();
+    UpdateNode::Service* service = new UpdateNode::Service(0);
 
     QString mode;
     QString argument;
@@ -95,13 +95,13 @@ int main(int argc, char *argv[])
     }
 
     if(config->getKey().isEmpty())
-        return SARA_PROCERROR_WRONG_PARAMETER;
+        return UPDATENODE_PROCERROR_WRONG_PARAMETER;
     else if(!config->getVersion().isEmpty() && config->getProductCode().isEmpty())
-        return SARA_PROCERROR_WRONG_PARAMETER;
+        return UPDATENODE_PROCERROR_WRONG_PARAMETER;
     else if(config->getVersion().isEmpty() && !config->getProductCode().isEmpty())
-        return SARA_PROCERROR_WRONG_PARAMETER;
+        return UPDATENODE_PROCERROR_WRONG_PARAMETER;
 
-    Sara::Settings settings;
+    UpdateNode::Settings settings;
     if(mode == "-register" || mode == "-unregister")
     {
         if(mode == "-register")
@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
         QSystemTrayIcon* tray = new QSystemTrayIcon(0);
         tray->setIcon(QIcon(config->mainIcon()));
         tray->show();
-        tray->showMessage("Sara Update Client", "Checking for updates...");
+        tray->showMessage("UpdateNode Update Client", "Checking for updates...");
     }
     */
 

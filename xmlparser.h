@@ -9,14 +9,14 @@
 #include "message.h"
 #include "config.h"
 
-namespace Sara
+namespace UpdateNode
 {
     class XmlParser : public QObject
     {
         Q_OBJECT
 
         public:
-        XmlParser(QObject* parent, Sara::Config* aConfig);
+        XmlParser(QObject* parent, UpdateNode::Config* aConfig);
             ~XmlParser();
 
         public:
@@ -32,15 +32,15 @@ namespace Sara
             bool parseUpdates();
             bool parseMessages();
 
-            Sara::ProductVersion parseVersion(QDomNode aNode);
-            Sara::Update parseUpdate(QDomNode aNode);
-            Sara::Message parseMessage(QDomNode aNode);
+            UpdateNode::ProductVersion parseVersion(QDomNode aNode);
+            UpdateNode::Update parseUpdate(QDomNode aNode);
+            UpdateNode::Message parseMessage(QDomNode aNode);
         private:
             QDomDocument* m_pDocument;
 
             int m_iStatus;
             QString m_strStatus;
-            Sara::Config* m_pConfig;
+            UpdateNode::Config* m_pConfig;
     };
 }
 

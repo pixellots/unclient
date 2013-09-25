@@ -2,7 +2,7 @@
 #include "downloader.h"
 #include "localfile.h"
 
-using namespace Sara;
+using namespace UpdateNode;
 
 Downloader::Downloader()
 {
@@ -26,7 +26,7 @@ QString Downloader::getTarget() const
     return m_strTarget;
 }
 
-void Downloader::doDownload(const QUrl& url, const Sara::Update& aUpdate)
+void Downloader::doDownload(const QUrl& url, const UpdateNode::Update& aUpdate)
 {
     QNetworkRequest request(url);
 
@@ -39,7 +39,7 @@ void Downloader::doDownload(const QUrl& url, const Sara::Update& aUpdate)
 
 void Downloader::cancel()
 {
-    QMapIterator<QNetworkReply*, Sara::Update> i(m_oCurrentDownloads);
+    QMapIterator<QNetworkReply*, UpdateNode::Update> i(m_oCurrentDownloads);
     while (i.hasNext())
     {
          i.next();
@@ -86,14 +86,14 @@ void Downloader::downloadFinished(QNetworkReply *reply)
         if(!getTarget().isEmpty())
             filename = m_strTarget;
         else
-            filename = Sara::LocalFile::getDownloadLocation(url.toString());
+            filename = UpdateNode::LocalFile::getDownloadLocation(url.toString());
 
         if (saveToDisk(filename, reply))
             printf("Download of %s succeeded (saved to %s)\n",
                 url.toEncoded().constData(), qPrintable(filename));
     }
 
-    Sara::Update update = m_oCurrentDownloads.value(reply);
+    UpdateNode::Update update = m_oCurrentDownloads.value(reply);
     m_oCurrentDownloads.remove(reply);
     reply->deleteLater();
 

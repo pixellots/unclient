@@ -9,7 +9,7 @@
 #include "update.h"
 #include "message.h"
 
-namespace Sara
+namespace UpdateNode
 {
     class Config
     {
@@ -50,21 +50,21 @@ namespace Sara
             QString getOS() const;
 
             void setProduct(const Product& aProduct);
-            Sara::Product product();
+            UpdateNode::Product product();
 
             void setVersion(const ProductVersion& aVersion);
-            Sara::ProductVersion version();
+            UpdateNode::ProductVersion version();
 
-            QList<Sara::Update> updates();
-            QList<Sara::Message> messages();
+            QList<UpdateNode::Update> updates();
+            QList<UpdateNode::Message> messages();
 
-            void addUpdate(const Sara::Update& aUpdate);
-            void addMessage(const Sara::Message& aMessage);
+            void addUpdate(const UpdateNode::Update& aUpdate);
+            void addMessage(const UpdateNode::Message& aMessage);
 
             void clear();
 
-            QList<Sara::Config*> configurations();
-            void addConfiguration(Sara::Config* aConfig);
+            QList<UpdateNode::Config*> configurations();
+            void addConfiguration(UpdateNode::Config* aConfig);
 
         public:
             Config();
@@ -87,12 +87,12 @@ namespace Sara
             QString m_strVersion;
             QString m_strLanguage;
 
-            Sara::Product m_oProduct;
-            Sara::ProductVersion m_oCurrentVersion;
+            UpdateNode::Product m_oProduct;
+            UpdateNode::ProductVersion m_oCurrentVersion;
 
-            QList<Sara::Update> m_listUpdates;
-            QList<Sara::Message> m_listMessages;
-            QList<Sara::Config*> m_listConfigs;
+            QList<UpdateNode::Update> m_listUpdates;
+            QList<UpdateNode::Message> m_listMessages;
+            QList<UpdateNode::Config*> m_listConfigs;
 
     };
 }

@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "config.h"
 
-using namespace Sara;
+using namespace UpdateNode;
 
 Config* Config::m_pInstance = NULL;
 
@@ -93,32 +93,32 @@ QString Config::getOS() const
 #endif
 }
 
-Sara::Product Config::product()
+UpdateNode::Product Config::product()
 {
     return m_oProduct;
 }
 
-Sara::ProductVersion Config::version()
+UpdateNode::ProductVersion Config::version()
 {
     return m_oCurrentVersion;
 }
 
-QList<Sara::Update> Config::updates()
+QList<UpdateNode::Update> Config::updates()
 {
     return m_listUpdates;
 }
 
-QList<Sara::Message> Config::messages()
+QList<UpdateNode::Message> Config::messages()
 {
     return m_listMessages;
 }
 
-void Config::addUpdate(const Sara::Update& aUpdate)
+void Config::addUpdate(const UpdateNode::Update& aUpdate)
 {
     m_listUpdates.append(aUpdate);
 }
 
-void Config::addMessage(const Sara::Message& aMessage)
+void Config::addMessage(const UpdateNode::Message& aMessage)
 {
     m_listMessages.append(aMessage);
 }
@@ -199,12 +199,12 @@ QString Config::getHost() const
     return m_strHost;
 }
 
-void Config::addConfiguration(Sara::Config* aConfig)
+void Config::addConfiguration(UpdateNode::Config* aConfig)
 {
     m_listConfigs.append(aConfig);
 }
 
-QList<Sara::Config*> Config::configurations()
+QList<UpdateNode::Config*> Config::configurations()
 {
     return m_listConfigs;
 }

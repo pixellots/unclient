@@ -3,7 +3,7 @@
 
 #include <QString>
 
-namespace Sara
+namespace UpdateNode
 {
     class Message
     {

@@ -6,13 +6,12 @@ QT = network \
     gui \
     core \
     webkit
-TARGET = sara
+TARGET = unclient
 TEMPLATE = app
 SOURCES += main.cpp \
     dialog.cpp \
     config.cpp \
     settings.cpp \
-    sara_service.cpp \
     xmlparser.cpp \
     product.cpp \
     productversion.cpp \
@@ -24,11 +23,11 @@ SOURCES += main.cpp \
     localfile.cpp \
     singleappdialog.cpp \
     usernotofication.cpp \
-    usermessages.cpp
+    usermessages.cpp \
+    updatenode_service.cpp
 HEADERS += dialog.h \
     config.h \
     settings.h \
-    sara_service.h \
     version.h \
     xmlparser.h \
     product.h \
@@ -42,7 +41,8 @@ HEADERS += dialog.h \
     singleappdialog.h \
     status.h \
     usernotofication.h \
-    usermessages.h
+    usermessages.h \
+    updatenode_service.h
 FORMS += dialog.ui \
     settingsdialog.ui \
     singleappdialog.ui \

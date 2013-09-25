@@ -2,7 +2,7 @@
 #include "product.h"
 #include "localfile.h"
 
-using namespace Sara;
+using namespace UpdateNode;
 
 Product::Product()
 {
@@ -40,5 +40,5 @@ QString Product::getIconUrl() const
 
 QString Product::getLocalIcon() const
 {
-    return Sara::LocalFile::getDownloadLocation(m_strIconUrl);
+    return UpdateNode::LocalFile::getDownloadLocation(m_strIconUrl);
 }

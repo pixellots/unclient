@@ -4,7 +4,7 @@
 #include <QString>
 #include "productversion.h"
 
-namespace Sara
+namespace UpdateNode
 {
     class Update
     {

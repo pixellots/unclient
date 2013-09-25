@@ -5,7 +5,7 @@
 #include <QProcess>
 #include "update.h"
 
-namespace Sara
+namespace UpdateNode
 {
     class Commander : public QObject
     {
@@ -13,7 +13,7 @@ namespace Sara
         public:
             Commander(QObject *parent = 0);
 
-            bool run(const Sara::Update& aUpdate);
+            bool run(const UpdateNode::Update& aUpdate);
 
             QString readStdErr() const;
             QString readStdOut() const;
@@ -30,7 +30,7 @@ namespace Sara
 
         private:
             QProcess* m_pProcess;
-            Sara::Update m_oUpdate;
+            UpdateNode::Update m_oUpdate;
             bool m_bCopy;
     };
 }

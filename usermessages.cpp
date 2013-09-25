@@ -25,7 +25,7 @@ UserMessages::~UserMessages()
     delete ui;
 }
 
-void UserMessages::init(Sara::Service* aService)
+void UserMessages::init(UpdateNode::Service* aService)
 {
     m_pService = aService;
     connect(m_pService, SIGNAL(done()), SLOT(serviceDone()));
@@ -33,8 +33,8 @@ void UserMessages::init(Sara::Service* aService)
 
 void UserMessages::serviceDone()
 {
-    Sara::Settings settings;
-    Sara::Config* config = Sara::Config::Instance();
+    UpdateNode::Settings settings;
+    UpdateNode::Config* config = UpdateNode::Config::Instance();
 
     m_iCurrentIndex = -1;
     m_listMessages.clear();
@@ -56,7 +56,7 @@ void UserMessages::serviceDone()
         ui->labelLogo->show();
     }
 
-    QList<Sara::Message> message_list= config->messages();
+    QList<UpdateNode::Message> message_list= config->messages();
     for(int i = 0; i < message_list.size(); i++)
     {
         if(!settings.messageShownAndLoaded(message_list.at(i).getCode()))
@@ -137,8 +137,8 @@ void UserMessages::onRight()
 
 void UserMessages::onRead()
 {
-    Sara::Settings settings;
-    Sara::Message message = m_listMessages.takeAt(m_iCurrentIndex);
+    UpdateNode::Settings settings;
+    UpdateNode::Message message = m_listMessages.takeAt(m_iCurrentIndex);
 
     settings.setMessage(message, true, true);
 

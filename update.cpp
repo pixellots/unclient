@@ -1,6 +1,6 @@
 #include "update.h"
 
-using namespace Sara;
+using namespace UpdateNode;
 
 Update::Update()
 {

@@ -8,9 +8,9 @@
 #include "config.h"
 #include "downloader.h"
 
-#define SARA_SERVICE_URL            "http://10.20.2.199/sara/service"
+#define UPDATENODE_SERVICE_URL            "https://updatenode.com/sara/service"
 
-namespace Sara
+namespace UpdateNode
 {
     class Service : public QObject
     {
@@ -21,7 +21,7 @@ namespace Sara
             ~Service();
 
             bool checkForUpdates();
-            bool checkForUpdates(Sara::Config* aConfig);
+            bool checkForUpdates(UpdateNode::Config* aConfig);
             int  returnCode();
 
         public slots:
@@ -33,7 +33,7 @@ namespace Sara
 
         private:
             QNetworkAccessManager* m_pManager;
-            Sara::Downloader* m_pDownloader;
+            UpdateNode::Downloader* m_pDownloader;
             QMap<QNetworkReply*, Config*> m_mapConfig;
     };
 }

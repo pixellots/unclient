@@ -20,7 +20,7 @@ public:
     explicit UserMessages(QWidget *parent = 0);
     ~UserMessages();
     
-    void init(Sara::Service* aService);
+    void init(UpdateNode::Service* aService);
 
 public slots:
     void serviceDone();
@@ -34,8 +34,8 @@ private:
 
 private:
     Ui::UserMessages *ui;
-    Sara::Service* m_pService;
-    QList<Sara::Message> m_listMessages;
+    UpdateNode::Service* m_pService;
+    QList<UpdateNode::Message> m_listMessages;
 
     int m_iCurrentIndex;
 };

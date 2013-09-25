@@ -4,7 +4,7 @@
 #include <QNetworkReply>
 #include <QLocale>
 
-#include "sara_service.h"
+#include "updatenode_service.h"
 #include "config.h"
 #include "settings.h"
 #include "version.h"
@@ -12,7 +12,7 @@
 #include "product.h"
 #include "osdetection.h"
 
-using namespace Sara;
+using namespace UpdateNode;
 
 Service::Service(QObject* parent)
     : QObject(parent)
@@ -29,7 +29,7 @@ Service::~Service()
 
 bool Service::checkForUpdates()
 {
-    Sara::Config* config = Sara::Config::Instance();
+    UpdateNode::Config* config = UpdateNode::Config::Instance();
 
     if(!m_pManager)
     {
@@ -54,13 +54,13 @@ bool Service::checkForUpdates()
     return true;
 }
 
-bool Service::checkForUpdates(Sara::Config* aConfig)
+bool Service::checkForUpdates(UpdateNode::Config* aConfig)
 {
-    Sara::Config* globalConfig = Sara::Config::Instance();
-    Sara::Settings settings;
+    UpdateNode::Config* globalConfig = UpdateNode::Config::Instance();
+    UpdateNode::Settings settings;
 
     QNetworkRequest request;
-    QUrl url(SARA_SERVICE_URL);
+    QUrl url(UPDATENODE_SERVICE_URL);
 
     if(!globalConfig->getHost().isEmpty())
         url.setHost(globalConfig->getHost());
@@ -71,8 +71,8 @@ bool Service::checkForUpdates(Sara::Config* aConfig)
         url.addQueryItem("test", globalConfig->getTestKey());
 
     url.addQueryItem("id", settings.uuid());
-    url.addQueryItem("os", Sara::OSDetection::getOS());
-    url.addQueryItem("arch", Sara::OSDetection::getArch());
+    url.addQueryItem("os", UpdateNode::OSDetection::getOS());
+    url.addQueryItem("arch", UpdateNode::OSDetection::getArch());
 
     if(!globalConfig->getLanguage().isEmpty())
         url.addQueryItem("lang", globalConfig->getLanguage());
@@ -90,7 +90,7 @@ bool Service::checkForUpdates(Sara::Config* aConfig)
     qDebug() << "REQUEST: " << url.toString();
     request.setUrl(url);
     request.setRawHeader("charset", "utf-8" );
-    request.setRawHeader("User-Agent", QString("SaraClient %1 (%2)").arg(SARA_CLIENT_VERSION).arg(globalConfig->getOS()).toAscii());
+    request.setRawHeader("User-Agent", QString("UpdateNodeClient %1 (%2)").arg(UPDATENODE_CLIENT_VERSION).arg(globalConfig->getOS()).toAscii());
 
     QNetworkReply* reply = m_pManager->get(request);
 
@@ -103,7 +103,7 @@ void Service::requestReceived(QNetworkReply* reply)
 {
     reply->deleteLater();
 
-    Sara::Config* config = m_mapConfig[reply];
+    UpdateNode::Config* config = m_mapConfig[reply];
 
     if(reply->error() == QNetworkReply::NoError)
     {
@@ -112,7 +112,7 @@ void Service::requestReceived(QNetworkReply* reply)
         {
             QString replyText = QString::fromUtf8(reply->readAll());
 
-            Sara::XmlParser* parser = new Sara::XmlParser(this, config);
+            UpdateNode::XmlParser* parser = new UpdateNode::XmlParser(this, config);
             parser->parse(replyText);
             qDebug() << "RESULT: " << parser->getStatusString() << "(" << parser->getStatus() << ")";
         }
@@ -137,21 +137,21 @@ void Service::requestReceived(QNetworkReply* reply)
     if(!config->product().getIconUrl().isEmpty())
     {
         if(!m_pDownloader)
-            m_pDownloader = new Sara::Downloader();
+            m_pDownloader = new UpdateNode::Downloader();
 
         m_pDownloader->setTarget(config->product().getLocalIcon());
 
-        if(Sara::Config::Instance()->isSingleMode())
-            connect(m_pDownloader, SIGNAL(done(const Sara::Update&, QNetworkReply::NetworkError, const QString&)), this, SIGNAL(done()));
+        if(UpdateNode::Config::Instance()->isSingleMode())
+            connect(m_pDownloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), this, SIGNAL(done()));
         else
-            connect(m_pDownloader, SIGNAL(done(const Sara::Update&, QNetworkReply::NetworkError, const QString&)), this, SIGNAL(doneManager()));
+            connect(m_pDownloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), this, SIGNAL(doneManager()));
 
-        m_pDownloader->doDownload(config->product().getIconUrl(), Sara::Update());
+        m_pDownloader->doDownload(config->product().getIconUrl(), UpdateNode::Update());
 
     }
     else
     {
-        if(Sara::Config::Instance()->isSingleMode())
+        if(UpdateNode::Config::Instance()->isSingleMode())
             emit done();
         else
             emit doneManager();
@@ -160,21 +160,21 @@ void Service::requestReceived(QNetworkReply* reply)
 
 int Service::returnCode()
 {
-    if(Sara::Config::Instance()->updates().size() == 0 && Sara::Config::Instance()->messages().size() == 0)
+    if(UpdateNode::Config::Instance()->updates().size() == 0 && UpdateNode::Config::Instance()->messages().size() == 0)
         return 0; // nothing
-    else if(Sara::Config::Instance()->updates().size() == 1 && Sara::Config::Instance()->messages().size() == 0)
+    else if(UpdateNode::Config::Instance()->updates().size() == 1 && UpdateNode::Config::Instance()->messages().size() == 0)
         return 1; // one update
-    else if(Sara::Config::Instance()->updates().size() == 0 && Sara::Config::Instance()->messages().size() == 1)
+    else if(UpdateNode::Config::Instance()->updates().size() == 0 && UpdateNode::Config::Instance()->messages().size() == 1)
         return 2; // one message
-    else if(Sara::Config::Instance()->updates().size() > 1 && Sara::Config::Instance()->messages().size() == 0)
+    else if(UpdateNode::Config::Instance()->updates().size() > 1 && UpdateNode::Config::Instance()->messages().size() == 0)
         return 3; // multiple updates
-    else if(Sara::Config::Instance()->updates().size() == 0 && Sara::Config::Instance()->messages().size() > 1)
+    else if(UpdateNode::Config::Instance()->updates().size() == 0 && UpdateNode::Config::Instance()->messages().size() > 1)
         return 4; // multiple messages
-    else if(Sara::Config::Instance()->updates().size() == 1 && Sara::Config::Instance()->messages().size() == 1)
+    else if(UpdateNode::Config::Instance()->updates().size() == 1 && UpdateNode::Config::Instance()->messages().size() == 1)
         return 5; // one update & one message
-    else if(Sara::Config::Instance()->updates().size() == 1 && Sara::Config::Instance()->messages().size() > 1)
+    else if(UpdateNode::Config::Instance()->updates().size() == 1 && UpdateNode::Config::Instance()->messages().size() > 1)
         return 6; // one update & multiple messages
-    else if(Sara::Config::Instance()->updates().size() > 1 && Sara::Config::Instance()->messages().size() == 1)
+    else if(UpdateNode::Config::Instance()->updates().size() > 1 && UpdateNode::Config::Instance()->messages().size() == 1)
         return 7; // multiple updates & one message
     else
         return 8; // multiple updates & messages

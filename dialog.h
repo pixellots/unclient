@@ -20,12 +20,12 @@ class Dialog : public QDialog
         Dialog(QWidget *parent = 0);
         ~Dialog();
 
-        void init(Sara::Service* aService);
+        void init(UpdateNode::Service* aService);
 
     private:
         void install();
-        void updateUpdateView(Sara::Config* aConfig = NULL);
-        void updateMessageView(Sara::Config* aConfig = NULL);
+        void updateUpdateView(UpdateNode::Config* aConfig = NULL);
+        void updateMessageView(UpdateNode::Config* aConfig = NULL);
         void updateTabCounter(bool aChangeTab = true);
         void resetMessageItem(QTreeWidgetItem* aItem);
 
@@ -42,7 +42,7 @@ class Dialog : public QDialog
         void updateSelectedMessage();
         void startInstall();
         void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
-        void downloadDone(const Sara::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString);
+        void downloadDone(const UpdateNode::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString);
         void messageLoaded(bool aSuccess);
         void tabSelected(int aIndex);
         void checkSelection();
@@ -53,12 +53,12 @@ class Dialog : public QDialog
 
     private:
         Ui::DialogUpdate* m_pUI;
-        Sara::Service* m_pService;
-        Sara::Downloader* m_pDownloader;
+        UpdateNode::Service* m_pService;
+        UpdateNode::Downloader* m_pDownloader;
 
-        QList<Sara::Update> m_oReadyUpdates;
-        Sara::Update m_oCurrentUpdate;
-        Sara::Commander m_oCommander;
+        QList<UpdateNode::Update> m_oReadyUpdates;
+        UpdateNode::Update m_oCurrentUpdate;
+        UpdateNode::Commander m_oCommander;
 
         QTextEdit m_oTextEdit;
 
