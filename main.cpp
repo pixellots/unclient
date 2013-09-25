@@ -33,7 +33,7 @@ int printHelp()
             + "  -v <version>   \tProduct Version\n"
             + "  -i <file>      \tMain Icon\n"
             + "  -l <lang-code> \tLanguage Code\n"
-            + "  -s             \tSilent check only\n"
+            + "  -s             \tSilent check\n"
             + "  -q             \tDo not show any question dialog before\n"
             + "  -d             \tDialog when updates available\n"
             + "  -st            \tSystem Tray Icon\n"
@@ -90,7 +90,8 @@ int main(int argc, char *argv[])
         else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help")
             return printHelp();
         else if(argument == "-updates" || argument == "-messages"
-                || argument == "-register" || argument == "-unregister" || argument == "-manager")
+                || argument == "-register" || argument == "-unregister" || argument == "-manager"
+                || argument == "-check")
             mode = argument;
     }
 
@@ -118,7 +119,7 @@ int main(int argc, char *argv[])
     SingleAppDialog singleDialog;
     Dialog manageDialog;
 
-    if(!config->isSilent())
+    if(mode != "-check")
     {
         if(config->isSingleMode())
         {
@@ -161,8 +162,51 @@ int main(int argc, char *argv[])
 
     int result = a.exec();
 
-    if(!config->isSilent())
+    if(mode != "-check")
         return result;
     else
-        return service->returnCode();
+    {
+        if(config->isSilent())
+            return service->returnCode();
+        else
+        {
+            QString text;
+            switch(service->returnCode())
+            {
+                case 0:
+                    text = QObject::tr("There are no new updates & messages available");
+                    break;
+                case 1:
+                    text = QObject::tr("There is 1 update available");
+                    break;
+                case 2:
+                    text = QObject::tr("There is 1 message available");
+                    break;
+                case 3:
+                    text = QObject::tr("There are updates available");
+                    break;
+                case 4:
+                    text = QObject::tr("There are messages available");
+                    break;
+                case 5:
+                    text = QObject::tr("There is 1 update and 1 message available");
+                    break;
+                case 6:
+                    text = QObject::tr("There is 1 update and messages available");
+                    break;
+                case 7:
+                    text = QObject::tr("There are updates and 1 message available");
+                    break;
+                case 8:
+                    text = QObject::tr("There are update and messages available");
+                    break;
+                default:
+                    text = QObject::tr("Undefined state");
+                    break;
+            }
+            QMessageBox::information(NULL, QObject::tr("UpdateNode Client"), text);
+            return result;
+
+        }
+    }
 }
