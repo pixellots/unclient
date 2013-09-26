@@ -39,22 +39,10 @@ void UserMessages::serviceDone()
     m_iCurrentIndex = -1;
     m_listMessages.clear();
 
-    setWindowTitle(config->product().getName() + tr(" - Message Client"));
     if(!config->product().getIconUrl().isEmpty())
-    {
         setWindowIcon(QPixmap(config->product().getLocalIcon()).scaledToHeight(64, Qt::SmoothTransformation));
-        if(!config->mainIcon().isEmpty())
-            ui->labelLogo->setPixmap(QPixmap(config->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
-        else
-            ui->labelLogo->setPixmap(QPixmap(config->product().getLocalIcon()).scaledToHeight(64, Qt::SmoothTransformation));
-        ui->labelLogo->show();
-    }
     else if(!config->mainIcon().isEmpty())
-    {
         setWindowIcon(QPixmap(config->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
-        ui->labelLogo->setPixmap(QPixmap(config->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
-        ui->labelLogo->show();
-    }
 
     QList<UpdateNode::Message> message_list= config->messages();
     for(int i = 0; i < message_list.size(); i++)
@@ -66,8 +54,13 @@ void UserMessages::serviceDone()
     if(m_listMessages.isEmpty())
         qApp->quit();
     else
+    {
+        if(m_listMessages.size()==1)
+            setWindowTitle(config->product().getName() + tr(" - Message"));
+        else
+            setWindowTitle(config->product().getName() + tr(" - Messages"));
         show();
-
+    }
     layout()->setSizeConstraint(QLayout::SetMinimumSize);
 
     showMessage();

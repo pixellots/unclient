@@ -5,8 +5,8 @@
 
 #include <QDesktopServices>
 
-Q_DECLARE_METATYPE ( UpdateNode::Update );
-Q_DECLARE_METATYPE ( UpdateNode::Message);
+Q_DECLARE_METATYPE ( UpdateNode::Update )
+Q_DECLARE_METATYPE ( UpdateNode::Message)
 
 UserNotofication::UserNotofication(QWidget *parent) :
     QDialog(parent, Qt::WindowCloseButtonHint),
@@ -79,11 +79,10 @@ void UserNotofication::updateView()
         {
             QTreeWidgetItem* parent = new QTreeWidgetItem(ui->treeWidget);
             parent->setData(0, Qt::UserRole, QVariant::fromValue(update_list.at(i)));
-            parent->setCheckState(1, Qt::Checked);
-            //parent->setIcon(0, QPixmap(":/images/updates.png"));
-            parent->setText(2, update_list.at(i).getTitle());
-            parent->setText(3, update_list.at(i).getTargetVersion().getVersion());
-            parent->setText(4, update_list.at(i).getFileSize());
+            parent->setCheckState(0, Qt::Checked);
+            parent->setText(1, update_list.at(i).getTitle());
+            parent->setText(2, update_list.at(i).getTargetVersion().getVersion());
+            parent->setText(3, update_list.at(i).getFileSize());
             if(i==0)
                 parent->setSelected(true);
 
@@ -94,11 +93,10 @@ void UserNotofication::updateView()
     if(QTreeWidgetItem* header = ui->treeWidget->headerItem())
       header->setText(0, "");
 
-    ui->treeWidget->header()->setResizeMode(2, QHeaderView::Stretch);
+    ui->treeWidget->header()->setResizeMode(1, QHeaderView::Stretch);
     ui->treeWidget->resizeColumnToContents(0);
-    ui->treeWidget->resizeColumnToContents(1);
     ui->treeWidget->resizeColumnToContents(3);
-    ui->treeWidget->resizeColumnToContents(4);
+    ui->treeWidget->resizeColumnToContents(2);
 
     adjustSize();
 }
