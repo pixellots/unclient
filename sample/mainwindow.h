@@ -15,8 +15,12 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+private:
+    int executeCommand(const QString& commandMode);
+
 private slots:
     void on_actionCheck_for_updates_triggered();
+    void on_actionCheck_for_messages_triggered();
 
 private:
     Ui::MainWindow *ui;

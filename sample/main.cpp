@@ -40,7 +40,7 @@ QString getUpdateMessage(int code)
             text = QObject::tr("There are update and messages available");
             break;
         default:
-            text = QObject::tr("Undefined state");
+            text = QObject::tr("Error %1 while checking for updates").arg(code);
             break;
     }
     return text;

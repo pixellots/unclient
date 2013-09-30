@@ -45,7 +45,10 @@
     </property>
     <addaction name="actionCheck_for_updates"/>
     <addaction name="actionCheck_for_messages"/>
-    <addaction name="actionReview_updates_messages"/>
+    <addaction name="separator"/>
+    <addaction name="actionLaunch_Manager"/>
+    <addaction name="separator"/>
+    <addaction name="actionRefresh"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -94,6 +97,16 @@
   <action name="actionGo_to_updateclient_com">
    <property name="text">
     <string>Go to updateclient.com</string>
+   </property>
+  </action>
+  <action name="actionLaunch_Manager">
+   <property name="text">
+    <string>Launch Manager</string>
+   </property>
+  </action>
+  <action name="actionRefresh">
+   <property name="text">
+    <string>Refresh</string>
    </property>
   </action>
  </widget>

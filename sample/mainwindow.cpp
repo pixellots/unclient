@@ -9,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    setWindowTitle("Test Product " + QString(MY_PRODUCT_VERSION));
 }
 
 MainWindow::~MainWindow()
@@ -16,7 +18,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_actionCheck_for_updates_triggered()
+int MainWindow::executeCommand(const QString& commandMode)
 {
     QStringList commandParams;
 
@@ -26,7 +28,17 @@ void MainWindow::on_actionCheck_for_updates_triggered()
     commandParams << "-k"   << MY_UPDATENODE_KEY;
     commandParams << "-pc"  << MY_PRODUCT_CODE;
     commandParams << "-v"  << MY_PRODUCT_VERSION;
-    commandParams << "-updates";
+    commandParams << commandMode;
 
-    QProcess::execute(qApp->applicationDirPath() + QDir::separator() + "unclient", commandParams);
+    return QProcess::execute(qApp->applicationDirPath() + QDir::separator() + "unclient", commandParams);
+}
+
+void MainWindow::on_actionCheck_for_updates_triggered()
+{
+    executeCommand("-updates");
+}
+
+void MainWindow::on_actionCheck_for_messages_triggered()
+{
+    executeCommand("-messages");
 }
