@@ -50,14 +50,14 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    QSplashScreen splash(QPixmap("images/splash_screen.png"));
+    QSplashScreen splash(QPixmap(":/images/images/splash_screen.png"));
     splash.showMessage("Checking for updates...", Qt::AlignCenter | Qt::AlignBottom);
     splash.show();
 
     QStringList commandParams;
 
     if(a.arguments().indexOf("-test")>-1)
-        commandParams << "-t" << MY_UPDATENODE_KEY;
+        commandParams << "-t" << MY_UPDATENODE_TEST_KEY;
 
     commandParams << "-k"   << MY_UPDATENODE_KEY;
     commandParams << "-pc"  << MY_PRODUCT_CODE;

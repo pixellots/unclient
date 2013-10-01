@@ -21,6 +21,7 @@ private:
 private slots:
     void on_actionCheck_for_updates_triggered();
     void on_actionCheck_for_messages_triggered();
+    void on_actionLaunch_Manager_triggered();
 
 private:
     Ui::MainWindow *ui;
