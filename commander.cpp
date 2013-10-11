@@ -45,6 +45,11 @@ QString Commander::setCommandBasedOnOS() const
     return command;
 }
 
+void Commander::setUpdate(const Update &aUpdate)
+{
+    m_oUpdate = aUpdate;
+}
+
 bool Commander::run(const UpdateNode::Update& aUpdate)
 {
     QString command;

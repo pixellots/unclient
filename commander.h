@@ -18,6 +18,9 @@ namespace UpdateNode
             QString readStdErr() const;
             QString readStdOut() const;
 
+            void setUpdate(const UpdateNode::Update& aUpdate);
+            QString resolve(const QString& aString);
+
         signals:
             void processError();
             void processOutput();
@@ -26,7 +29,6 @@ namespace UpdateNode
 
         private:
             QString setCommandBasedOnOS() const;
-            QString resolve(const QString& aString);
 
         private:
             QProcess* m_pProcess;
