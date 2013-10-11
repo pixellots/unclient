@@ -125,7 +125,7 @@ void UserNotofication::checkSelection()
 
     while(*it)
     {
-        if((*it)->checkState(1) == Qt::Checked)
+        if((*it)->checkState(0) == Qt::Checked)
             ui->pshYes->setEnabled(true);
         it++;
     }
