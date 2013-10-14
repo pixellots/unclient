@@ -62,11 +62,13 @@ void SingleAppDialog::install()
 {
     if(m_oReadyUpdates.size()==0)
     {
-        /// TODO ... should not happen
+        qApp->quit();
         return;
     }
 
     m_oCurrentUpdate = m_oReadyUpdates.takeFirst();
+
+    m_pUi->labelProgress->setText(tr("Installing Update ..."));
 
     if(!m_oCommander.run(m_oCurrentUpdate))
     {
@@ -135,7 +137,7 @@ void SingleAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus
             if(m_oCurrentUpdate.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION)
                 settings.setNewVersion(UpdateNode::Config::Instance()->product(), m_oCurrentUpdate.getTargetVersion());
 
-            //install();
+            install();
         }
         else
         {
