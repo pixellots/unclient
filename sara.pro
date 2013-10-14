@@ -24,7 +24,8 @@ SOURCES += main.cpp \
     singleappdialog.cpp \
     usernotofication.cpp \
     usermessages.cpp \
-    updatenode_service.cpp
+    updatenode_service.cpp \
+    wincommander.cpp
 HEADERS += dialog.h \
     config.h \
     settings.h \
@@ -42,10 +43,15 @@ HEADERS += dialog.h \
     status.h \
     usernotofication.h \
     usermessages.h \
-    updatenode_service.h
+    updatenode_service.h \
+    wincommander.h
 FORMS += dialog.ui \
     settingsdialog.ui \
     singleappdialog.ui \
     usernotofication.ui \
     usermessages.ui
 RESOURCES += res.qrc
+
+win32{
+LIBS+= Shell32.lib Advapi32.lib
+}

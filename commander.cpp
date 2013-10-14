@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <QProcessEnvironment>
 #include <QSettings>
+
+#include "wincommander.h"
 #include "commander.h"
 #include "settings.h"
 #include "localfile.h"
@@ -116,6 +118,14 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
     }
     else
     {
+#ifdef Q_OS_WIN // Windows
+        if(m_oUpdate.isAdminRequired() && !UpdateNode::WinCommander::isProcessElevated())
+        {
+            uint result = UpdateNode::WinCommander::runProcessElevated(command, commandParameters);
+            emit updateExit(result, QProcess::NormalExit);
+            return true;
+        }
+#endif
         m_pProcess->start(command, commandParameters);
 
         // wait 3 minutes for process start
