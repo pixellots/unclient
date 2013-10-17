@@ -14,6 +14,9 @@
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
+   <property name="verticalSpacing">
+    <number>2</number>
+   </property>
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout">
      <item row="0" column="0" rowspan="3" colspan="2">
@@ -54,7 +57,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Software updates are available</string>
+        <string>A new software update is available</string>
        </property>
       </widget>
      </item>
@@ -67,7 +70,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Do you want to download and install them now?</string>
+        <string>Do you want to download and install the update now?</string>
        </property>
        <property name="wordWrap">
         <bool>true</bool>
@@ -87,11 +90,17 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>125</height>
-      </size>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="lineWidth">
+      <number>1</number>
+     </property>
+     <property name="showDropIndicator" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::NoSelection</enum>
      </property>
      <property name="iconSize">
       <size>
@@ -102,17 +111,15 @@
      <property name="rootIsDecorated">
       <bool>false</bool>
      </property>
-     <property name="uniformRowHeights">
-      <bool>true</bool>
+     <property name="itemsExpandable">
+      <bool>false</bool>
+     </property>
+     <property name="expandsOnDoubleClick">
+      <bool>false</bool>
      </property>
      <attribute name="headerStretchLastSection">
       <bool>false</bool>
      </attribute>
-     <column>
-      <property name="text">
-       <string>Install</string>
-      </property>
-     </column>
      <column>
       <property name="text">
        <string>Name</string>

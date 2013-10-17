@@ -2,6 +2,7 @@
 #include "ui_usernotofication.h"
 #include "config.h"
 #include "settings.h"
+#include "version.h"
 
 #include <QDesktopServices>
 
@@ -18,8 +19,6 @@ UserNotofication::UserNotofication(QWidget *parent) :
     connect(ui->webView, SIGNAL(linkClicked(const QUrl&)), SLOT(openLink(const QUrl&)));
 
     connect(ui->treeWidget, SIGNAL(itemSelectionChanged()), SLOT(updateSelectedUpdate()));
-    connect(ui->treeWidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(checkSelection()));
-
     connect(ui->pshDetails, SIGNAL(clicked()), SLOT(detailsClicked()));
 
     ui->treeWidget->hide();
@@ -47,6 +46,11 @@ void UserNotofication::changeEvent(QEvent *e)
     }
 }
 
+bool toAssending(UpdateNode::Update a, UpdateNode::Update b)
+{
+    return UpdateNode::Version::compare(a.getTargetVersion().getVersion(), b.getTargetVersion().getVersion()) == -1;
+}
+
 void UserNotofication::updateView()
 {
     UpdateNode::Config* config = UpdateNode::Config::Instance();
@@ -69,34 +73,22 @@ void UserNotofication::updateView()
         ui->labelLogo->show();
     }
 
-    m_iNewUpdates = 0;
-    m_iNewMessages = 0;
-
     if(config->updates().size()>0)
     {
-       QList<UpdateNode::Update> update_list = config->updates();
-        for(int i = 0; i < update_list.size(); i++)
-        {
-            QTreeWidgetItem* parent = new QTreeWidgetItem(ui->treeWidget);
-            parent->setData(0, Qt::UserRole, QVariant::fromValue(update_list.at(i)));
-            parent->setCheckState(0, Qt::Checked);
-            parent->setText(1, update_list.at(i).getTitle());
-            parent->setText(2, update_list.at(i).getTargetVersion().getVersion());
-            parent->setText(3, update_list.at(i).getFileSize());
-            if(i==0)
-                parent->setSelected(true);
+        QList<UpdateNode::Update> update_list = config->updates();
+        qSort(update_list.begin(), update_list.end(), toAssending);
 
-            m_iNewUpdates++;
-        }
+        QTreeWidgetItem* parent = new QTreeWidgetItem(ui->treeWidget);
+        parent->setData(0, Qt::UserRole, QVariant::fromValue(update_list.at(0)));
+        parent->setText(0, update_list.at(0).getTitle());
+        parent->setText(1, update_list.at(0).getTargetVersion().getVersion());
+        parent->setText(2, update_list.at(0).getFileSize());
+        parent->setSelected(true);
     }
 
-    if(QTreeWidgetItem* header = ui->treeWidget->headerItem())
-      header->setText(0, "");
-
-    ui->treeWidget->header()->setResizeMode(1, QHeaderView::Stretch);
-    ui->treeWidget->resizeColumnToContents(0);
-    ui->treeWidget->resizeColumnToContents(3);
+    ui->treeWidget->header()->setResizeMode(0, QHeaderView::Stretch);
     ui->treeWidget->resizeColumnToContents(2);
+    ui->treeWidget->resizeColumnToContents(1);
 
     adjustSize();
 }
@@ -114,20 +106,6 @@ void UserNotofication::updateSelectedUpdate()
 
         UpdateNode::Update update = item->data(0, Qt::UserRole).value<UpdateNode::Update>();
         ui->webView->setHtml(update.getDescription());
-    }
-}
-
-void UserNotofication::checkSelection()
-{
-    QTreeWidgetItemIterator it(ui->treeWidget);
-
-    ui->pshYes->setEnabled(false);
-
-    while(*it)
-    {
-        if((*it)->checkState(0) == Qt::Checked)
-            ui->pshYes->setEnabled(true);
-        it++;
     }
 }
 

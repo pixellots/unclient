@@ -20,7 +20,6 @@ public:
 public slots:
     void openLink(const QUrl& aUrl);
     void updateSelectedUpdate();
-    void checkSelection();
     void detailsClicked();
 
 protected:
@@ -28,9 +27,6 @@ protected:
 
 private:
     Ui::UserNotofication *ui;
-
-    int m_iNewUpdates;
-    int m_iNewMessages;
 };
 
 #endif // USERNOTOFICATION_H

@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     usernotofication.cpp \
     usermessages.cpp \
     updatenode_service.cpp \
-    wincommander.cpp
+    wincommander.cpp \
+    version.cpp
 HEADERS += dialog.h \
     config.h \
     settings.h \

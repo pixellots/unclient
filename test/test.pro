@@ -15,7 +15,7 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 
-SOURCES += tst_commandertest.cpp \
+SOURCES += \
     ../commander.cpp \
     ../config.cpp \
     ../localfile.cpp \
@@ -26,7 +26,10 @@ SOURCES += tst_commandertest.cpp \
     ../message.cpp \
     ../settings.cpp \
     ../update.cpp \
-    ../xmlparser.cpp
+    ../xmlparser.cpp \
+    ../wincommander.cpp \
+    ../version.cpp \
+    tst_clienttest.cpp
 DEFINES += SRCDIR=..
 
 HEADERS += \
@@ -40,4 +43,10 @@ HEADERS += \
     ../message.h \
     ../settings.h \
     ../update.h \
-    ../xmlparser.h
+    ../xmlparser.h \
+    ../wincommander.h \
+    ../version.h
+
+win32{
+LIBS+= Shell32.lib Advapi32.lib
+}
