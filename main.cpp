@@ -19,7 +19,9 @@ int printHelp()
             + "\n\n"
             + "Mode:\n\n"
             + "  -check          \tchecks for update\n"
-            + "  -updates        \truns update mode only\n"
+            + "  -update         \truns update mode only\n"
+            + "  -download       \truns update mode only, but exits after download\n"
+            + "  -execute        \texecutes the downloaded update (relates to -download)\n"
             + "  -messages       \truns message mode only\n"
             + "  -manager        \truns update & message mode\n"
             + "  -register       \tregistrates the current version\n"
@@ -89,9 +91,9 @@ int main(int argc, char *argv[])
             config->setLanguage(arguments.at(i+1));
         else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help")
             return printHelp();
-        else if(argument == "-updates" || argument == "-messages"
+        else if(argument == "-update" || argument == "-messages"
                 || argument == "-register" || argument == "-unregister" || argument == "-manager"
-                || argument == "-check")
+                || argument == "-check" || argument == "-download" || argument == "-execute")
             mode = argument;
     }
 
@@ -123,9 +125,9 @@ int main(int argc, char *argv[])
     {
         if(config->isSingleMode())
         {
-            if(mode == "-updates")
+            if(mode == "-update" || mode == "-download" || mode == "-execute")
             {
-                singleDialog.init(service);
+                singleDialog.init(service, mode == "-download", mode == "-execute");
                 singleDialog.hide();
             }
             else if(mode == "-messages")

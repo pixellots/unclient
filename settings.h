@@ -43,6 +43,9 @@ namespace UpdateNode
 
             bool messageShownAndLoaded(const QString& aMessageCode);
 
+            void setCachedFile(const QString& aCode, const QString& aFilename);
+            QString getCachedFile(const QString& aCode);
+
         private:
             bool isVersionMapped(const QString& aProductCode, const QString& aVersion);
             bool isVersionMapped(const QString& aVersionCode);

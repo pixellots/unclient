@@ -4,6 +4,8 @@
 #include <QDialog>
 #include <QUrl>
 
+#include "update.h"
+
 namespace Ui {
     class UserNotofication;
 }
@@ -16,6 +18,7 @@ public:
 
 public:
     void updateView();
+    static bool toAssending(const UpdateNode::Update& a, const UpdateNode::Update& b);
 
 public slots:
     void openLink(const QUrl& aUrl);

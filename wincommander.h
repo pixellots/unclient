@@ -20,10 +20,12 @@ namespace UpdateNode
         static bool isProcessElevated();
         static uint runProcessElevated(const QString &path,
                                        const QStringList &parameters = QStringList(),
-                                       const QString &workingDir = QString());
+                                       const QString &workingDir = QString(),
+                                       bool aWait = true);
         static uint runProcessElevated(const QString &path,
                                        const QString &parameters = QString(),
-                                       const QString &workingDir = QString());
+                                       const QString &workingDir = QString(),
+                                       bool aWait = true);
 
     #ifdef Q_OS_WIN
         static bool isVista();

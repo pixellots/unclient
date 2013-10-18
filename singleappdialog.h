@@ -18,7 +18,7 @@ class SingleAppDialog : public QDialog
         explicit SingleAppDialog(QWidget *parent = 0);
         ~SingleAppDialog();
 
-        void init(UpdateNode::Service* aService);
+        void init(UpdateNode::Service* aService, bool aDownloadOnly, bool aExecuteOnly);
         void download();
         void install();
 
@@ -41,6 +41,8 @@ class SingleAppDialog : public QDialog
         QList<UpdateNode::Update> m_oReadyUpdates;
         UpdateNode::Update m_oCurrentUpdate;
         UpdateNode::Commander m_oCommander;
+        bool m_bDownloadOnly;
+        bool m_bExecuteOnly;
 };
 
 #endif // SINGLEAPPDIALOG_H

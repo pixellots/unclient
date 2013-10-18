@@ -5,13 +5,15 @@
 #include "product.h"
 #include "localfile.h"
 #include "usernotofication.h"
+#include "status.h"
 
 #include <QtDebug>
 #include <QMessageBox>
 
 SingleAppDialog::SingleAppDialog(QWidget *parent) :
     QDialog(parent, Qt::WindowCloseButtonHint),
-    m_pUi(new Ui::SingleAppDialog)
+    m_pUi(new Ui::SingleAppDialog),
+    m_bDownloadOnly(false), m_bExecuteOnly(false)
 {
     m_pUi->setupUi(this);
 
@@ -28,6 +30,7 @@ SingleAppDialog::SingleAppDialog(QWidget *parent) :
     connect(m_pDownloader, SIGNAL(downloadProgress(qint64,qint64)), SLOT(downloadProgress(qint64, qint64)));
     connect(m_pDownloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), SLOT(downloadDone(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)));
 
+    m_pUi->chkDetails->hide();
 }
 
 SingleAppDialog::~SingleAppDialog()
@@ -38,8 +41,10 @@ SingleAppDialog::~SingleAppDialog()
     delete m_pUi;
 }
 
-void SingleAppDialog::init(UpdateNode::Service* aService)
+void SingleAppDialog::init(UpdateNode::Service* aService, bool aDownloadOnly, bool aExecuteOnly)
 {
+    m_bDownloadOnly = aDownloadOnly;
+    m_bExecuteOnly = aExecuteOnly;
     m_pService = aService;
     connect(m_pService, SIGNAL(done()), SLOT(serviceDone()));
 }
@@ -60,20 +65,27 @@ void SingleAppDialog::download()
 
 void SingleAppDialog::install()
 {
-    if(m_oReadyUpdates.size()==0)
+    if(m_oReadyUpdates.isEmpty() || m_bDownloadOnly)
     {
-        qApp->quit();
+        accept();
         return;
     }
 
     m_oCurrentUpdate = m_oReadyUpdates.takeFirst();
 
+    if(m_oCurrentUpdate.getTypeEnum() == UpdateNode::Update::INSTALLER_SETS_VERSION)
+        hide();
+
     m_pUi->labelProgress->setText(tr("Installing Update ..."));
 
     if(!m_oCommander.run(m_oCurrentUpdate))
     {
-        /// TODO .... needs a check or somthing else
+        qApp->exit(UPDATENODE_PROCERROR_COMMAND_LAUNCH_FAILED);
+        return;
     }
+
+    if(m_oCurrentUpdate.getTypeEnum() == UpdateNode::Update::INSTALLER_SETS_VERSION)
+        accept();
 }
 
 void SingleAppDialog::serviceDone()
@@ -89,19 +101,49 @@ void SingleAppDialog::serviceDone()
             setWindowIcon(QPixmap(config->product().getLocalIcon()).scaledToHeight(64, Qt::SmoothTransformation));
     }
 
-    UserNotofication userNotify;
-
-    userNotify.updateView();
-    if(userNotify.exec() != QDialog::Accepted)
+    if(config->updates().size()==0)
     {
-        reject();
+        qApp->exit(UPDATENODE_PROCERROR_NO_UPDATES);
         return;
     }
 
-    adjustSize();
-    show();
+    if(!m_bExecuteOnly)
+    {
+        UserNotofication userNotify;
+        userNotify.updateView();
+        if(userNotify.exec() != QDialog::Accepted)
+        {
+            qApp->exit(UPDATENODE_PROCERROR_CANCELED);
+            return;
+        }
 
-    download();
+        adjustSize();
+        show();
+
+        download();
+    }
+    else
+    {
+        QList<UpdateNode::Update> update_list = UpdateNode::Config::Instance()->updates();
+        UpdateNode::Update update;
+
+        if(update_list.size()>0)
+            update = update_list.at(0);
+
+        UpdateNode::Settings settings;
+        QString cachedFile = settings.getCachedFile(update.getCode());
+
+        if(update.getCode().isEmpty() || !QFile::exists(cachedFile))
+        {
+            qApp->exit(UPDATENODE_PROCERROR_RUN_DOWNLOAD_FIRST);
+            return;
+        }
+        else
+        {
+            m_oReadyUpdates.append(update);
+            install();
+        }
+    }
 }
 
 void SingleAppDialog::onDetailsCheck()
@@ -111,6 +153,7 @@ void SingleAppDialog::onDetailsCheck()
 
 void SingleAppDialog::processError()
 {
+    m_pUi->chkDetails->show();
     m_pUi->textProgress->setTextColor(Qt::red);
     m_pUi->textProgress->append(m_oCommander.readStdErr());
     m_pUi->textProgress->show();
@@ -118,6 +161,7 @@ void SingleAppDialog::processError()
 
 void SingleAppDialog::processOutput()
 {
+    m_pUi->chkDetails->show();
     m_pUi->textProgress->setTextColor(Qt::black);
     m_pUi->textProgress->append(m_oCommander.readStdOut());
     m_pUi->textProgress->show();
@@ -126,6 +170,8 @@ void SingleAppDialog::processOutput()
 void SingleAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
 {
     UpdateNode::Settings settings;
+
+    settings.setUpdate(m_oCurrentUpdate, UpdateNode::LocalFile::getDownloadLocation(m_oCurrentUpdate.getDownloadLink()), aExitCode);
 
     if(aExitStatus == QProcess::NormalExit)
     {
@@ -137,7 +183,7 @@ void SingleAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus
             if(m_oCurrentUpdate.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION)
                 settings.setNewVersion(UpdateNode::Config::Instance()->product(), m_oCurrentUpdate.getTargetVersion());
 
-            install();
+            accept();
         }
         else
         {
@@ -145,16 +191,15 @@ void SingleAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus
             //m_pUI->pshCheck->show();
             //m_pUI->labelProgress->setText(tr("Update '%1' failed with error %2").arg(m_oCurrentUpdate.getTitle()).arg(aExitCode));
 
-            qDebug() << m_oCurrentUpdate.getTitle() << " updated failed!";
-
+            qDebug() << m_oCurrentUpdate.getTitle() << "updated failed - ErrorCode " << aExitCode;
+            qApp->exit(UPDATENODE_PROCERROR_UPDATE_EXEC_FAILED);
         }
     }
     else
     {
-        qDebug() << m_oCurrentUpdate.getTitle() << " carshed!";
+        qDebug() << m_oCurrentUpdate.getTitle() << " crashed!";
+        qApp->exit(UPDATENODE_PROCERROR_UPDATE_EXEC_CRASHED);
     }
-
-    settings.setUpdate(m_oCurrentUpdate, UpdateNode::LocalFile::getDownloadLocation(m_oCurrentUpdate.getDownloadLink()), aExitCode);
 }
 
 void SingleAppDialog::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
@@ -173,12 +218,10 @@ void SingleAppDialog::downloadDone(const UpdateNode::Update& aUpdate, QNetworkRe
     if(aError != QNetworkReply::NoError)
     {
         qDebug() << "Download failed: " << aErrorString;
+        qApp->exit(UPDATENODE_PROCERROR_DOWNLOAD_FAILED);
         return;
     }
 
     if(!m_pDownloader->isDownloading())
-    {
-
         install();
-    }
 }

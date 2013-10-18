@@ -13,8 +13,8 @@
 #include "downloader.h"
 #include "settings.h"
 
-Q_DECLARE_METATYPE ( UpdateNode::Update );
-Q_DECLARE_METATYPE ( UpdateNode::Message);
+Q_DECLARE_METATYPE ( UpdateNode::Update )
+Q_DECLARE_METATYPE ( UpdateNode::Message)
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),

@@ -121,20 +121,26 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
 #ifdef Q_OS_WIN // Windows
         if(m_oUpdate.isAdminRequired() && !UpdateNode::WinCommander::isProcessElevated())
         {
-            uint result = UpdateNode::WinCommander::runProcessElevated(command, commandParameters);
+            uint result = UpdateNode::WinCommander::runProcessElevated(command, commandParameters, QDir::currentPath(), m_oUpdate.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION);
             emit updateExit(result, QProcess::NormalExit);
             return true;
         }
 #endif
-        m_pProcess->start(command, commandParameters);
-
-        // wait 3 minutes for process start
-        if(!m_pProcess->waitForStarted(1000 * 60 * 3))
+        if(m_oUpdate.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION)
         {
-            emit progressText(tr("Error: Update '%1' failed to start").arg(m_oUpdate.getTitle()));
-            m_pProcess->kill();
-            return false;
+            m_pProcess->start(command, commandParameters);
+
+            // wait 3 minutes for process start
+            if(!m_pProcess->waitForStarted(1000 * 60 * 3))
+            {
+                qDebug() << "Error: Update failed to start:" << m_pProcess->errorString();
+                emit progressText(tr("Error: Update '%1' failed to start").arg(m_oUpdate.getTitle()));
+                m_pProcess->kill();
+                return false;
+            }
         }
+        else
+            QProcess::startDetached(command, commandParameters);
     }
     return true;
 }

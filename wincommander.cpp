@@ -1,5 +1,7 @@
 #include "wincommander.h"
+#include "status.h"
 
+#include <QCoreApplication>
 #include <QSysInfo>
 #include <QProcess>
 #include <QDir>
@@ -8,7 +10,7 @@ using namespace UpdateNode;
 
 uint WinCommander::runProcessElevated(const QString &path,
                                               const QStringList &parameters,
-                                              const QString &workingDir)
+                                              const QString &workingDir, bool aWait)
 {
     uint result = 0;
 
@@ -43,9 +45,17 @@ uint WinCommander::runProcessElevated(const QString &path,
     ShellExecuteEx(&shex);
     if (shex.hProcess)
     {
-        WaitForSingleObject(shex.hProcess, INFINITE );
-        GetExitCodeProcess(shex.hProcess, &dwCode);
+        if(aWait)
+        {
+            WaitForSingleObject(shex.hProcess, INFINITE );
+            GetExitCodeProcess(shex.hProcess, &dwCode);
+        }
         CloseHandle (shex.hProcess) ;
+    }
+    else
+    {
+        qApp->exit(UPDATENODE_PROCERROR_WINDOWS_UAC_FAILED);
+        return 0;
     }
 
     result = (uint)dwCode;
@@ -57,9 +67,9 @@ uint WinCommander::runProcessElevated(const QString &path,
     return result;
 }
 
-uint WinCommander::runProcessElevated(const QString &path, const QString &parameters, const QString &workingDir)
+uint WinCommander::runProcessElevated(const QString &path, const QString &parameters, const QString &workingDir, bool aWait)
 {
-    return runProcessElevated(path, QStringList() << parameters, workingDir);
+    return runProcessElevated(path, QStringList() << parameters, workingDir, aWait);
 }
 
 bool WinCommander::isProcessElevated()

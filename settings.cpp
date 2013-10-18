@@ -12,6 +12,7 @@ using namespace UpdateNode;
 Settings::Settings()
     : QSettings(UPDATENODE_COMPANY_STR, UPDATENODE_APPLICATION_STR, 0)
 {
+
     QString id = UpdateNode::Config::Instance()->getKey();
 
     if(!id.isEmpty())
@@ -242,4 +243,18 @@ QString Settings::getVersionCode()
         return getMappedVersionCode();
     else
         return UpdateNode::Config::Instance()->getVersionCode();
+}
+
+void Settings::setCachedFile(const QString& aCode, const QString& aFilename)
+{
+    QString id = m_strUpdate + aCode + "/";
+
+    this->setValue( id + "File" , aFilename);
+}
+
+QString Settings::getCachedFile(const QString& aCode)
+{
+    QString id = m_strUpdate + aCode + "/";
+
+    return this->value( id + "File").toString();
 }

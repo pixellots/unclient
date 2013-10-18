@@ -30,7 +30,7 @@ namespace UpdateNode
 
         public:
              void doDownload(const QUrl& url, const UpdateNode::Update& aUpdate);
-             bool saveToDisk(const QString &filename, QIODevice *data);
+             bool saveToDisk(const QString &filename, QIODevice *data, const QString& aCode);
              void setTarget(const QString& aTarget);
              QString getTarget() const;
 

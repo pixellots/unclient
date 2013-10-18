@@ -1,6 +1,8 @@
 #include <QDir>
 #include "downloader.h"
 #include "localfile.h"
+#include "settings.h"
+#include "status.h"
 
 using namespace UpdateNode;
 
@@ -28,6 +30,14 @@ QString Downloader::getTarget() const
 
 void Downloader::doDownload(const QUrl& url, const UpdateNode::Update& aUpdate)
 {
+    UpdateNode::Settings settings;
+    QString cachedFile = settings.getCachedFile(aUpdate.getCode());
+    if(!cachedFile.isEmpty() && QFile::exists(cachedFile))
+    {
+        emit done(aUpdate, QNetworkReply::NoError, QString());
+        return;
+    }
+
     QNetworkRequest request(url);
 
     QNetworkReply *reply = m_oManager.get(request);
@@ -47,7 +57,7 @@ void Downloader::cancel()
     }
 }
 
-bool Downloader::saveToDisk(const QString &filename, QIODevice *data)
+bool Downloader::saveToDisk(const QString &filename, QIODevice *data, const QString& aCode)
 {
     QFile file(filename);
 
@@ -62,6 +72,9 @@ bool Downloader::saveToDisk(const QString &filename, QIODevice *data)
     file.write(data->readAll());
     file.close();
 
+    UpdateNode::Settings settings;
+    settings.setCachedFile(aCode, filename);
+
     return true;
 }
 
@@ -72,6 +85,7 @@ void Downloader::downloadFinished(QNetworkReply *reply)
 
     error = reply->error();
     errorString = reply->errorString();
+    UpdateNode::Update update = m_oCurrentDownloads.value(reply);
 
     QUrl url = reply->url();
     if (reply->error() != QNetworkReply::NoError)
@@ -79,6 +93,7 @@ void Downloader::downloadFinished(QNetworkReply *reply)
         fprintf(stderr, "Download of %s failed: %s\n",
              url.toEncoded().constData(),
              qPrintable(reply->errorString()));
+
     }
     else
     {
@@ -88,12 +103,11 @@ void Downloader::downloadFinished(QNetworkReply *reply)
         else
             filename = UpdateNode::LocalFile::getDownloadLocation(url.toString());
 
-        if (saveToDisk(filename, reply))
+        if (saveToDisk(filename, reply, update.getCode()))
             printf("Download of %s succeeded (saved to %s)\n",
                 url.toEncoded().constData(), qPrintable(filename));
     }
 
-    UpdateNode::Update update = m_oCurrentDownloads.value(reply);
     m_oCurrentDownloads.remove(reply);
     reply->deleteLater();
 
