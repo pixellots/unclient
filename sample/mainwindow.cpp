@@ -35,7 +35,7 @@ int MainWindow::executeCommand(const QString& commandMode)
 
 void MainWindow::on_actionCheck_for_updates_triggered()
 {
-    executeCommand("-updates");
+    executeCommand("-update");
 }
 
 void MainWindow::on_actionCheck_for_messages_triggered()
