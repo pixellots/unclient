@@ -26,7 +26,8 @@ SOURCES += main.cpp \
     usermessages.cpp \
     updatenode_service.cpp \
     wincommander.cpp \
-    version.cpp
+    version.cpp \
+    application.cpp
 HEADERS += dialog.h \
     config.h \
     settings.h \
@@ -45,7 +46,8 @@ HEADERS += dialog.h \
     usernotofication.h \
     usermessages.h \
     updatenode_service.h \
-    wincommander.h
+    wincommander.h \
+    application.h
 FORMS += dialog.ui \
     settingsdialog.ui \
     singleappdialog.ui \
