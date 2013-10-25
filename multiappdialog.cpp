@@ -2,7 +2,7 @@
 #include <QtWebKit>
 #include <QDesktopServices>
 
-#include "dialog.h"
+#include "multiappdialog.h"
 #include "ui_dialog.h"
 #include "update.h"
 #include "message.h"
@@ -16,7 +16,7 @@
 Q_DECLARE_METATYPE ( UpdateNode::Update )
 Q_DECLARE_METATYPE ( UpdateNode::Message)
 
-Dialog::Dialog(QWidget *parent) :
+MultiAppDialog::MultiAppDialog(QWidget *parent) :
     QDialog(parent),
     m_pUI(new Ui::DialogUpdate)
 {
@@ -56,12 +56,12 @@ Dialog::Dialog(QWidget *parent) :
     connect(m_pUI->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabSelected(int)));
 }
 
-Dialog::~Dialog()
+MultiAppDialog::~MultiAppDialog()
 {
     delete m_pUI;
 }
 
-void Dialog::init(UpdateNode::Service* aService)
+void MultiAppDialog::init(UpdateNode::Service* aService)
 {
     m_pService = aService;
 
@@ -69,7 +69,7 @@ void Dialog::init(UpdateNode::Service* aService)
     connect(m_pService, SIGNAL(doneManager()), SLOT(serviceDoneManager()));
 }
 
-void Dialog::changeEvent(QEvent *e)
+void MultiAppDialog::changeEvent(QEvent *e)
 {
     QDialog::changeEvent(e);
     switch (e->type())
@@ -82,12 +82,12 @@ void Dialog::changeEvent(QEvent *e)
     }
 }
 
-void Dialog::openLink(const QUrl& aUrl)
+void MultiAppDialog::openLink(const QUrl& aUrl)
 {
     QDesktopServices::openUrl(aUrl);
 }
 
-void Dialog::updateSelectedUpdate()
+void MultiAppDialog::updateSelectedUpdate()
 {
     if(m_pUI->treeUpdate->selectedItems().size()>0)
     {
@@ -98,7 +98,7 @@ void Dialog::updateSelectedUpdate()
     }
 }
 
-void Dialog::checkSelection()
+void MultiAppDialog::checkSelection()
 {
     QTreeWidgetItemIterator it(m_pUI->treeUpdate, QTreeWidgetItemIterator::Checked | QTreeWidgetItemIterator::Enabled);
     if(*it)
@@ -107,7 +107,7 @@ void Dialog::checkSelection()
         m_pUI->pshUpdate->setEnabled(false);
 }
 
-void Dialog::updateSelectedMessage()
+void MultiAppDialog::updateSelectedMessage()
 {
     if(m_pUI->treeMessage->selectedItems().size()>0)
     {
@@ -122,7 +122,7 @@ void Dialog::updateSelectedMessage()
     }
 }
 
-void Dialog::serviceDone()
+void MultiAppDialog::serviceDone()
 {
     UpdateNode::Config* config = UpdateNode::Config::Instance();
     
@@ -164,7 +164,7 @@ void Dialog::serviceDone()
     show();
 }
 
-void Dialog::serviceDoneManager()
+void MultiAppDialog::serviceDoneManager()
 {
     UpdateNode::Config* globalConfig = UpdateNode::Config::Instance();
 
@@ -198,13 +198,13 @@ void Dialog::serviceDoneManager()
     show();
 }
 
-void Dialog::cancelProgress()
+void MultiAppDialog::cancelProgress()
 {
     if(m_pDownloader->isDownloading())
         m_pDownloader->cancel();
 }
 
-void Dialog::updateUpdateView(UpdateNode::Config* aConfig /* = NULL */)
+void MultiAppDialog::updateUpdateView(UpdateNode::Config* aConfig /* = NULL */)
 {
     UpdateNode::Config* config;
 
@@ -245,7 +245,7 @@ void Dialog::updateUpdateView(UpdateNode::Config* aConfig /* = NULL */)
 
 }
 
-void Dialog::updateMessageView(UpdateNode::Config* aConfig /* = NULL */)
+void MultiAppDialog::updateMessageView(UpdateNode::Config* aConfig /* = NULL */)
 {
     UpdateNode::Settings settings;
     UpdateNode::Config* config;
@@ -280,7 +280,7 @@ void Dialog::updateMessageView(UpdateNode::Config* aConfig /* = NULL */)
     m_pUI->treeMessage->expandAll();
 }
 
-void Dialog::updateTabCounter(bool aChangeTab /* = true */)
+void MultiAppDialog::updateTabCounter(bool aChangeTab /* = true */)
 {
     if(aChangeTab)
     {
@@ -317,7 +317,7 @@ void Dialog::updateTabCounter(bool aChangeTab /* = true */)
         m_pUI->tabWidget->setTabText(1, tr("Messages (%1)").arg(m_iNewMessages));
 }
 
-void Dialog::refresh()
+void MultiAppDialog::refresh()
 {
     UpdateNode::Config::Instance()->clear();
 
@@ -330,7 +330,7 @@ void Dialog::refresh()
     QApplication::restoreOverrideCursor();
 }
 
-void Dialog::startInstall()
+void MultiAppDialog::startInstall()
 {
     m_pUI->labelProgress->show();
     m_pUI->toolCancel->show();
@@ -352,7 +352,7 @@ void Dialog::startInstall()
     }
 }
 
-void Dialog::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
+void MultiAppDialog::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
     if(m_pUI->progressBar->maximum() <= bytesTotal)
     {
@@ -361,7 +361,7 @@ void Dialog::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
     }
 }
 
-void Dialog::downloadDone(const UpdateNode::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString)
+void MultiAppDialog::downloadDone(const UpdateNode::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString)
 {
     m_oReadyUpdates.append(aUpdate);
 
@@ -384,7 +384,7 @@ void Dialog::downloadDone(const UpdateNode::Update& aUpdate, QNetworkReply::Netw
     }
 }
 
-void Dialog::install()
+void MultiAppDialog::install()
 {
     if(m_oReadyUpdates.size()==0)
     {
@@ -402,21 +402,21 @@ void Dialog::install()
     }
 }
 
-void Dialog::processError()
+void MultiAppDialog::processError()
 {
     m_oTextEdit.setTextColor(Qt::red);
     m_oTextEdit.append(m_oCommander.readStdErr());
     m_oTextEdit.show();
 }
 
-void Dialog::processOutput()
+void MultiAppDialog::processOutput()
 {
     m_oTextEdit.setTextColor(Qt::darkBlue);
     m_oTextEdit.append(m_oCommander.readStdOut());
     m_oTextEdit.show();
 }
 
-void Dialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
+void MultiAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
 {
     UpdateNode::Settings settings;
 
@@ -450,7 +450,7 @@ void Dialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
     settings.setUpdate(m_oCurrentUpdate, UpdateNode::LocalFile::getDownloadLocation(m_oCurrentUpdate.getDownloadLink()), aExitCode);
 }
 
-void Dialog::messageLoaded(bool aSuccess)
+void MultiAppDialog::messageLoaded(bool aSuccess)
 {
     UpdateNode::Settings settings;
 
@@ -474,7 +474,7 @@ void Dialog::messageLoaded(bool aSuccess)
     }
 }
 
-void Dialog::resetMessageItem(QTreeWidgetItem* aItem)
+void MultiAppDialog::resetMessageItem(QTreeWidgetItem* aItem)
 {
     QFont font = aItem->font(0);
     font.setBold(false);
@@ -482,7 +482,7 @@ void Dialog::resetMessageItem(QTreeWidgetItem* aItem)
     updateTabCounter(false);
 }
 
-void Dialog::tabSelected(int aIndex)
+void MultiAppDialog::tabSelected(int aIndex)
 {
     if(aIndex == 1)
     {

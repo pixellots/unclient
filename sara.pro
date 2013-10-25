@@ -9,7 +9,6 @@ QT = network \
 TARGET = unclient
 TEMPLATE = app
 SOURCES += main.cpp \
-    dialog.cpp \
     config.cpp \
     settings.cpp \
     xmlparser.cpp \
@@ -28,8 +27,9 @@ SOURCES += main.cpp \
     wincommander.cpp \
     version.cpp \
     application.cpp \
-    systemtray.cpp
-HEADERS += dialog.h \
+    systemtray.cpp \
+    multiappdialog.cpp
+HEADERS += \
     config.h \
     settings.h \
     version.h \
@@ -49,12 +49,14 @@ HEADERS += dialog.h \
     updatenode_service.h \
     wincommander.h \
     application.h \
-    systemtray.h
-FORMS += dialog.ui \
+    systemtray.h \
+    multiappdialog.h
+FORMS += \
     settingsdialog.ui \
     singleappdialog.ui \
     usernotofication.ui \
-    usermessages.ui
+    usermessages.ui \
+    multiappdialog.ui
 RESOURCES += res.qrc
 
 win32{

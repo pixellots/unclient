@@ -5,7 +5,7 @@
 #include <QMenu>
 #include <QDebug>
 #include "application.h"
-#include "dialog.h"
+#include "multiappdialog.h"
 #include "singleappdialog.h"
 #include "config.h"
 #include "settings.h"
@@ -42,7 +42,7 @@ int printHelp()
             + "  -s             \tSilent check\n"
             + "  -q             \tDo not show any question dialog before\n"
             + "  -d             \tDialog when updates available\n"
-            + "  -st            \tSystem Tray Icon (For -check mode, updates only)\n"
+            + "  -st            \tSystem Tray Icon (-check mode only)\n"
             + "  -l <lang-code> \tLanguage Code\n";
 
     QMessageBox::information(NULL, appName, message);
@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
     }
     UserMessages messageDialog;
     SingleAppDialog singleDialog;
-    Dialog manageDialog;
+    MultiAppDialog manageDialog;
 
     if(mode != "-check")
     {
@@ -199,7 +199,14 @@ int main(int argc, char *argv[])
                 return tray_res;
             }
             else if(!config->isSystemTray())
+            {
+                if(config->mainIcon().isEmpty())
+                    qApp->setWindowIcon(QIcon(config->product().getLocalIcon()));
+                else
+                    qApp->setWindowIcon(QIcon(config->mainIcon()));
+
                 QMessageBox::information(NULL, config->product().getName(), text);
+            }
             return service->returnCode();
         }
     }

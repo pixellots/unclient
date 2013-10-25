@@ -222,7 +222,7 @@ QString Service::notificationText()
             text = QObject::tr("There are no new updates & messages available");
             break;
         case Service::UPDATE:
-            text = QObject::tr("There is an new update available");
+            text = QObject::tr("There is a new update available");
             break;
         case Service::MESSAGE:
             text = QObject::tr("There is a new message available");

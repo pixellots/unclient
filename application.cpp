@@ -75,7 +75,6 @@ void Application::killMeOrNot()
 
     if(data)
     {
-        qDebug() << data[0];
         if(data[0] == '-')
         {
             if(!m_visible)

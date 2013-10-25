@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by Qt Creator 2.6.2, 2013-10-24T11:03:56. -->
+<!-- Written by Qt Creator 2.6.2, 2013-10-25T11:56:13. -->
 <qtcreator>
  <data>
   <variable>ProjectExplorer.Project.ActiveTarget</variable>
@@ -209,7 +209,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
     <value type="QByteArray" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:D:/test/s/sara-client/sara.pro</value>
     <value type="int" key="Qt4ProjectManager.Qt4RunConfiguration.BaseEnvironmentBase">2</value>
-    <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.CommandLineArguments">-k 73ddf26f0d79fdb70b5dcfe738fbe685 -pc {a12414b1-7279-4685-9269-d2a013ef2316} -v 1.0 -check -st</value>
+    <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.CommandLineArguments">-k 73ddf26f0d79fdb70b5dcfe738fbe685 -pc {a12414b1-7279-4685-9269-d2a013ef2316} -v 1.0 -manager</value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.ProFile">sara.pro</value>
     <value type="bool" key="Qt4ProjectManager.Qt4RunConfiguration.UseDyldImageSuffix">false</value>
     <value type="bool" key="Qt4ProjectManager.Qt4RunConfiguration.UseTerminal">false</value>
