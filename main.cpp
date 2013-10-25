@@ -13,6 +13,7 @@
 #include "version.h"
 #include "status.h"
 #include "usermessages.h"
+#include "systemtray.h"
 
 int printHelp()
 {
@@ -112,11 +113,16 @@ int main(int argc, char *argv[])
 
     if(un_app.isAlreadyRunning(config->getKey()))
     {
-        if(!un_app.isSystemTrayHidden())
+        if(!un_app.isHidden())
             return 0;
         else
             un_app.killOther();
     }
+
+    if(mode == "-check" && config->isSystemTray())
+        un_app.setVisible(false);
+    else
+        un_app.setVisible();
 
     UpdateNode::Settings settings;
     if(mode == "-register" || mode == "-unregister")
@@ -180,29 +186,14 @@ int main(int argc, char *argv[])
 
             if(config->isSystemTray() && service->returnCode() != 0)
             {
-                QMenu menu;
-                QSystemTrayIcon tray;
-                tray.setContextMenu(&menu);
-                if(config->mainIcon().isEmpty())
-                    tray.setIcon(QIcon(config->product().getLocalIcon()));
-                else
-                    tray.setIcon(QIcon(config->mainIcon()));
-                tray.show();
-                tray.showMessage(config->product().getName(), text);
+                UpdateNode::SystemTray tray;
+                QObject::connect(&tray, SIGNAL(launchClient()), &un_app, SLOT(setVisible()));
+
                 if(config->isSingleMode())
-                {
-                    QObject::connect(menu.addAction(QObject::tr("Launch Update Client")), SIGNAL(triggered()), &singleDialog, SLOT(serviceDone()));
-                    QObject::connect(&tray, SIGNAL(messageClicked()), &singleDialog, SLOT(serviceDone()));
-                }
+                    QObject::connect(&tray, SIGNAL(launchClient()), &singleDialog, SLOT(serviceDone()));
                 else
-                {
-                    QObject::connect(menu.addAction(QObject::tr("Launch Update Client")), SIGNAL(triggered()), &manageDialog, SLOT(serviceDone()));
-                    QObject::connect(&tray, SIGNAL(messageClicked()), &manageDialog, SLOT(serviceDone()));
-                }
-
-                menu.addSeparator();
-                QObject::connect(menu.addAction(QObject::tr("Close")), SIGNAL(triggered()), &a, SLOT(quit()));
-
+                    QObject::connect(&tray, SIGNAL(launchClient()), &manageDialog, SLOT(serviceDone()));
+                tray.showMessage(text);
                 int tray_res = a.exec();
                 tray.hide();
                 return tray_res;

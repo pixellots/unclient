@@ -15,17 +15,18 @@ namespace UpdateNode
             explicit Application(QObject *parent = 0);
 
             bool isAlreadyRunning(const QString& aKey);
-            bool isSystemTrayHidden();
+            bool isHidden();
             void killOther();
 
         public slots:
-            void setSystemTrayShown(bool aShown = true);
+            void setVisible(bool aShown = true);
             void killMeOrNot();
 
 
         private:
             QSharedMemory m_oSharedMemory;
             QTimer m_oTimer;
+            bool m_visible;
 
     };
 }

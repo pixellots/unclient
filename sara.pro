@@ -27,7 +27,8 @@ SOURCES += main.cpp \
     updatenode_service.cpp \
     wincommander.cpp \
     version.cpp \
-    application.cpp
+    application.cpp \
+    systemtray.cpp
 HEADERS += dialog.h \
     config.h \
     settings.h \
@@ -47,7 +48,8 @@ HEADERS += dialog.h \
     usermessages.h \
     updatenode_service.h \
     wincommander.h \
-    application.h
+    application.h \
+    systemtray.h
 FORMS += dialog.ui \
     settingsdialog.ui \
     singleappdialog.ui \
