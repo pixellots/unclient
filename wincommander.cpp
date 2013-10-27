@@ -63,6 +63,7 @@ uint WinCommander::runProcessElevated(const QString &path,
     Q_UNUSED(path);
     Q_UNUSED(parameters);
     Q_UNUSED(workingDir);
+    Q_UNUSED(aWait);
 #endif
     return result;
 }
