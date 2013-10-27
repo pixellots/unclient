@@ -1,8 +1,11 @@
 #include <QtGui/QApplication>
 #include <QtGui/QMessageBox>
+#include <QSharedMemory>
 #include <QSystemTrayIcon>
+#include <QMenu>
 #include <QDebug>
-#include "dialog.h"
+#include "application.h"
+#include "multiappdialog.h"
 #include "singleappdialog.h"
 #include "config.h"
 #include "settings.h"
@@ -10,6 +13,7 @@
 #include "version.h"
 #include "status.h"
 #include "usermessages.h"
+#include "systemtray.h"
 
 int printHelp()
 {
@@ -38,7 +42,7 @@ int printHelp()
             + "  -s             \tSilent check\n"
             + "  -q             \tDo not show any question dialog before\n"
             + "  -d             \tDialog when updates available\n"
-            + "  -st            \tSystem Tray Icon\n"
+            + "  -st            \tSystem Tray Icon (-check mode only)\n"
             + "  -l <lang-code> \tLanguage Code\n";
 
     QMessageBox::information(NULL, appName, message);
@@ -48,6 +52,8 @@ int printHelp()
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    UpdateNode::Application un_app;
+
     UpdateNode::Config* config = UpdateNode::Config::Instance();
     UpdateNode::Service* service = new UpdateNode::Service(0);
 
@@ -104,6 +110,20 @@ int main(int argc, char *argv[])
     else if(config->getVersion().isEmpty() && !config->getProductCode().isEmpty())
         return UPDATENODE_PROCERROR_WRONG_PARAMETER;
 
+
+    if(un_app.isAlreadyRunning(config->getKey()))
+    {
+        if(!un_app.isHidden())
+            return 0;
+        else
+            un_app.killOther();
+    }
+
+    if(mode == "-check" && config->isSystemTray())
+        un_app.setVisible(false);
+    else
+        un_app.setVisible();
+
     UpdateNode::Settings settings;
     if(mode == "-register" || mode == "-unregister")
     {
@@ -119,7 +139,7 @@ int main(int argc, char *argv[])
     }
     UserMessages messageDialog;
     SingleAppDialog singleDialog;
-    Dialog manageDialog;
+    MultiAppDialog manageDialog;
 
     if(mode != "-check")
     {
@@ -150,16 +170,6 @@ int main(int argc, char *argv[])
     else
         QObject::connect(service, SIGNAL(done()), &a, SLOT(quit()));
 
-    /*
-    if(config->isSystemTray())
-    {
-        QSystemTrayIcon* tray = new QSystemTrayIcon(0);
-        tray->setIcon(QIcon(config->mainIcon()));
-        tray->show();
-        tray->showMessage("UpdateNode Update Client", "Checking for updates...");
-    }
-    */
-
     service->checkForUpdates();
 
     int result = a.exec();
@@ -172,43 +182,32 @@ int main(int argc, char *argv[])
             return service->returnCode();
         else
         {
-            QString text;
-            switch(service->returnCode())
-            {
-                case 0:
-                    text = QObject::tr("There are no new updates & messages available");
-                    break;
-                case 1:
-                    text = QObject::tr("There is 1 update available");
-                    break;
-                case 2:
-                    text = QObject::tr("There is 1 message available");
-                    break;
-                case 3:
-                    text = QObject::tr("There are updates available");
-                    break;
-                case 4:
-                    text = QObject::tr("There are messages available");
-                    break;
-                case 5:
-                    text = QObject::tr("There is 1 update and 1 message available");
-                    break;
-                case 6:
-                    text = QObject::tr("There is 1 update and messages available");
-                    break;
-                case 7:
-                    text = QObject::tr("There are updates and 1 message available");
-                    break;
-                case 8:
-                    text = QObject::tr("There are update and messages available");
-                    break;
-                default:
-                    text = QObject::tr("Undefined state");
-                    break;
-            }
-            QMessageBox::information(NULL, QObject::tr("UpdateNode Client"), text);
-            return result;
+            QString text = service->notificationText();
 
+            if(config->isSystemTray() && service->returnCode() != 0)
+            {
+                UpdateNode::SystemTray tray;
+                QObject::connect(&tray, SIGNAL(launchClient()), &un_app, SLOT(setVisible()));
+
+                if(config->isSingleMode())
+                    QObject::connect(&tray, SIGNAL(launchClient()), &singleDialog, SLOT(serviceDone()));
+                else
+                    QObject::connect(&tray, SIGNAL(launchClient()), &manageDialog, SLOT(serviceDone()));
+                tray.showMessage(text);
+                int tray_res = a.exec();
+                tray.hide();
+                return tray_res;
+            }
+            else if(!config->isSystemTray())
+            {
+                if(config->mainIcon().isEmpty())
+                    qApp->setWindowIcon(QIcon(config->product().getLocalIcon()));
+                else
+                    qApp->setWindowIcon(QIcon(config->mainIcon()));
+
+                QMessageBox::information(NULL, config->product().getName(), text);
+            }
+            return service->returnCode();
         }
     }
 }

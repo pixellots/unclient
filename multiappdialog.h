@@ -13,12 +13,12 @@ namespace Ui
     class DialogUpdate;
 }
 
-class Dialog : public QDialog
+class MultiAppDialog : public QDialog
 {
     Q_OBJECT
     public:
-        Dialog(QWidget *parent = 0);
-        ~Dialog();
+        MultiAppDialog(QWidget *parent = 0);
+        ~MultiAppDialog();
 
         void init(UpdateNode::Service* aService);
 

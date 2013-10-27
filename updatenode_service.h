@@ -20,9 +20,13 @@ namespace UpdateNode
             Service(QObject* parent);
             ~Service();
 
+            enum Status { NOTHING = 0, UPDATE, MESSAGE, UPDATES, MESSAGES,
+                          UPDATE_MESSAGE, UPDATE_MESSAGES, UPDATES_MESSAGE, UPDATES_MESSAGES };
+
             bool checkForUpdates();
             bool checkForUpdates(UpdateNode::Config* aConfig);
             int  returnCode();
+            QString notificationText();
 
         public slots:
             void requestReceived(QNetworkReply* reply);
