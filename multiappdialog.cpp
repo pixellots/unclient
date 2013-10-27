@@ -3,7 +3,7 @@
 #include <QDesktopServices>
 
 #include "multiappdialog.h"
-#include "ui_dialog.h"
+#include "ui_multiappdialog.h"
 #include "update.h"
 #include "message.h"
 #include "product.h"
