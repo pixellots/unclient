@@ -1,3 +1,4 @@
+#include <QLocale>
 #include <stdlib.h>
 #include "config.h"
 
@@ -150,7 +151,7 @@ void Config::setLanguage(const QString& aLanguage)
 
 QString Config::getLanguage() const
 {
-    return m_strLanguage;
+    return m_strLanguage.isEmpty() ? QLocale::system().name() : m_strLanguage;
 }
 
 void Config::clear()

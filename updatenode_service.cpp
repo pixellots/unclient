@@ -2,7 +2,6 @@
 #include <QtDebug>
 #include <QUrl>
 #include <QNetworkReply>
-#include <QLocale>
 
 #include "updatenode_service.h"
 #include "config.h"
@@ -73,11 +72,7 @@ bool Service::checkForUpdates(UpdateNode::Config* aConfig)
     url.addQueryItem("id", settings.uuid());
     url.addQueryItem("os", UpdateNode::OSDetection::getOS());
     url.addQueryItem("arch", UpdateNode::OSDetection::getArch());
-
-    if(!globalConfig->getLanguage().isEmpty())
-        url.addQueryItem("lang", globalConfig->getLanguage());
-    else
-        url.addQueryItem("lang", QLocale::system().name());
+    url.addQueryItem("lang", globalConfig->getLanguage());
 
     if(settings.getVersionCode().isEmpty())
     {

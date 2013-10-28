@@ -8,6 +8,7 @@ QT = network \
     webkit
 TARGET = unclient
 TEMPLATE = app
+TRANSLATIONS = translations/en_US.ts
 SOURCES += main.cpp \
     config.cpp \
     settings.cpp \

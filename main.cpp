@@ -3,6 +3,7 @@
 #include <QSharedMemory>
 #include <QSystemTrayIcon>
 #include <QMenu>
+#include <QTranslator>
 #include <QDebug>
 #include "application.h"
 #include "multiappdialog.h"
@@ -128,6 +129,10 @@ int main(int argc, char *argv[])
         un_app.setVisible(false);
     else
         un_app.setVisible();
+
+    QTranslator translator;
+    translator.load(config->getLanguage(), a.applicationDirPath() + "/translations");
+    a.installTranslator(&translator);
 
     UpdateNode::Settings settings;
     if(mode == "-register" || mode == "-unregister")
