@@ -134,6 +134,16 @@ int main(int argc, char *argv[])
     translator.load(config->getLanguage(), a.applicationDirPath() + "/translations");
     a.installTranslator(&translator);
 
+    QFile style(a.applicationDirPath() + "/default.qss");
+    if(style.exists())
+    {
+        if(style.open(QIODevice::ReadOnly))
+        {
+            a.setStyleSheet(style.readAll());
+            style.close();
+        }
+    }
+
     UpdateNode::Settings settings;
     if(mode == "-register" || mode == "-unregister")
     {
