@@ -14,6 +14,8 @@ namespace UpdateNode
         public:
             explicit Application(QObject *parent = 0);
 
+            bool relaunchUpdateSave(const QString& aKey);
+            bool relaunch(const QString& aKey);
             bool isAlreadyRunning(const QString& aKey);
             bool isHidden();
             void killOther();

@@ -110,6 +110,11 @@ int main(int argc, char *argv[])
     else if(config->getVersion().isEmpty() && !config->getProductCode().isEmpty())
         return UPDATENODE_PROCERROR_WRONG_PARAMETER;
 
+    if(mode == "-manager" && un_app.relaunchUpdateSave(config->getKey()))
+    {
+        un_app.relaunch(config->getKey());
+        return 0;
+    }
 
     if(un_app.isAlreadyRunning(config->getKey()))
     {
