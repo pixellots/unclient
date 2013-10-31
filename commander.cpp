@@ -121,12 +121,12 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
 #ifdef Q_OS_WIN // Windows
         if(m_oUpdate.isAdminRequired() && !UpdateNode::WinCommander::isProcessElevated())
         {
-            uint result = UpdateNode::WinCommander::runProcessElevated(command, commandParameters, QDir::currentPath(), m_oUpdate.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION);
+            uint result = UpdateNode::WinCommander::runProcessElevated(command, commandParameters, QDir::currentPath(), m_oUpdate.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION && Config::Instance()->isSingleMode());
             emit updateExit(result, QProcess::NormalExit);
             return true;
         }
 #endif
-        if(m_oUpdate.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION)
+        if(m_oUpdate.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION || !Config::Instance()->isSingleMode())
         {
             m_pProcess->start(command, commandParameters);
 

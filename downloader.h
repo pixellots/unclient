@@ -26,14 +26,10 @@ namespace UpdateNode
 
          public:
              Downloader();
-             Downloader(const QString& aTarget);
 
         public:
              void doDownload(const QUrl& url, const UpdateNode::Update& aUpdate);
              bool saveToDisk(const QString &filename, QIODevice *data, const QString& aCode);
-             void setTarget(const QString& aTarget);
-             QString getTarget() const;
-
              bool isDownloading();
 
              void cancel();
@@ -48,8 +44,6 @@ namespace UpdateNode
         private:
              QNetworkAccessManager m_oManager;
              QMap<QNetworkReply*, UpdateNode::Update> m_oCurrentDownloads;
-
-             QString m_strTarget;
      };
 
 

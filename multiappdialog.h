@@ -25,9 +25,7 @@ class MultiAppDialog : public QDialog
     private:
         void install();
         void updateUpdateView(UpdateNode::Config* aConfig = NULL);
-        void updateMessageView(UpdateNode::Config* aConfig = NULL);
-        void updateTabCounter(bool aChangeTab = true);
-        void resetMessageItem(QTreeWidgetItem* aItem);
+        void updateCounter();
 
     protected:
         void changeEvent(QEvent *e);
@@ -39,12 +37,9 @@ class MultiAppDialog : public QDialog
         void cancelProgress();
         void openLink(const QUrl& aUrl);
         void updateSelectedUpdate();
-        void updateSelectedMessage();
         void startInstall();
         void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
         void downloadDone(const UpdateNode::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString);
-        void messageLoaded(bool aSuccess);
-        void tabSelected(int aIndex);
         void checkSelection();
 
         void processError();
@@ -63,7 +58,6 @@ class MultiAppDialog : public QDialog
         QTextEdit m_oTextEdit;
 
         int m_iNewUpdates;
-        int m_iNewMessages;
 };
 
 #endif // DIALOG_H

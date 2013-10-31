@@ -17,7 +17,7 @@ Q_DECLARE_METATYPE ( UpdateNode::Update )
 Q_DECLARE_METATYPE ( UpdateNode::Message)
 
 MultiAppDialog::MultiAppDialog(QWidget *parent) :
-    QDialog(parent),
+    QDialog(parent, Qt::WindowCloseButtonHint),
     m_pUI(new Ui::DialogUpdate)
 {
     m_pUI->setupUi(this);
@@ -44,16 +44,12 @@ MultiAppDialog::MultiAppDialog(QWidget *parent) :
     connect(m_pUI->toolCancel, SIGNAL(clicked()), SLOT(cancelProgress()));
 
     m_pUI->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-    m_pUI->webViewMessage->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 
     connect(m_pUI->webView, SIGNAL(linkClicked(const QUrl&)), SLOT(openLink(const QUrl&)));
     connect(m_pUI->treeUpdate, SIGNAL(itemSelectionChanged()), SLOT(updateSelectedUpdate()));
     connect(m_pUI->treeUpdate, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(checkSelection()));
-    connect(m_pUI->webViewMessage, SIGNAL(linkClicked(const QUrl&)), SLOT(openLink(const QUrl&)));
-    connect(m_pUI->webViewMessage, SIGNAL(loadFinished(bool)), SLOT(messageLoaded(bool)));
-    connect(m_pUI->treeMessage, SIGNAL(itemSelectionChanged()), SLOT(updateSelectedMessage()));
 
-    connect(m_pUI->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabSelected(int)));
+
 }
 
 MultiAppDialog::~MultiAppDialog()
@@ -107,33 +103,15 @@ void MultiAppDialog::checkSelection()
         m_pUI->pshUpdate->setEnabled(false);
 }
 
-void MultiAppDialog::updateSelectedMessage()
-{
-    if(m_pUI->treeMessage->selectedItems().size()>0)
-    {
-        QTreeWidgetItem* item = m_pUI->treeMessage->selectedItems().at(0);
-
-        UpdateNode::Message message = item->data(0, Qt::UserRole).value<UpdateNode::Message>();
-
-        if(!message.getMessage().isEmpty())
-            m_pUI->webViewMessage->setContent(message.getMessage().toUtf8());
-        else
-            m_pUI->webViewMessage->load(message.getLink());
-    }
-}
-
 void MultiAppDialog::serviceDone()
 {
     UpdateNode::Config* config = UpdateNode::Config::Instance();
     
     setWindowTitle(config->product().getName() + tr(" - Update Manager"));
 
-    m_iNewMessages = 0;
     m_iNewUpdates = 0;
     m_pUI->treeUpdate->clear();
-    m_pUI->treeMessage->clear();
     m_pUI->webView->setContent("");
-    m_pUI->webViewMessage->setContent("");
 
     if(!config->product().getIconUrl().isEmpty())
     {
@@ -157,8 +135,7 @@ void MultiAppDialog::serviceDone()
     m_pUI->labelVersion->setText(tr("Current Version: %1").arg(config->version().getVersion()));
 
     updateUpdateView();
-    updateMessageView();
-    updateTabCounter();
+    updateCounter();
 
     m_pUI->pshUpdate->setFocus();
     show();
@@ -168,12 +145,9 @@ void MultiAppDialog::serviceDoneManager()
 {
     UpdateNode::Config* globalConfig = UpdateNode::Config::Instance();
 
-    m_iNewMessages = 0;
     m_iNewUpdates = 0;
     m_pUI->treeUpdate->clear();
-    m_pUI->treeMessage->clear();
     m_pUI->webView->setContent("");
-    m_pUI->webViewMessage->setContent("");
 
     if(!globalConfig->mainIcon().isEmpty())
     {
@@ -188,11 +162,9 @@ void MultiAppDialog::serviceDoneManager()
     m_pUI->pshCheck->hide();
 
     for(int i = 0; i < globalConfig->configurations().size();i++)
-    {
         updateUpdateView(globalConfig->configurations().at(i));
-        updateMessageView(globalConfig->configurations().at(i));
-    }
-    updateTabCounter();
+
+    updateCounter();
 
     m_pUI->pshUpdate->setFocus();
     show();
@@ -220,6 +192,7 @@ void MultiAppDialog::updateUpdateView(UpdateNode::Config* aConfig /* = NULL */)
     product->setFont(0, font);
     product->setText(0, config->product().getName());
     product->setIcon(0, QPixmap(config->product().getLocalIcon()));
+    product->setFlags(Qt::ItemIsEnabled);
 
     QList<UpdateNode::Update> update_list = config->updates();
     for(int i = 0; i < update_list.size(); i++)
@@ -245,76 +218,18 @@ void MultiAppDialog::updateUpdateView(UpdateNode::Config* aConfig /* = NULL */)
 
 }
 
-void MultiAppDialog::updateMessageView(UpdateNode::Config* aConfig /* = NULL */)
+void MultiAppDialog::updateCounter()
 {
-    UpdateNode::Settings settings;
-    UpdateNode::Config* config;
-
-    if(aConfig)
-        config = aConfig;
-    else
-        config = UpdateNode::Config::Instance();
-
-    QTreeWidgetItem* product= new QTreeWidgetItem(m_pUI->treeMessage);
-    product->setText(0, config->product().getName());
-
-    QList<UpdateNode::Message> message_list= config->messages();
-    for(int i = 0; i < message_list.size(); i++)
-    {
-        QTreeWidgetItem* parent = new QTreeWidgetItem(product);
-
-        if(!settings.messageShownAndLoaded(message_list.at(i).getCode()))
-        {
-            QFont font;
-            font.setBold(true);
-            parent->setFont(0, font);
-
-            m_iNewMessages++;
-        }
-        parent->setText(0, message_list.at(i).getTitle());
-        parent->setData(0, Qt::UserRole, QVariant::fromValue(message_list.at(i)));
-        if(i==0)
-            parent->setSelected(true);
-    }
-
-    m_pUI->treeMessage->expandAll();
-}
-
-void MultiAppDialog::updateTabCounter(bool aChangeTab /* = true */)
-{
-    if(aChangeTab)
-    {
-        if(m_iNewUpdates > 0)
-            m_pUI->tabWidget->setCurrentIndex(0);
-        else if(m_iNewMessages > 0)
-            m_pUI->tabWidget->setCurrentIndex(1);
-        else
-            m_pUI->tabWidget->setCurrentIndex(0);
-    }
-
     QString strMessage;
 
-    if(m_iNewUpdates>0)
-        strMessage = tr("Software Updates");
-    else if(m_iNewMessages>0)
-        strMessage = tr("Product Messages");
-    if(m_iNewUpdates>0 && m_iNewMessages>0)
-        strMessage = tr("Software Updates & Messages");
-
-    if(!strMessage.isEmpty())
-        m_pUI->labelTitle->setText(tr("%1 are available on this computer.").arg(strMessage));
+    if(m_iNewUpdates==1)
+        strMessage = tr("There is %1 new software update available").arg(m_iNewUpdates);
+    else if(m_iNewUpdates>1)
+        strMessage = tr("There are %1 new software updates available").arg(m_iNewUpdates);
     else
-        m_pUI->labelTitle->setText(tr("No new Updates/Messages available on this computer"));
+        strMessage = tr("Your software is up to date");
 
-    if(m_iNewUpdates==0)
-        m_pUI->tabWidget->setTabText(0, tr("Updates"));
-    else
-        m_pUI->tabWidget->setTabText(0, tr("Updates (%1)").arg(m_iNewUpdates));
-
-    if(m_iNewMessages==0)
-        m_pUI->tabWidget->setTabText(1, tr("Messages"));
-    else
-        m_pUI->tabWidget->setTabText(1, tr("Messages (%1)").arg(m_iNewMessages));
+    m_pUI->labelTitle->setText(strMessage);
 }
 
 void MultiAppDialog::refresh()
@@ -343,7 +258,7 @@ void MultiAppDialog::startInstall()
     m_oReadyUpdates.clear();
 
     QTreeWidgetItemIterator it(m_pUI->treeUpdate, QTreeWidgetItemIterator::Checked | QTreeWidgetItemIterator::Enabled);
-    while (*it)
+    while(*it)
     {
         UpdateNode::Update update = (*it)->data(0, Qt::UserRole).value<UpdateNode::Update>();
         m_pDownloader->doDownload(update.getDownloadLink(), update);
@@ -389,6 +304,7 @@ void MultiAppDialog::install()
     if(m_oReadyUpdates.size()==0)
     {
         m_pUI->pshCheck->show();
+        m_pUI->labelProgress->setText(tr("All updates have been installed"));
         return;
     }
 
@@ -396,9 +312,12 @@ void MultiAppDialog::install()
 
     m_oCurrentUpdate = m_oReadyUpdates.takeFirst();
 
+    m_pUI->labelProgress->setText(tr("Installing Update \"%1\"").arg(m_oCurrentUpdate.getTitle()));
+
     if(!m_oCommander.run(m_oCurrentUpdate))
     {
-        // TODO .... needs a check or somthing else
+        //qApp->exit(UPDATENODE_PROCERROR_COMMAND_LAUNCH_FAILED);
+        return;
     }
 }
 
@@ -430,7 +349,6 @@ void MultiAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
             if(m_oCurrentUpdate.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION)
                 settings.setNewVersion(UpdateNode::Config::Instance()->product(), m_oCurrentUpdate.getTargetVersion());
 
-            install();
         }
         else
         {
@@ -448,61 +366,6 @@ void MultiAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
     }
 
     settings.setUpdate(m_oCurrentUpdate, UpdateNode::LocalFile::getDownloadLocation(m_oCurrentUpdate.getDownloadLink()), aExitCode);
+
+    install();
 }
-
-void MultiAppDialog::messageLoaded(bool aSuccess)
-{
-    UpdateNode::Settings settings;
-
-    if(m_pUI->treeMessage->selectedItems().count()==0)
-        return;
-
-    QTreeWidgetItem* currentItem = m_pUI->treeMessage->selectedItems().at(0);
-
-    if(currentItem && currentItem->parent())
-    {
-        UpdateNode::Message message = currentItem->data(0, Qt::UserRole).value<UpdateNode::Message>();
-
-        if(!settings.messageShownAndLoaded(message.getCode()))
-        {
-            settings.setMessage(message, m_pUI->tabWidget->currentWidget() == m_pUI->tabMessage, aSuccess);
-            if(settings.messageShownAndLoaded(message.getCode()))
-                resetMessageItem(currentItem);
-        }
-        else
-            resetMessageItem(currentItem);
-    }
-}
-
-void MultiAppDialog::resetMessageItem(QTreeWidgetItem* aItem)
-{
-    QFont font = aItem->font(0);
-    font.setBold(false);
-    aItem->setFont(0, font);
-    updateTabCounter(false);
-}
-
-void MultiAppDialog::tabSelected(int aIndex)
-{
-    if(aIndex == 1)
-    {
-        UpdateNode::Settings settings;
-        QTreeWidgetItem* currentItem = m_pUI->treeMessage->selectedItems().at(0);
-
-        if(currentItem && currentItem->parent())
-        {
-            UpdateNode::Message message = currentItem->data(0, Qt::UserRole).value<UpdateNode::Message>();
-
-            if(!settings.messageShownAndLoaded(message.getCode()))
-            {
-                settings.setMessage(message, true);
-                if(settings.messageShownAndLoaded(message.getCode()))
-                    resetMessageItem(currentItem);
-            }
-            else
-                resetMessageItem(currentItem);
-        }
-    }
-}
-
-

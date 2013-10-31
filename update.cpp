@@ -1,5 +1,6 @@
 #include "update.h"
 
+#include <QUrl>
 using namespace UpdateNode;
 
 Update::Update()
@@ -33,7 +34,7 @@ void Update::setDownloadLink(const QString& aDownloadLink)
 
 QString Update::getDownloadLink() const
 {
-    return m_strDownloadLink;
+    return QUrl::fromUserInput(m_strDownloadLink).toEncoded();
 }
 
 void Update::setCommand(const QString& aCommand)

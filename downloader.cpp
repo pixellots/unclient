@@ -1,4 +1,5 @@
 #include <QDir>
+#include <QDebug>
 #include "downloader.h"
 #include "localfile.h"
 #include "settings.h"
@@ -9,23 +10,6 @@ using namespace UpdateNode;
 Downloader::Downloader()
 {
     connect(&m_oManager, SIGNAL(finished(QNetworkReply*)), SLOT(downloadFinished(QNetworkReply*)));
-}
-
-Downloader::Downloader(const QString& aTarget)
-{
-    m_strTarget = aTarget;
-
-    connect(&m_oManager, SIGNAL(finished(QNetworkReply*)), SLOT(downloadFinished(QNetworkReply*)));
-}
-
-void Downloader::setTarget(const QString& aTarget)
-{
-    m_strTarget = aTarget;
-}
-
-QString Downloader::getTarget() const
-{
-    return m_strTarget;
 }
 
 void Downloader::doDownload(const QUrl& url, const UpdateNode::Update& aUpdate)
@@ -98,10 +82,7 @@ void Downloader::downloadFinished(QNetworkReply *reply)
     else
     {
         QString filename;
-        if(!getTarget().isEmpty())
-            filename = m_strTarget;
-        else
-            filename = UpdateNode::LocalFile::getDownloadLocation(url.toString());
+        filename = UpdateNode::LocalFile::getDownloadLocation(url.toString());
 
         if (saveToDisk(filename, reply, update.getCode()))
             printf("Download of %s succeeded (saved to %s)\n",

@@ -134,8 +134,6 @@ void Service::requestReceived(QNetworkReply* reply)
         if(!m_pDownloader)
             m_pDownloader = new UpdateNode::Downloader();
 
-        m_pDownloader->setTarget(config->product().getLocalIcon());
-
         if(UpdateNode::Config::Instance()->isSingleMode())
             connect(m_pDownloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), this, SIGNAL(done()));
         else
