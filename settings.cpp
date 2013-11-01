@@ -15,12 +15,15 @@ Settings::Settings()
 
     QString id = UpdateNode::Config::Instance()->getKey();
 
-    if(!id.isEmpty())
-        id += "/";
-
     m_strUUID = QString("uuid");
 
+    if(!id.isEmpty())
+        id = uuid();
+
+    id += "/";
+
     m_strDownloadPath   = id + QString("DownloadPath");
+    m_strClientPath     = id + QString("ClientPath/");
     m_strUpdate         = id + QString("Update/");
     m_strMessage        = id + QString("Message/");
     m_strCurrentVersion = id + QString("CurrentVersion/");
@@ -138,13 +141,13 @@ bool Settings::messageShownAndLoaded(const QString& aMessageCode)
     return this->value( id + "Shown" , false).toBool() && this->value( id + "Loaded" , false).toBool();
 }
 
-void Settings::setNewVersion(UpdateNode::Product aProduct, UpdateNode::ProductVersion aVersion)
+void Settings::setNewVersion(UpdateNode::Config* config, UpdateNode::Product aProduct, UpdateNode::ProductVersion aVersion)
 {
     QString id = m_strCurrentVersion + aProduct.getCode() + "/";
 
     this->setValue( id + "Name", aProduct.getName());
-    this->setValue( id + "Old/Version", UpdateNode::Config::Instance()->getVersion());
-    this->setValue( id + "Old/Code", UpdateNode::Config::Instance()->getVersionCode());
+    this->setValue( id + "Old/Version", config->getVersion());
+    this->setValue( id + "Old/Code", config->getVersionCode());
 
     this->setValue( id + "Version/Version", aVersion.getVersion());
     this->setValue( id + "Version/Code", aVersion.getCode());
@@ -237,12 +240,19 @@ QString Settings::getProductVersion(UpdateNode::Config* aConfig /* = null */)
         return config->getVersion();
 }
 
-QString Settings::getVersionCode()
+QString Settings::getVersionCode(UpdateNode::Config* aConfig /* = null */)
 {
-    if(isVersionMapped(UpdateNode::Config::Instance()->getVersionCode()))
+    UpdateNode::Config* config;
+
+    if(aConfig)
+        config = aConfig;
+    else
+        config = UpdateNode::Config::Instance();
+
+    if(isVersionMapped(config->getVersionCode()))
         return getMappedVersionCode();
     else
-        return UpdateNode::Config::Instance()->getVersionCode();
+        return config->getVersionCode();
 }
 
 void Settings::setCachedFile(const QString& aCode, const QString& aFilename)
@@ -257,4 +267,14 @@ QString Settings::getCachedFile(const QString& aCode)
     QString id = m_strUpdate + aCode + "/";
 
     return this->value( id + "File").toString();
+}
+
+void Settings::setCurrentClientDir(const QString& aClientDir)
+{
+    this->setValue( m_strClientPath + Config::Instance()->getKey() , aClientDir);
+}
+
+QString Settings::getCurrentClientDir()
+{
+    return this->value( m_strClientPath + Config::Instance()->getKey()).toString();
 }

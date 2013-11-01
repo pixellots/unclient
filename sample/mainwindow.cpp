@@ -3,6 +3,7 @@
 #include "productdata.h"
 #include "QProcess"
 #include "QDir"
+#include "QFile"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -11,11 +12,29 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     setWindowTitle("Test Product " + QString(MY_PRODUCT_VERSION));
+
+    init();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::init()
+{
+    QFile file("initial.data");
+    if(file.exists())
+    {
+        if(file.open(QIODevice::ReadOnly))
+        {
+            ui->textBrowser->setText(file.readAll());
+            file.close();
+        }
+    }
+    else
+        ui->textBrowser->setText("No Data");
+
 }
 
 int MainWindow::executeCommand(const QString& commandMode)

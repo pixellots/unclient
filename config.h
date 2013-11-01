@@ -65,6 +65,7 @@ namespace UpdateNode
 
             QList<UpdateNode::Config*> configurations();
             void addConfiguration(UpdateNode::Config* aConfig);
+            void clearConfigurations();
 
         public:
             Config();

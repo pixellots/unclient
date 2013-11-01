@@ -1,5 +1,6 @@
 #include <QFile>
 #include <QtWebKit>
+#include <QMessageBox>
 #include <QDesktopServices>
 
 #include "multiappdialog.h"
@@ -14,7 +15,7 @@
 #include "settings.h"
 
 Q_DECLARE_METATYPE ( UpdateNode::Update )
-Q_DECLARE_METATYPE ( UpdateNode::Message)
+Q_DECLARE_METATYPE ( UpdateNode::Config* )
 
 MultiAppDialog::MultiAppDialog(QWidget *parent) :
     QDialog(parent, Qt::WindowCloseButtonHint),
@@ -130,10 +131,6 @@ void MultiAppDialog::serviceDone()
     else
         m_pUI->labelLogo->hide();
 
-    m_pUI->labelVersion->show();
-    m_pUI->labelVersion->setDisabled(true);
-    m_pUI->labelVersion->setText(tr("Current Version: %1").arg(config->version().getVersion()));
-
     updateUpdateView();
     updateCounter();
 
@@ -144,6 +141,8 @@ void MultiAppDialog::serviceDone()
 void MultiAppDialog::serviceDoneManager()
 {
     UpdateNode::Config* globalConfig = UpdateNode::Config::Instance();
+
+    setWindowTitle(tr("Software Update Manager"));
 
     m_iNewUpdates = 0;
     m_pUI->treeUpdate->clear();
@@ -158,7 +157,6 @@ void MultiAppDialog::serviceDoneManager()
     else
         m_pUI->labelLogo->hide();
 
-    m_pUI->labelVersion->hide();
     m_pUI->pshCheck->hide();
 
     for(int i = 0; i < globalConfig->configurations().size();i++)
@@ -188,6 +186,9 @@ void MultiAppDialog::updateUpdateView(UpdateNode::Config* aConfig /* = NULL */)
     QFont font;
     font.setPointSize(qApp->font().pointSize()+1);
 
+    if(config->updates().size()==0)
+        return;
+
     QTreeWidgetItem* product= new QTreeWidgetItem(m_pUI->treeUpdate);
     product->setFont(0, font);
     product->setText(0, config->product().getName());
@@ -202,7 +203,8 @@ void MultiAppDialog::updateUpdateView(UpdateNode::Config* aConfig /* = NULL */)
         parent->setText(0, update_list.at(i).getTitle() + tr(" (Size: %1)").arg(update_list.at(i).getFileSize()));
         parent->setCheckState(0, Qt::Checked);
         parent->setData(0, Qt::UserRole, QVariant::fromValue(update_list.at(i)));
-        if(i==0)
+        parent->setData(0, Qt::UserRole+1, QVariant::fromValue(config));
+        if(m_pUI->treeUpdate->topLevelItemCount() == 1 && product->childCount() == 1)
             parent->setSelected(true);
 
         m_iNewUpdates++;
@@ -236,6 +238,12 @@ void MultiAppDialog::refresh()
 {
     UpdateNode::Config::Instance()->clear();
 
+    if(!UpdateNode::Config::Instance()->isSingleMode())
+    {
+        UpdateNode::Settings settings;
+        settings.getRegisteredVersion();
+    }
+
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     m_pUI->pshCheck->setDisabled(true);
 
@@ -256,15 +264,29 @@ void MultiAppDialog::startInstall()
     m_pUI->progressBar->setValue(0);
     
     m_oReadyUpdates.clear();
+    m_bIsInstalling = false;
+
+    m_pUI->treeUpdate->clearSelection();
 
     QTreeWidgetItemIterator it(m_pUI->treeUpdate, QTreeWidgetItemIterator::Checked | QTreeWidgetItemIterator::Enabled);
-    while(*it)
+    if(*it)
     {
-        UpdateNode::Update update = (*it)->data(0, Qt::UserRole).value<UpdateNode::Update>();
+        qDebug() << (*it)->text(0);
+        m_currentItem = (*it);
+        m_currentItem->setSelected(true);
+        UpdateNode::Update update = m_currentItem->data(0, Qt::UserRole).value<UpdateNode::Update>();
+        m_pUI->labelProgress->setText(tr("Downloading Update %1 ...").arg(update.getTitle()));
         m_pDownloader->doDownload(update.getDownloadLink(), update);
-        m_pUI->labelProgress->setText("Downloading Updates...");
-        ++it;
+        return;
     }
+
+    qApp->processEvents();
+
+    m_pUI->toolCancel->hide();
+    m_pUI->progressBar->hide();
+    m_pUI->pshCheck->show();
+    m_pUI->labelProgress->setText(tr("All updates have been installed"));
+    qApp->processEvents();
 }
 
 void MultiAppDialog::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
@@ -290,23 +312,16 @@ void MultiAppDialog::downloadDone(const UpdateNode::Update& aUpdate, QNetworkRep
         return;
     }
 
-    if(!m_pDownloader->isDownloading())
-    {
-        m_pUI->progressBar->hide();
-        m_pUI->toolCancel->hide();
+    m_pUI->progressBar->hide();
+    m_pUI->toolCancel->hide();
 
+    if(!m_bIsInstalling)
         install();
-    }
 }
 
 void MultiAppDialog::install()
 {
-    if(m_oReadyUpdates.size()==0)
-    {
-        m_pUI->pshCheck->show();
-        m_pUI->labelProgress->setText(tr("All updates have been installed"));
-        return;
-    }
+    m_bIsInstalling = true;
 
     m_oTextEdit.clear();
 
@@ -316,8 +331,14 @@ void MultiAppDialog::install()
 
     if(!m_oCommander.run(m_oCurrentUpdate))
     {
-        //qApp->exit(UPDATENODE_PROCERROR_COMMAND_LAUNCH_FAILED);
-        return;
+        m_currentItem->setTextColor(0, QColor("red"));
+
+        QMessageBox::critical(this, m_oCurrentUpdate.getTitle(), tr("Update failed:<br>%1").arg(tr("Unable to execute the command!")));
+
+        m_currentItem->setCheckState(0, Qt::Unchecked);
+        m_currentItem->setFlags(Qt::NoItemFlags);
+        m_bIsInstalling = false;
+        startInstall();
     }
 }
 
@@ -347,8 +368,17 @@ void MultiAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
             qDebug() << m_oCurrentUpdate.getTitle() << " updated successfully!";
 
             if(m_oCurrentUpdate.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION)
-                settings.setNewVersion(UpdateNode::Config::Instance()->product(), m_oCurrentUpdate.getTargetVersion());
+            {
+                if(UpdateNode::Config::Instance()->isSingleMode())
+                    settings.setNewVersion(UpdateNode::Config::Instance(), UpdateNode::Config::Instance()->product(), m_oCurrentUpdate.getTargetVersion());
+                else
+                {
+                    UpdateNode::Config* config = m_currentItem->data(0, Qt::UserRole+1).value<UpdateNode::Config*>();
+                    settings.setNewVersion(config, config->product(), m_oCurrentUpdate.getTargetVersion());
+                }
+            }
 
+            m_currentItem->setTextColor(0, QColor("green"));
         }
         else
         {
@@ -357,15 +387,19 @@ void MultiAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
             m_pUI->labelProgress->setText(tr("Update '%1' failed with error %2").arg(m_oCurrentUpdate.getTitle()).arg(aExitCode));
 
             qDebug() << m_oCurrentUpdate.getTitle() << " updated failed!";
-
+            m_currentItem->setTextColor(0, QColor("red"));
         }
     }
     else
     {
         qDebug() << m_oCurrentUpdate.getTitle() << " crashed!";
+        m_currentItem->setTextColor(0, QColor("red"));
     }
 
     settings.setUpdate(m_oCurrentUpdate, UpdateNode::LocalFile::getDownloadLocation(m_oCurrentUpdate.getDownloadLink()), aExitCode);
 
-    install();
+    m_currentItem->setCheckState(0, Qt::Unchecked);
+    m_currentItem->setFlags(Qt::NoItemFlags);
+    m_bIsInstalling = false;
+    startInstall();
 }

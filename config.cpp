@@ -158,6 +158,7 @@ void Config::clear()
 {
     m_listUpdates.clear();
     m_listMessages.clear();
+    m_listConfigs.clear();
 }
 
 void Config::setSystemTray(bool aTray)
@@ -208,6 +209,11 @@ void Config::addConfiguration(UpdateNode::Config* aConfig)
 QList<UpdateNode::Config*> Config::configurations()
 {
     return m_listConfigs;
+}
+
+void Config::clearConfigurations()
+{
+    m_listConfigs.clear();
 }
 
 

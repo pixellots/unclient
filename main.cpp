@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
     UpdateNode::Config* config = UpdateNode::Config::Instance();
     UpdateNode::Service* service = new UpdateNode::Service(0);
 
-    QString mode;
+    QString mode = "-manager";
     QString argument;
     QStringList arguments = QCoreApplication::arguments();
     for (int i = 0; i < arguments.size(); ++i)
@@ -111,12 +111,32 @@ int main(int argc, char *argv[])
     else if(config->getVersion().isEmpty() && !config->getProductCode().isEmpty())
         return UPDATENODE_PROCERROR_WRONG_PARAMETER;
 
-   /* if(mode == "-manager" && un_app.relaunchUpdateSave(config->getKey()))
+    UpdateNode::Settings settings;
+    if(mode == "-register" || mode == "-unregister")
     {
+        if(mode == "-register")
+            return settings.registerVersion() ? 0 : 1;
+        else
+            return settings.unRegisterVersion() ? 0 : 1;
+    }
+
+    if(mode == "-manager" && un_app.relaunchUpdateSave(config->getKey()))
+    {
+        settings.setCurrentClientDir(qApp->applicationDirPath());
         un_app.relaunch(config->getKey());
         return 0;
     }
-*/
+    else if (mode != "-manager")
+        settings.setCurrentClientDir(qApp->applicationDirPath());
+
+    if(mode != "-manager" && mode != "-check")
+    {
+        if(config->getVersion().isEmpty() && config->getProductCode().isEmpty()
+                && config->getVersionCode().isEmpty())
+            return UPDATENODE_PROCERROR_WRONG_PARAMETER;
+
+    }
+
     if(un_app.isAlreadyRunning(config->getKey()))
     {
         if(!un_app.isHidden())
@@ -137,22 +157,14 @@ int main(int argc, char *argv[])
     QFile style(a.applicationDirPath() + "/default.qss");
     if(style.exists())
     {
-        if(style.open(QIODevice::ReadOnly))
-        {
-            a.setStyleSheet(style.readAll());
-            style.close();
-        }
+         if(style.open(QIODevice::ReadOnly))
+         {
+             a.setStyleSheet(style.readAll());
+             style.close();
+         }
     }
 
-    UpdateNode::Settings settings;
-    if(mode == "-register" || mode == "-unregister")
-    {
-        if(mode == "-register")
-            return settings.registerVersion() ? 0 : 1;
-        else
-            return settings.unRegisterVersion() ? 0 : 1;
-    }
-    else if(mode == "-manager" || mode.isEmpty())
+    if(mode == "-manager" || mode.isEmpty() || mode == "-check")
     {
         if(config->getVersion().isEmpty() && config->getVersionCode().isEmpty() && config->getProductCode().isEmpty())
             settings.getRegisteredVersion();
@@ -188,7 +200,12 @@ int main(int argc, char *argv[])
         }
     }
     else
-        QObject::connect(service, SIGNAL(done()), &a, SLOT(quit()));
+    {
+        if(config->isSingleMode())
+            QObject::connect(service, SIGNAL(done()), &a, SLOT(quit()));
+        else
+            QObject::connect(service, SIGNAL(doneManager()), &a, SLOT(quit()));
+    }
 
     service->checkForUpdates();
 

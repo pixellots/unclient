@@ -16,6 +16,7 @@ public:
     ~MainWindow();
 
 private:
+    void init();
     int executeCommand(const QString& commandMode);
 
 private slots:

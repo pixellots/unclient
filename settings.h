@@ -31,11 +31,11 @@ namespace UpdateNode
             void setUpdate(UpdateNode::Update aUpdate, const QString& aLocalFile, int aResult);
             void setMessage(UpdateNode::Message aMessage, bool aShown, bool aLoaded);
             void setMessage(UpdateNode::Message aMessage, bool aShown);
-            void setNewVersion(UpdateNode::Product aProduct, UpdateNode::ProductVersion aVersion);
+            void setNewVersion(UpdateNode::Config* config, UpdateNode::Product aProduct, UpdateNode::ProductVersion aVersion);
 
             QString getProductCode(UpdateNode::Config* aConfig = NULL);
             QString getProductVersion(UpdateNode::Config* aConfig = NULL);
-            QString getVersionCode();
+            QString getVersionCode(UpdateNode::Config* aConfig = NULL);
 
             QString getMappedProductCode() const;
             QString getMappedVersionCode() const;
@@ -46,6 +46,9 @@ namespace UpdateNode
             void setCachedFile(const QString& aCode, const QString& aFilename);
             QString getCachedFile(const QString& aCode);
 
+            void setCurrentClientDir(const QString& aClientDir);
+            QString getCurrentClientDir();
+
         private:
             bool isVersionMapped(const QString& aProductCode, const QString& aVersion);
             bool isVersionMapped(const QString& aVersionCode);
@@ -53,7 +56,7 @@ namespace UpdateNode
 
         private:
             QString m_strDownloadPath;
-
+            QString m_strClientPath;
             QString m_strUUID;
             QString m_strUpdate;
             QString m_strMessage;

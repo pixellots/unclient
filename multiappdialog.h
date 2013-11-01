@@ -54,10 +54,12 @@ class MultiAppDialog : public QDialog
         QList<UpdateNode::Update> m_oReadyUpdates;
         UpdateNode::Update m_oCurrentUpdate;
         UpdateNode::Commander m_oCommander;
+        QTreeWidgetItem* m_currentItem;
 
         QTextEdit m_oTextEdit;
 
         int m_iNewUpdates;
+        bool m_bIsInstalling;
 };
 
 #endif // DIALOG_H

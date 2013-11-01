@@ -74,13 +74,13 @@ bool Service::checkForUpdates(UpdateNode::Config* aConfig)
     url.addQueryItem("arch", UpdateNode::OSDetection::getArch());
     url.addQueryItem("lang", globalConfig->getLanguage());
 
-    if(settings.getVersionCode().isEmpty())
+    if(aConfig->getVersionCode().isEmpty())
     {
         url.addQueryItem("productCode", settings.getProductCode(aConfig));
         url.addQueryItem("productVersion", settings.getProductVersion(aConfig));
     }
     else
-        url.addQueryItem("versionCode", settings.getVersionCode());
+        url.addQueryItem("versionCode", settings.getVersionCode(aConfig));
 
     qDebug() << "REQUEST: " << url.toString();
     request.setUrl(url);

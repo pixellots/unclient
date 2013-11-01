@@ -158,6 +158,7 @@ QString Commander::readStdOut() const
 /// command = "ld.exe [HOME] [INI@/home/user/.config/UpdateNode/Client.conf:uuid] [SHELL] [@[HOME]/.config/UpdateNode/Client.conf:uuid]";
 QString Commander::resolve(const QString& aString)
 {
+    UpdateNode::Settings settings;
     QString theString = aString;
 
     // replace internals
@@ -171,7 +172,8 @@ QString Commander::resolve(const QString& aString)
     theString = theString.replace("[UN_FILENAME]", QFileInfo(UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink())).fileName());
     theString = theString.replace("[UN_FILEEXT]", QFileInfo(UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink())).completeSuffix());
     theString = theString.replace("[UN_SEP]", QDir::separator());
-    theString = theString.replace("[UN_PATH]", UpdateNode::LocalFile::getDownloadPath());
+    theString = theString.replace("[UN_DOWNLOAD_PATH]", UpdateNode::LocalFile::getDownloadPath());
+    theString = theString.replace("[UN_CLIENT_PATH]", settings.getCurrentClientDir());
     theString = theString.replace("[UN_VERSION]", UPDATENODE_CLIENT_VERSION);
 
     // replace environment vars
