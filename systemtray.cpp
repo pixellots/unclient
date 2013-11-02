@@ -16,11 +16,16 @@ SystemTray::SystemTray(QObject *parent) :
     m_oSystemTray.setContextMenu(&m_oMenu);
 
     connect(&m_oSystemTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(onActivatedactivated(QSystemTrayIcon::ActivationReason)));
-    m_oSystemTray.setToolTip(QObject::tr("%1 %2").arg(config->product().getName()).arg(config->getVersion()));
-    if(config->mainIcon().isEmpty())
+
+    if(config->isSingleMode())
+        m_oSystemTray.setToolTip(QObject::tr("%1 %2").arg(config->product().getName()).arg(config->getVersion()));
+
+    if(config->mainIcon().isEmpty() && config->isSingleMode())
         m_oSystemTray.setIcon(QIcon(config->product().getLocalIcon()));
-    else
+    else if(!config->mainIcon().isEmpty())
         m_oSystemTray.setIcon(QIcon(config->mainIcon()));
+    else
+        m_oSystemTray.setIcon(QIcon(":/images/updatenode.png"));
 
     QAction* action = m_oMenu.addAction(QObject::tr("Launch Update Client"));
 
@@ -33,7 +38,11 @@ SystemTray::SystemTray(QObject *parent) :
 void SystemTray::showMessage(const QString &aText)
 {
     m_oSystemTray.show();
-    m_oSystemTray.showMessage(UpdateNode::Config::Instance()->product().getName(), aText);
+
+    if(UpdateNode::Config::Instance()->isSingleMode())
+        m_oSystemTray.showMessage(UpdateNode::Config::Instance()->product().getName(), aText);
+    else
+        m_oSystemTray.showMessage(tr("Software Update Manager"), aText);
 }
 
 void SystemTray::onActivatedactivated(QSystemTrayIcon::ActivationReason aReason)

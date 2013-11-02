@@ -98,7 +98,7 @@ void Service::requestReceived(QNetworkReply* reply)
 {
     reply->deleteLater();
 
-    UpdateNode::Config* config = m_mapConfig[reply];
+    UpdateNode::Config* config = m_mapConfig.take(reply);
 
     if(reply->error() == QNetworkReply::NoError)
     {
@@ -136,107 +136,114 @@ void Service::requestReceived(QNetworkReply* reply)
 
         if(UpdateNode::Config::Instance()->isSingleMode())
             connect(m_pDownloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), this, SIGNAL(done()));
-        else
+        else if(m_mapConfig.size()==0)
             connect(m_pDownloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), this, SIGNAL(doneManager()));
 
         m_pDownloader->doDownload(config->product().getIconUrl(), UpdateNode::Update());
-
     }
     else
     {
         if(UpdateNode::Config::Instance()->isSingleMode())
             emit done();
-        else
+        else if(m_mapConfig.size()==0)
             emit doneManager();
     }
 }
 
-int Service::returnCode()
+int Service::returnCodeManager()
+{
+    QString result;
+    UpdateNode::Config* config = UpdateNode::Config::Instance();
+
+    int update_cnt = 0;
+    int message_cnt = 0;
+    for(int i = 0; i < config->configurations().size(); i++)
+    {
+        update_cnt += config->configurations().at(i)->updates().size();
+        message_cnt += config->configurations().at(i)->messages().size();
+    }
+    return returnCode(update_cnt, message_cnt);
+}
+
+
+int Service::returnCode(UpdateNode::Config* config /* = NULL */)
+{
+    if(!config)
+        config = UpdateNode::Config::Instance();
+
+    int update_cnt = config->updates().size();
+    int message_cnt = config->messages().size();
+
+    return returnCode(update_cnt, message_cnt);
+}
+
+int Service::returnCode(int aUpdateCount, int aMessageCode)
 {
     Service::Status status;
-    if(UpdateNode::Config::Instance()->updates().size() == 0 && UpdateNode::Config::Instance()->messages().size() == 0)
+
+    if(aUpdateCount == 0 && aMessageCode == 0)
         status = Service::NOTHING; // nothing
-    else if(UpdateNode::Config::Instance()->updates().size() == 1 && UpdateNode::Config::Instance()->messages().size() == 0)
-        status = Service::UPDATE; // one update
-    else if(UpdateNode::Config::Instance()->updates().size() == 0 && UpdateNode::Config::Instance()->messages().size() == 1)
-        status = Service::MESSAGE; // one message
-    else if(UpdateNode::Config::Instance()->updates().size() > 1 && UpdateNode::Config::Instance()->messages().size() == 0)
-        status = Service::UPDATES; // multiple updates
-    else if(UpdateNode::Config::Instance()->updates().size() == 0 && UpdateNode::Config::Instance()->messages().size() > 1)
-        status = Service::MESSAGES; // multiple messages
-    else if(UpdateNode::Config::Instance()->updates().size() == 1 && UpdateNode::Config::Instance()->messages().size() == 1)
-        status = Service::UPDATE_MESSAGE; // one update & one message
-    else if(UpdateNode::Config::Instance()->updates().size() == 1 && UpdateNode::Config::Instance()->messages().size() > 1)
-        status = Service::UPDATE_MESSAGES; // one update & multiple messages
-    else if(UpdateNode::Config::Instance()->updates().size() > 1 && UpdateNode::Config::Instance()->messages().size() == 1)
-        status = Service::UPDATES_MESSAGE; // multiple updates & one message
+    else if(aUpdateCount > 0 && aMessageCode == 0)
+        status = Service::UPDATE; // update
+    else if(aUpdateCount == 0 && aMessageCode >= 1)
+        status = Service::MESSAGE; // message
     else
-        status = Service::UPDATES_MESSAGES; // multiple updates & messages
+        status = Service::UPDATE_MESSAGE; // update & message
 
     if(UpdateNode::Config::Instance()->isSystemTray())
     {
         switch(status)
         {
             case Service::MESSAGE:
-            case Service::MESSAGES:
                 return Service::NOTHING;
-            case Service::UPDATE_MESSAGE:
-            case Service::UPDATE_MESSAGES:
-                return Service::UPDATE;
-            case Service::UPDATES_MESSAGE:
-            case Service::UPDATES_MESSAGES:
-                return Service::UPDATES;
             default:
                 return status;
        }
     }
 
-    if(UpdateNode::Config::Instance()->isSingleMode())
-    {
-        switch(status)
-        {
-            case Service::UPDATES:
-            case Service::UPDATES_MESSAGE:
-            case Service::UPDATES_MESSAGES:
-                return Service::UPDATE;
-            default:
-                return status;
-       }
-    }
     return status;
 }
 
-QString Service::notificationText()
+QString Service::notificationText(UpdateNode::Config* config /* = NULL */)
 {
     QString text;
-    switch(returnCode())
+    switch(returnCode(config))
     {
         case Service::NOTHING:
             text = QObject::tr("There are no new updates & messages available");
             break;
         case Service::UPDATE:
-            text = QObject::tr("There is a new update available");
+            text = QObject::tr("There are new updates available");
             break;
         case Service::MESSAGE:
-            text = QObject::tr("There is a new message available");
-            break;
-        case Service::UPDATES:
-            text = QObject::tr("There are multiple updates available");
-            break;
-        case Service::MESSAGES:
-            text = QObject::tr("There are multiple messages available");
+            text = QObject::tr("There are new messages available");
             break;
         case Service::UPDATE_MESSAGE:
-            text = QObject::tr("There is an update and one message available");
+            text = QObject::tr("There are updates and messages available");
             break;
-        case Service::UPDATE_MESSAGES:
-            text = QObject::tr("There is an update and multiple messages available");
+        default:
+            text = QObject::tr("Undefined state");
             break;
-        case Service::UPDATES_MESSAGE:
-            text = QObject::tr("There are multiple updates and one message available");
+    }
+    return text;
+}
+
+QString Service::notificationTextManager()
+{
+    QString text;
+    switch(returnCodeManager())
+    {
+        case Service::NOTHING:
+            text = QObject::tr("There are no new updates & messages available");
             break;
-        case Service::UPDATES_MESSAGES:
-            text = QObject::tr("There are multiple updates and messages available");
+        case Service::UPDATE:
+            text = QObject::tr("There are new updates available");
+            break;
+        case Service::MESSAGE:
+            text = QObject::tr("There are new messages available");
+            break;
+        case Service::UPDATE_MESSAGE:
+            text = QObject::tr("There are updates and messages available");
             break;
         default:
             text = QObject::tr("Undefined state");

@@ -219,9 +219,14 @@ int main(int argc, char *argv[])
             return service->returnCode();
         else
         {
-            QString text = service->notificationText();
+            QString text;
 
-            if(config->isSystemTray() && service->returnCode() != 0)
+            if(config->isSingleMode())
+                text = service->notificationText();
+            else
+                text = service->notificationTextManager();
+
+            if(config->isSystemTray() && (service->returnCode() != 0 || service->returnCodeManager() != 0))
             {
                 UpdateNode::SystemTray tray;
                 QObject::connect(&tray, SIGNAL(launchClient()), &un_app, SLOT(setVisible()));
@@ -229,7 +234,7 @@ int main(int argc, char *argv[])
                 if(config->isSingleMode())
                     QObject::connect(&tray, SIGNAL(launchClient()), &singleDialog, SLOT(serviceDone()));
                 else
-                    QObject::connect(&tray, SIGNAL(launchClient()), &manageDialog, SLOT(serviceDone()));
+                    QObject::connect(&tray, SIGNAL(launchClient()), &manageDialog, SLOT(serviceDoneManager()));
                 tray.showMessage(text);
                 int tray_res = a.exec();
                 tray.hide();
@@ -244,7 +249,11 @@ int main(int argc, char *argv[])
 
                 QMessageBox::information(NULL, config->product().getName(), text);
             }
-            return service->returnCode();
+
+            if(config->isSingleMode())
+                return service->returnCode();
+            else
+                return service->returnCodeManager();
         }
     }
 }

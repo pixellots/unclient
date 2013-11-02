@@ -25,9 +25,13 @@ namespace UpdateNode
 
             bool checkForUpdates();
             bool checkForUpdates(UpdateNode::Config* aConfig);
-            int  returnCode();
-            QString notificationText();
 
+            int returnCodeManager();
+            int returnCode(UpdateNode::Config* config = NULL);
+            int returnCode(int aUpdateCount, int aMessageCode);
+
+            QString notificationText(UpdateNode::Config* config = NULL);
+            QString notificationTextManager();
         public slots:
             void requestReceived(QNetworkReply* reply);
 
