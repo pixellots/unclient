@@ -1,7 +1,7 @@
 #include <QApplication>
 #include <QMenu>
 #include <QAction>
-#include <QDebug>
+#include "logging.h"
 
 #include "config.h"
 #include "systemtray.h"

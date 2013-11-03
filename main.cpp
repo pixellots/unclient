@@ -4,7 +4,7 @@
 #include <QSystemTrayIcon>
 #include <QMenu>
 #include <QTranslator>
-#include <QDebug>
+#include "logging.h"
 #include "application.h"
 #include "multiappdialog.h"
 #include "singleappdialog.h"
@@ -44,7 +44,7 @@ int printHelp()
             + "  -q             \tDo not show any question dialog before\n"
             + "  -d             \tDialog when updates available\n"
             + "  -st            \tSystem Tray Icon (-check mode only)\n"
-            + "  -l <lang-code> \tLanguage Code\n";
+            + "  -log <file>    \tEnables Logging\n";
 
     QMessageBox::information(NULL, appName, message);
     return 1;
@@ -92,11 +92,11 @@ int main(int argc, char *argv[])
             config->setSystemTray(true);
         else if(argument == "-i")
             config->setMainIcon(arguments.at(i+1));
-        else if(argument == "-n")
-            config->setUpdateInterval(arguments.at(i+1).toInt());
         else if(arguments.at(i) == "-l")
             config->setLanguage(arguments.at(i+1));
-        else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help")
+        else if(arguments.at(i) == "-log")
+            config->setLogging(arguments.at(i+1));
+        else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help" || arguments.at(i) == "-help")
             return printHelp();
         else if(argument == "-update" || argument == "-messages"
                 || argument == "-register" || argument == "-unregister" || argument == "-manager"
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
             return settings.unRegisterVersion() ? 0 : 1;
     }
 
-    if(mode == "-manager" && un_app.relaunchUpdateSave(config->getKey()))
+    if((mode == "-manager" || mode == "update" || mode == "execute") && un_app.relaunchUpdateSave(config->getKey()))
     {
         settings.setCurrentClientDir(qApp->applicationDirPath());
         un_app.relaunch(config->getKey());

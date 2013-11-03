@@ -30,7 +30,8 @@ SOURCES += main.cpp \
     version.cpp \
     application.cpp \
     systemtray.cpp \
-    multiappdialog.cpp
+    multiappdialog.cpp \
+    logging.cpp
 HEADERS += \
     config.h \
     settings.h \
@@ -52,7 +53,8 @@ HEADERS += \
     wincommander.h \
     application.h \
     systemtray.h \
-    multiappdialog.h
+    multiappdialog.h \
+    logging.h
 FORMS += \
     settingsdialog.ui \
     singleappdialog.ui \

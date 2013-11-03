@@ -1,5 +1,5 @@
 #include <QDir>
-#include <QDebug>
+#include "logging.h"
 #include "downloader.h"
 #include "localfile.h"
 #include "settings.h"

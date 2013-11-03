@@ -1,7 +1,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QDebug>
+#include "logging.h"
 #include <QProcessEnvironment>
 #include <QSettings>
 
@@ -81,8 +81,8 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
 
     emit progressText(tr("Installing Update '%1'").arg(m_oUpdate.getTitle()));
 
-    qDebug() << "command: " << command;
-    qDebug() << "commandlline: " << commandParameters.join(" ");
+    UpdateNode::Logging() << "command: " << command;
+    UpdateNode::Logging() << "commandlline: " << commandParameters.join(" ");
 
     commandParameters.removeAll("");
 
@@ -111,7 +111,7 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
         }
         else
         {
-            qDebug() << file.errorString();
+            UpdateNode::Logging() << file.errorString();
             emit updateExit(file.error(), QProcess::NormalExit);
             return false;
         }
@@ -121,26 +121,21 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
 #ifdef Q_OS_WIN // Windows
         if(m_oUpdate.isAdminRequired() && !UpdateNode::WinCommander::isProcessElevated())
         {
-            uint result = UpdateNode::WinCommander::runProcessElevated(command, commandParameters, QDir::currentPath(), m_oUpdate.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION && Config::Instance()->isSingleMode());
+            uint result = UpdateNode::WinCommander::runProcessElevated(command, commandParameters, QDir::currentPath());
             emit updateExit(result, QProcess::NormalExit);
             return true;
         }
 #endif
-        if(m_oUpdate.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION || !Config::Instance()->isSingleMode())
-        {
-            m_pProcess->start(command, commandParameters);
+        m_pProcess->start(command, commandParameters);
 
-            // wait 3 minutes for process start
-            if(!m_pProcess->waitForStarted(1000 * 60 * 3))
-            {
-                qDebug() << "Error: Update failed to start:" << m_pProcess->errorString();
-                emit progressText(tr("Error: Update '%1' failed to start").arg(m_oUpdate.getTitle()));
-                m_pProcess->kill();
-                return false;
-            }
+        // wait 3 minutes for process start
+        if(!m_pProcess->waitForStarted(1000 * 60 * 3))
+        {
+            UpdateNode::Logging() << "Error: Update failed to start:" << m_pProcess->errorString();
+            emit progressText(tr("Error: Update '%1' failed to start").arg(m_oUpdate.getTitle()));
+            m_pProcess->kill();
+            return false;
         }
-        else
-            QProcess::startDetached(command, commandParameters);
     }
     return true;
 }

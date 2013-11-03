@@ -44,9 +44,6 @@ namespace UpdateNode
             void setSystemTray(bool aTray);
             bool isSystemTray();
 
-            int getUpdateInterval();
-            void setUpdateInterval(int aInterval);
-
             QString getOS() const;
 
             void setProduct(const Product& aProduct);
@@ -66,6 +63,10 @@ namespace UpdateNode
             QList<UpdateNode::Config*> configurations();
             void addConfiguration(UpdateNode::Config* aConfig);
             void clearConfigurations();
+
+            void setLogging(const QString& aFileName);
+            bool isLoggingEnabled();
+            QString getLoggingFile();
 
         public:
             Config();
@@ -87,6 +88,7 @@ namespace UpdateNode
             QString m_strProductCode;
             QString m_strVersion;
             QString m_strLanguage;
+            QString m_strLogging;
 
             UpdateNode::Product m_oProduct;
             UpdateNode::ProductVersion m_oCurrentVersion;

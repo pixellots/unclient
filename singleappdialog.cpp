@@ -6,8 +6,8 @@
 #include "localfile.h"
 #include "usernotofication.h"
 #include "status.h"
+#include "logging.h"
 
-#include <QtDebug>
 #include <QMessageBox>
 
 SingleAppDialog::SingleAppDialog(QWidget *parent) :
@@ -178,7 +178,7 @@ void SingleAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus
         if(aExitCode == 0)
         {
             //m_pUI->labelProgress->setText(tr("Update '%1' installed successfully").arg(m_oCurrentUpdate.getTitle()));
-            qDebug() << m_oCurrentUpdate.getTitle() << " updated successfully!";
+            UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << " updated successfully!";
 
             if(m_oCurrentUpdate.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION)
                 settings.setNewVersion(UpdateNode::Config::Instance(), UpdateNode::Config::Instance()->product(), m_oCurrentUpdate.getTargetVersion());
@@ -191,13 +191,13 @@ void SingleAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus
             //m_pUI->pshCheck->show();
             //m_pUI->labelProgress->setText(tr("Update '%1' failed with error %2").arg(m_oCurrentUpdate.getTitle()).arg(aExitCode));
 
-            qDebug() << m_oCurrentUpdate.getTitle() << "updated failed - ErrorCode " << aExitCode;
+            UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << "updated failed - ErrorCode " << aExitCode;
             qApp->exit(UPDATENODE_PROCERROR_UPDATE_EXEC_FAILED);
         }
     }
     else
     {
-        qDebug() << m_oCurrentUpdate.getTitle() << " crashed!";
+        UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << " crashed!";
         qApp->exit(UPDATENODE_PROCERROR_UPDATE_EXEC_CRASHED);
     }
 }
@@ -217,7 +217,7 @@ void SingleAppDialog::downloadDone(const UpdateNode::Update& aUpdate, QNetworkRe
 
     if(aError != QNetworkReply::NoError)
     {
-        qDebug() << "Download failed: " << aErrorString;
+        UpdateNode::Logging() << "Download failed: " << aErrorString;
         qApp->exit(UPDATENODE_PROCERROR_DOWNLOAD_FAILED);
         return;
     }

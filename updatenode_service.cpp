@@ -10,6 +10,7 @@
 #include "xmlparser.h"
 #include "product.h"
 #include "osdetection.h"
+#include "logging.h"
 
 using namespace UpdateNode;
 
@@ -82,7 +83,7 @@ bool Service::checkForUpdates(UpdateNode::Config* aConfig)
     else
         url.addQueryItem("versionCode", settings.getVersionCode(aConfig));
 
-    qDebug() << "REQUEST: " << url.toString();
+    UpdateNode::Logging() << "REQUEST: " << url.toString();
     request.setUrl(url);
     request.setRawHeader("charset", "utf-8" );
     request.setRawHeader("User-Agent", QString("UpdateNodeClient %1 (%2)").arg(UPDATENODE_CLIENT_VERSION).arg(globalConfig->getOS()).toAscii());
@@ -109,7 +110,7 @@ void Service::requestReceived(QNetworkReply* reply)
 
             UpdateNode::XmlParser* parser = new UpdateNode::XmlParser(this, config);
             parser->parse(replyText);
-            qDebug() << "RESULT: " << parser->getStatusString() << "(" << parser->getStatus() << ")";
+            UpdateNode::Logging() << "RESULT: " << parser->getStatusString() << "(" << parser->getStatus() << ")";
         }
         else if (v >= 300 && v < 400) // Redirection
         {
@@ -126,7 +127,7 @@ void Service::requestReceived(QNetworkReply* reply)
     else
     {
         // Error
-        qDebug() << "ERROR: " << reply->errorString();
+        UpdateNode::Logging() << "ERROR: " << reply->errorString();
     }
 
     if(!config->product().getIconUrl().isEmpty())

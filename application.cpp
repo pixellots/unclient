@@ -1,6 +1,6 @@
 #include "application.h"
 #include <QApplication>
-#include <QDebug>
+#include "logging.h"
 #include <QThread>
 #include <QDir>
 #include <QFileInfo>
@@ -34,7 +34,7 @@ bool Application::relaunchUpdateSave(const QString& aKey)
         data = currentFile.readAll();
         src = qChecksum(data, data.length());
         currentFile.close();
-        qDebug() << src;
+        UpdateNode::Logging() << src;
     }
     else
         return false;
@@ -58,7 +58,7 @@ bool Application::relaunchUpdateSave(const QString& aKey)
         data = newFile.readAll();
         dst = qChecksum(data, data.length());
         newFile.close();
-        qDebug() << newFile.fileName() << dst;
+        UpdateNode::Logging() << newFile.fileName() << dst;
     }
     else
         return false;

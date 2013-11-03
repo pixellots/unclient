@@ -181,16 +181,6 @@ bool Config::isSingleMode()
     return m_bSingleMode;
 }
 
-int Config::getUpdateInterval()
-{
-    return m_iUpdateInterval;
-}
-
-void Config::setUpdateInterval(int aInterval)
-{
-    m_iUpdateInterval = aInterval;
-}
-
 void Config::setHost(const QString& aHost)
 {
     m_strHost = aHost;
@@ -214,6 +204,21 @@ QList<UpdateNode::Config*> Config::configurations()
 void Config::clearConfigurations()
 {
     m_listConfigs.clear();
+}
+
+void Config::setLogging(const QString &aFileName)
+{
+    m_strLogging = aFileName;
+}
+
+bool Config::isLoggingEnabled()
+{
+    return !m_strLogging.isEmpty();
+}
+
+QString Config::getLoggingFile()
+{
+    return m_strLogging;
 }
 
 

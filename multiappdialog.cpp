@@ -13,6 +13,7 @@
 #include "localfile.h"
 #include "downloader.h"
 #include "settings.h"
+#include "logging.h"
 
 Q_DECLARE_METATYPE ( UpdateNode::Update )
 Q_DECLARE_METATYPE ( UpdateNode::Config* )
@@ -271,7 +272,7 @@ void MultiAppDialog::startInstall()
     QTreeWidgetItemIterator it(m_pUI->treeUpdate, QTreeWidgetItemIterator::Checked | QTreeWidgetItemIterator::Enabled);
     if(*it)
     {
-        qDebug() << (*it)->text(0);
+        UpdateNode::Logging() << (*it)->text(0);
         m_currentItem = (*it);
         m_currentItem->setSelected(true);
         UpdateNode::Update update = m_currentItem->data(0, Qt::UserRole).value<UpdateNode::Update>();
@@ -365,7 +366,7 @@ void MultiAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
         if(aExitCode == 0)
         {
             m_pUI->labelProgress->setText(tr("Update '%1' installed successfully").arg(m_oCurrentUpdate.getTitle()));
-            qDebug() << m_oCurrentUpdate.getTitle() << " updated successfully!";
+            UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << " updated successfully!";
 
             if(m_oCurrentUpdate.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION)
             {
@@ -386,13 +387,13 @@ void MultiAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
             m_pUI->pshCheck->show();
             m_pUI->labelProgress->setText(tr("Update '%1' failed with error %2").arg(m_oCurrentUpdate.getTitle()).arg(aExitCode));
 
-            qDebug() << m_oCurrentUpdate.getTitle() << " updated failed!";
+            UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << " updated failed!";
             m_currentItem->setTextColor(0, QColor("red"));
         }
     }
     else
     {
-        qDebug() << m_oCurrentUpdate.getTitle() << " crashed!";
+        UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << " crashed!";
         m_currentItem->setTextColor(0, QColor("red"));
     }
 

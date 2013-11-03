@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <QString>
-#include <QDebug>
+#include "logging.h"
 #include <QDomElement>
 #include "xmlparser.h"
 
@@ -34,7 +34,7 @@ bool XmlParser::parse(const QString& aXmlData)
     }
     else
     {
-        qDebug() << "ERROR: " << errorMsg << "(Line " << errorLine << " - Column " << errorColumn << ")";
+        UpdateNode::Logging() << "ERROR: " << errorMsg << "(Line " << errorLine << " - Column " << errorColumn << ")";
         return false;
     }
 
