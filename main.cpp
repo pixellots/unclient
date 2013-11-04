@@ -164,10 +164,16 @@ int main(int argc, char *argv[])
          }
     }
 
-    if(mode == "-manager" || mode.isEmpty() || mode == "-check")
+    if(mode == "-manager" || mode.isEmpty() || (mode == "-check" && !config->isSingleMode()))
     {
         if(config->getVersion().isEmpty() && config->getVersionCode().isEmpty() && config->getProductCode().isEmpty())
             settings.getRegisteredVersion();
+
+        if(config->configurations().size()==0)
+        {
+            UpdateNode::Logging() << "ERROR: There are no versions registered";
+            return UPDATENODE_PROCERROR_REGISTER_FIRST;
+        }
     }
     UserMessages messageDialog;
     SingleAppDialog singleDialog;

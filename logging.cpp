@@ -10,9 +10,18 @@ Logging::Logging()
 
     if(Config::Instance()->isLoggingEnabled())
     {
-        m_pFile = new QFile(Config::Instance()->getLoggingFile());
-        if(m_pFile->open(QIODevice::WriteOnly | QIODevice::Append))
-            m_pStream = new QTextStream(m_pFile);
+        if(Config::Instance()->getLoggingFile()=="-")
+        {
+            m_pFile = new QFile();
+            if(m_pFile->open(stderr, QIODevice::WriteOnly))
+                m_pStream = new QTextStream(m_pFile);
+        }
+        else
+        {
+            m_pFile = new QFile(Config::Instance()->getLoggingFile());
+            if(m_pFile->open(QIODevice::WriteOnly | QIODevice::Append))
+                m_pStream = new QTextStream(m_pFile);
+        }
     }
 }
 
