@@ -9,6 +9,7 @@ QT = network \
 TARGET = unclient
 TEMPLATE = app
 TRANSLATIONS = translations/en_US.ts translations/de_DE.ts
+CONFIG-=app_bundle
 
 SOURCES += main.cpp \
     config.cpp \
