@@ -2,7 +2,9 @@
 #include "ui_usermessages.h"
 #include "config.h"
 #include "settings.h"
+#include "localfile.h"
 
+#include <QNetworkDiskCache>
 #include <QDesktopServices>
 
 UserMessages::UserMessages(QWidget *parent) :
@@ -10,6 +12,10 @@ UserMessages::UserMessages(QWidget *parent) :
     ui(new Ui::UserMessages)
 {
     ui->setupUi(this);
+
+    QNetworkDiskCache* cache = new QNetworkDiskCache(this);
+    cache->setCacheDirectory(UpdateNode::LocalFile::getCachePath());
+    ui->webView->page()->networkAccessManager()->setCache(cache);
 
     ui->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     connect(ui->webView, SIGNAL(linkClicked(const QUrl&)), SLOT(openLink(const QUrl&)));
@@ -22,6 +28,7 @@ UserMessages::UserMessages(QWidget *parent) :
 
 UserMessages::~UserMessages()
 {
+    delete ui->webView->page()->networkAccessManager()->cache();
     delete ui;
 }
 

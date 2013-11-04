@@ -27,3 +27,9 @@ QString LocalFile::getDownloadPath()
             + QDir::separator()
             + UpdateNode::Config::Instance()->getKey();
 }
+
+
+QString LocalFile::getCachePath()
+{
+    return getDownloadPath() + QDir::separator() + "cache";
+}

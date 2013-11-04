@@ -10,6 +10,7 @@ namespace UpdateNode
         public:
             static QString getDownloadLocation(const QString& aFileName);
             static QString getDownloadPath();
+            static QString getCachePath();
 
     };
 }
