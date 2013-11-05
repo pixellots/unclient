@@ -41,13 +41,68 @@ int printHelp()
             + "  -i <file>      \tMain Icon\n"
             + "  -l <lang-code> \tLanguage Code\n"
             + "  -s             \tSilent check\n"
-            + "  -q             \tDo not show any question dialog before\n"
-            + "  -d             \tDialog when updates available\n"
+            + "  -r             \tRelaunch client in temp directory (self update)\n"
             + "  -st            \tSystem Tray Icon (-check mode only)\n"
-            + "  -log <file>    \tEnables Logging\n";
+            + "  -log <file>    \tEnables Logging\n"
+            + "  -exec <command>\tLaunches command before terminating\n"
+            + "  -config <file> \tLoads parameter settings from file\n";
 
     QMessageBox::information(NULL, appName, message);
     return 1;
+}
+
+int returnANDlaunch(int result)
+{
+    QString exec = UpdateNode::Config::Instance()->getExec();
+
+    if(!exec.isEmpty())
+    {
+        if(!QProcess::startDetached(exec))
+            QMessageBox::critical(0, "TODO", QObject::tr("Unable to launch %1").arg(exec));
+    }
+
+    return result;
+}
+
+void getParametersFromFile(const QString& file)
+{
+    UpdateNode::Config* config = UpdateNode::Config::Instance();
+    QSettings *settings = new QSettings(file, QSettings::IniFormat);
+    if(settings->contains("key"))
+        config->setKey(settings->value("key").toString());
+    if(settings->contains("test_key"))
+        config->setTestKey(settings->value("test_key").toString());
+    if(settings->contains("version_code"))
+    {
+        config->setSingleMode(true);
+        config->setVersionCode(settings->value("version_code").toString());
+    }
+    if(settings->contains("product_code"))
+    {
+        config->setSingleMode(true);
+        config->setProductCode(settings->value("product_code").toString());
+    }
+    if(settings->contains("version"))
+    {
+        config->setSingleMode(true);
+        config->setVersion(settings->value("version").toString());
+    }
+    if(settings->contains("icon"))
+        config->setMainIcon(settings->value("icon").toString());
+    if(settings->contains("language"))
+        config->setLanguage(settings->value("language").toString());
+    if(settings->contains("silent"))
+        config->setSilent(settings->value("silent").toString().toLower()=="true");
+    if(settings->contains("systemtray"))
+        config->setSystemTray(settings->value("systemtray").toString().toLower()=="true");
+    if(settings->contains("relaunch"))
+        config->setRelaunch(settings->value("relaunch").toString().toLower()=="true");
+    if(settings->contains("log"))
+        config->setLogging(settings->value("log").toString());
+    if(settings->contains("exec_command"))
+        config->setExec(settings->value("exec_command").toString());
+
+    delete settings;
 }
 
 int main(int argc, char *argv[])
@@ -61,6 +116,11 @@ int main(int argc, char *argv[])
     QString mode = "-manager";
     QString argument;
     QStringList arguments = QCoreApplication::arguments();
+
+    int config_index = arguments.indexOf("-config");
+    if(config_index>-1)
+        getParametersFromFile(arguments.at(config_index+1));
+
     for (int i = 0; i < arguments.size(); ++i)
     {
         argument = arguments.at(i);
@@ -88,6 +148,8 @@ int main(int argc, char *argv[])
             config->setHost(arguments.at(i+1));
         else if(argument == "-s")
             config->setSilent(TRUE);
+        else if(argument == "-r")
+            config->setRelaunch(true);
         else if(argument == "-st")
             config->setSystemTray(true);
         else if(argument == "-i")
@@ -96,6 +158,8 @@ int main(int argc, char *argv[])
             config->setLanguage(arguments.at(i+1));
         else if(arguments.at(i) == "-log")
             config->setLogging(arguments.at(i+1));
+        else if(arguments.at(i) == "-exec")
+            config->setExec(arguments.at(i+1));
         else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help" || arguments.at(i) == "-help")
             return printHelp();
         else if(argument == "-update" || argument == "-messages"
@@ -105,22 +169,22 @@ int main(int argc, char *argv[])
     }
 
     if(config->getKey().isEmpty())
-        return UPDATENODE_PROCERROR_WRONG_PARAMETER;
+        return returnANDlaunch(UPDATENODE_PROCERROR_WRONG_PARAMETER);
     else if(!config->getVersion().isEmpty() && config->getProductCode().isEmpty())
-        return UPDATENODE_PROCERROR_WRONG_PARAMETER;
+        return returnANDlaunch(UPDATENODE_PROCERROR_WRONG_PARAMETER);
     else if(config->getVersion().isEmpty() && !config->getProductCode().isEmpty())
-        return UPDATENODE_PROCERROR_WRONG_PARAMETER;
+        return returnANDlaunch(UPDATENODE_PROCERROR_WRONG_PARAMETER);
 
     UpdateNode::Settings settings;
     if(mode == "-register" || mode == "-unregister")
     {
         if(mode == "-register")
-            return settings.registerVersion() ? 0 : 1;
+           return returnANDlaunch(settings.registerVersion() ? 0 : 1);
         else
-            return settings.unRegisterVersion() ? 0 : 1;
+           return returnANDlaunch(settings.unRegisterVersion() ? 0 : 1);
     }
 
-    if((mode == "-manager" || mode == "update" || mode == "execute") && un_app.relaunchUpdateSave(config->getKey()))
+    if(config->isRelaunch() && (mode == "-manager" || mode == "-update" || mode == "-execute") && un_app.relaunchUpdateSave(config->getKey()))
     {
         settings.setCurrentClientDir(qApp->applicationDirPath());
         un_app.relaunch(config->getKey());
@@ -133,14 +197,14 @@ int main(int argc, char *argv[])
     {
         if(config->getVersion().isEmpty() && config->getProductCode().isEmpty()
                 && config->getVersionCode().isEmpty())
-            return UPDATENODE_PROCERROR_WRONG_PARAMETER;
+            return returnANDlaunch(UPDATENODE_PROCERROR_WRONG_PARAMETER);
 
     }
 
     if(un_app.isAlreadyRunning(config->getKey()))
     {
         if(!un_app.isHidden())
-            return 0;
+            return returnANDlaunch(0);
         else
             un_app.killOther();
     }
@@ -151,10 +215,10 @@ int main(int argc, char *argv[])
         un_app.setVisible();
 
     QTranslator translator;
-    translator.load(config->getLanguage(), a.applicationDirPath() + "/translations");
+    translator.load(config->getLanguage(), "translations");
     a.installTranslator(&translator);
 
-    QFile style(a.applicationDirPath() + "/default.qss");
+    QFile style("default.qss");
     if(style.exists())
     {
          if(style.open(QIODevice::ReadOnly))
@@ -172,7 +236,7 @@ int main(int argc, char *argv[])
         if(config->configurations().size()==0)
         {
             UpdateNode::Logging() << "ERROR: There are no versions registered";
-            return UPDATENODE_PROCERROR_REGISTER_FIRST;
+            return returnANDlaunch(UPDATENODE_PROCERROR_REGISTER_FIRST);
         }
     }
     UserMessages messageDialog;
@@ -218,11 +282,11 @@ int main(int argc, char *argv[])
     int result = a.exec();
 
     if(mode != "-check")
-        return result;
+        return returnANDlaunch(result);
     else
     {
         if(config->isSilent())
-            return service->returnCode();
+            return returnANDlaunch(service->returnCode());
         else
         {
             QString text;
@@ -244,7 +308,7 @@ int main(int argc, char *argv[])
                 tray.showMessage(text);
                 int tray_res = a.exec();
                 tray.hide();
-                return tray_res;
+                return returnANDlaunch(tray_res);
             }
             else if(!config->isSystemTray())
             {
@@ -257,9 +321,9 @@ int main(int argc, char *argv[])
             }
 
             if(config->isSingleMode())
-                return service->returnCode();
+                return returnANDlaunch(service->returnCode());
             else
-                return service->returnCodeManager();
+                return returnANDlaunch(service->returnCodeManager());
         }
     }
 }

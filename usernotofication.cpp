@@ -78,11 +78,6 @@ void UserNotofication::updateView()
         qSort(update_list.begin(), update_list.end(), UserNotofication::toAssending);
 
         QTreeWidgetItem* parent = new QTreeWidgetItem(ui->treeWidget);
-        QFont font = parent->font(0);
-        font.setPixelSize(14);
-        parent->setFont(0, font);
-        parent->setFont(1, font);
-        parent->setFont(2, font);
         parent->setData(0, Qt::UserRole, QVariant::fromValue(update_list.at(0)));
         parent->setText(0, update_list.at(0).getTitle());
         parent->setText(1, update_list.at(0).getTargetVersion().getVersion());

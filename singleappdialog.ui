@@ -7,16 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>420</width>
-    <height>199</height>
+    <height>168</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <property name="sizeConstraint">
-    <enum>QLayout::SetFixedSize</enum>
-   </property>
+  <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
@@ -54,21 +51,24 @@
     <widget class="QTextEdit" name="textProgress"/>
    </item>
    <item row="2" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
       <widget class="QCheckBox" name="chkDetails">
        <property name="text">
         <string>Show details</string>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QDialogButtonBox" name="buttonBox">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="pushButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="standardButtons">
-        <set>QDialogButtonBox::Cancel</set>
+       <property name="text">
+        <string>&amp;Cancel</string>
        </property>
       </widget>
      </item>
@@ -78,38 +78,6 @@
  </widget>
  <resources/>
  <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>SingleAppDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>338</x>
-     <y>156</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>167</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>SingleAppDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>390</x>
-     <y>157</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>167</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>chkDetails</sender>
    <signal>toggled(bool)</signal>

@@ -19,6 +19,7 @@ Config::Config()
     m_bSilent = false;
     m_bSytemTray = false;
     m_bSingleMode = false;
+    m_bRelaunch = false;
 }
 
 void Config::setKey(const QString& aKey)
@@ -220,5 +221,27 @@ QString Config::getLoggingFile()
 {
     return m_strLogging;
 }
+
+void Config::setExec(const QString& aFileName)
+{
+    m_strExec = aFileName;
+}
+
+QString Config::getExec()
+{
+    return m_strExec;
+}
+
+void Config::setRelaunch(bool aEnable)
+{
+    m_bRelaunch = aEnable;
+}
+
+bool Config::isRelaunch()
+{
+    return m_bRelaunch;
+}
+
+
 
 

@@ -25,6 +25,7 @@ class SingleAppDialog : public QDialog
     public slots:
         void serviceDone();
         void onDetailsCheck();
+        void onCancel();
 
         void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
         void downloadDone(const UpdateNode::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString);
@@ -43,6 +44,7 @@ class SingleAppDialog : public QDialog
         UpdateNode::Commander m_oCommander;
         bool m_bDownloadOnly;
         bool m_bExecuteOnly;
+        int  m_iErrorCode;
 };
 
 #endif // SINGLEAPPDIALOG_H

@@ -14,14 +14,8 @@
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <property name="verticalSpacing">
-    <number>1</number>
-   </property>
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout">
-     <property name="bottomMargin">
-      <number>5</number>
-     </property>
      <item row="0" column="0" rowspan="3" colspan="2">
       <widget class="QLabel" name="labelLogo">
        <property name="text">
@@ -96,20 +90,11 @@
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
-     <property name="lineWidth">
-      <number>1</number>
-     </property>
      <property name="showDropIndicator" stdset="0">
       <bool>false</bool>
      </property>
      <property name="selectionMode">
       <enum>QAbstractItemView::NoSelection</enum>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>24</width>
-       <height>24</height>
-      </size>
      </property>
      <property name="rootIsDecorated">
       <bool>false</bool>
@@ -157,9 +142,6 @@
    </item>
    <item row="3" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
-     <property name="topMargin">
-      <number>5</number>
-     </property>
      <item>
       <widget class="QPushButton" name="pshDetails">
        <property name="text">

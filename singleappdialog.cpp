@@ -20,6 +20,7 @@ SingleAppDialog::SingleAppDialog(QWidget *parent) :
     m_pUi->textProgress->setHidden(true);
 
     connect(m_pUi->chkDetails, SIGNAL(stateChanged(int)), SLOT(onDetailsCheck()));
+    connect(m_pUi->pushButton, SIGNAL(clicked()), SLOT(onCancel()));
 
     connect(&m_oCommander, SIGNAL(processError()), this, SLOT(processError()));
     connect(&m_oCommander, SIGNAL(processError()), this, SLOT(processOutput()));
@@ -31,6 +32,8 @@ SingleAppDialog::SingleAppDialog(QWidget *parent) :
     connect(m_pDownloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), SLOT(downloadDone(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)));
 
     m_pUi->chkDetails->hide();
+
+    m_iErrorCode = -1;
 }
 
 SingleAppDialog::~SingleAppDialog()
@@ -73,10 +76,9 @@ void SingleAppDialog::install()
 
     m_oCurrentUpdate = m_oReadyUpdates.takeFirst();
 
-    if(m_oCurrentUpdate.getTypeEnum() == UpdateNode::Update::INSTALLER_SETS_VERSION)
-        hide();
-
     m_pUi->labelProgress->setText(tr("Installing Update ..."));
+    m_pUi->progressBar->hide();
+    hide();
 
     if(!m_oCommander.run(m_oCurrentUpdate))
     {
@@ -84,8 +86,9 @@ void SingleAppDialog::install()
         return;
     }
 
-    if(m_oCurrentUpdate.getTypeEnum() == UpdateNode::Update::INSTALLER_SETS_VERSION)
-        accept();
+    adjustSize();
+    show();
+    m_pUi->pushButton->setText(tr("Close"));
 }
 
 void SingleAppDialog::serviceDone()
@@ -151,6 +154,14 @@ void SingleAppDialog::onDetailsCheck()
     adjustSize();
 }
 
+void SingleAppDialog::onCancel()
+{
+    if(m_iErrorCode == -1)
+        qApp->exit(UPDATENODE_PROCERROR_CANCELED);
+    else
+        qApp->exit(m_iErrorCode);
+}
+
 void SingleAppDialog::processError()
 {
     m_pUi->chkDetails->show();
@@ -173,32 +184,33 @@ void SingleAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus
 
     settings.setUpdate(m_oCurrentUpdate, UpdateNode::LocalFile::getDownloadLocation(m_oCurrentUpdate.getDownloadLink()), aExitCode);
 
+    m_iErrorCode = aExitCode;
+
     if(aExitStatus == QProcess::NormalExit)
     {
         if(aExitCode == 0)
         {
-            //m_pUI->labelProgress->setText(tr("Update '%1' installed successfully").arg(m_oCurrentUpdate.getTitle()));
+            m_pUi->labelProgress->setText(tr("Update '%1' installed successfully").arg(m_oCurrentUpdate.getTitle()));
+
             UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << " updated successfully!";
 
             if(m_oCurrentUpdate.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION)
                 settings.setNewVersion(UpdateNode::Config::Instance(), UpdateNode::Config::Instance()->product(), m_oCurrentUpdate.getTargetVersion());
 
-            accept();
         }
         else
         {
-            //m_pUI->pshUpdate->show();
-            //m_pUI->pshCheck->show();
-            //m_pUI->labelProgress->setText(tr("Update '%1' failed with error %2").arg(m_oCurrentUpdate.getTitle()).arg(aExitCode));
+            m_pUi->labelProgress->setText(tr("Update '%1' failed with error %2").arg(m_oCurrentUpdate.getTitle()).arg(aExitCode));
 
             UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << "updated failed - ErrorCode " << aExitCode;
-            qApp->exit(UPDATENODE_PROCERROR_UPDATE_EXEC_FAILED);
+            m_iErrorCode = UPDATENODE_PROCERROR_UPDATE_EXEC_FAILED;
         }
     }
     else
     {
+        m_pUi->labelProgress->setText(tr("Update '%1' closed unexpected"));
         UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << " crashed!";
-        qApp->exit(UPDATENODE_PROCERROR_UPDATE_EXEC_CRASHED);
+        m_iErrorCode = UPDATENODE_PROCERROR_UPDATE_EXEC_CRASHED;
     }
 }
 

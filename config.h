@@ -68,6 +68,12 @@ namespace UpdateNode
             bool isLoggingEnabled();
             QString getLoggingFile();
 
+            void setExec(const QString& aFileName);
+            QString getExec();
+
+            void setRelaunch(bool aEnable);
+            bool isRelaunch();
+
         public:
             Config();
 
@@ -77,6 +83,7 @@ namespace UpdateNode
             bool m_bSilent;
             bool m_bSytemTray;
             bool m_bSingleMode;
+            bool m_bRelaunch;
 
             int m_iUpdateInterval;
 
@@ -89,6 +96,7 @@ namespace UpdateNode
             QString m_strVersion;
             QString m_strLanguage;
             QString m_strLogging;
+            QString m_strExec;
 
             UpdateNode::Product m_oProduct;
             UpdateNode::ProductVersion m_oCurrentVersion;
