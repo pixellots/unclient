@@ -22,6 +22,8 @@ class SingleAppDialog : public QDialog
         void download();
         void install();
 
+        static bool toAssending(const UpdateNode::Update& a, const UpdateNode::Update& b);
+
     public slots:
         void serviceDone();
         void onDetailsCheck();

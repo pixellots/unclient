@@ -136,7 +136,10 @@ void MultiAppDialog::serviceDone()
     updateCounter();
 
     m_pUI->pshUpdate->setFocus();
-    show();
+    if(!config->isSilent())
+        show();
+    else
+        startInstall();
 }
 
 void MultiAppDialog::serviceDoneManager()
@@ -166,7 +169,11 @@ void MultiAppDialog::serviceDoneManager()
     updateCounter();
 
     m_pUI->pshUpdate->setFocus();
-    show();
+
+    if(!globalConfig->isSilent())
+        show();
+    else
+        startInstall();
 }
 
 void MultiAppDialog::cancelProgress()

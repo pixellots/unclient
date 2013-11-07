@@ -62,131 +62,115 @@
 <context>
     <name>DialogUpdate</name>
     <message>
-        <location filename="../multiappdialog.ui" line="14"/>
-        <source>Dialog</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../multiappdialog.ui" line="23"/>
+        <location filename="../multiappdialog.ui" line="168"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.ui" line="46"/>
+        <location filename="../multiappdialog.ui" line="99"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.ui" line="60"/>
-        <source>&amp;Updates</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../multiappdialog.ui" line="100"/>
+        <location filename="../multiappdialog.ui" line="74"/>
         <source>1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.ui" line="115"/>
-        <location filename="../multiappdialog.ui" line="216"/>
+        <location filename="../multiappdialog.ui" line="89"/>
         <source>about:blank</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.ui" line="143"/>
+        <location filename="../multiappdialog.ui" line="178"/>
         <source>Check</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.ui" line="153"/>
+        <location filename="../multiappdialog.ui" line="132"/>
         <source>Install</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.ui" line="173"/>
-        <source>x</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../multiappdialog.ui" line="180"/>
-        <source>TextLabel</source>
+        <location filename="../multiappdialog.ui" line="14"/>
+        <source>Software Update Manager</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../multiappdialog.ui" line="188"/>
-        <source>&amp;Messages</source>
+        <source>x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../multiappdialog.ui" line="109"/>
+        <source>TextLabel</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MultiAppDialog</name>
     <message>
-        <location filename="../multiappdialog.cpp" line="129"/>
+        <location filename="../multiappdialog.cpp" line="112"/>
         <source> - Update Manager</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="157"/>
-        <source>Current Version: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../multiappdialog.cpp" line="229"/>
+        <location filename="../multiappdialog.cpp" line="204"/>
         <source> (Size: %1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="298"/>
-        <source>Software Updates</source>
+        <location filename="../multiappdialog.cpp" line="146"/>
+        <source>Software Update Manager</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="300"/>
-        <source>Product Messages</source>
+        <location filename="../multiappdialog.cpp" line="229"/>
+        <source>There is %1 new software update available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="302"/>
-        <source>Software Updates &amp; Messages</source>
+        <location filename="../multiappdialog.cpp" line="231"/>
+        <source>There are %1 new software updates available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="305"/>
-        <source>%1 are available on this computer.</source>
+        <location filename="../multiappdialog.cpp" line="233"/>
+        <source>Your software is up to date</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="307"/>
-        <source>No new Updates/Messages available on this computer</source>
+        <location filename="../multiappdialog.cpp" line="279"/>
+        <source>Downloading Update %1 ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="310"/>
-        <source>Updates</source>
+        <location filename="../multiappdialog.cpp" line="289"/>
+        <source>All updates have been installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="312"/>
-        <source>Updates (%1)</source>
+        <location filename="../multiappdialog.cpp" line="331"/>
+        <source>Installing Update &quot;%1&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="315"/>
-        <source>Messages</source>
+        <location filename="../multiappdialog.cpp" line="337"/>
+        <source>Update failed:&lt;br&gt;%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="317"/>
-        <source>Messages (%1)</source>
+        <location filename="../multiappdialog.cpp" line="337"/>
+        <source>Unable to execute the command!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="427"/>
+        <location filename="../multiappdialog.cpp" line="368"/>
         <source>Update &apos;%1&apos; installed successfully</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="439"/>
+        <location filename="../multiappdialog.cpp" line="388"/>
         <source>Update &apos;%1&apos; failed with error %2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -194,68 +178,53 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../systemtray.cpp" line="19"/>
+        <location filename="../systemtray.cpp" line="21"/>
         <source>%1 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../systemtray.cpp" line="25"/>
+        <location filename="../systemtray.cpp" line="30"/>
         <source>Launch Update Client</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../systemtray.cpp" line="30"/>
+        <location filename="../systemtray.cpp" line="35"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../updatenode_service.cpp" line="217"/>
+        <location filename="../updatenode_service.cpp" line="214"/>
+        <location filename="../updatenode_service.cpp" line="238"/>
         <source>There are no new updates &amp; messages available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../updatenode_service.cpp" line="217"/>
+        <location filename="../updatenode_service.cpp" line="241"/>
+        <source>There are new updates available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../updatenode_service.cpp" line="220"/>
-        <source>There is a new update available</source>
+        <location filename="../updatenode_service.cpp" line="244"/>
+        <source>There are new messages available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../updatenode_service.cpp" line="223"/>
-        <source>There is a new message available</source>
+        <location filename="../updatenode_service.cpp" line="247"/>
+        <source>There are updates and messages available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../updatenode_service.cpp" line="226"/>
-        <source>There are multiple updates available</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../updatenode_service.cpp" line="229"/>
-        <source>There are multiple messages available</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../updatenode_service.cpp" line="232"/>
-        <source>There is an update and one message available</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../updatenode_service.cpp" line="235"/>
-        <source>There is an update and multiple messages available</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../updatenode_service.cpp" line="238"/>
-        <source>There are multiple updates and one message available</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../updatenode_service.cpp" line="241"/>
-        <source>There are multiple updates and messages available</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../updatenode_service.cpp" line="244"/>
+        <location filename="../updatenode_service.cpp" line="250"/>
         <source>Undefined state</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../main.cpp" line="61"/>
+        <source>Unable to launch %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -267,22 +236,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../singleappdialog.ui" line="31"/>
+        <location filename="../singleappdialog.ui" line="28"/>
         <source>Initalizing ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../singleappdialog.ui" line="61"/>
+        <location filename="../singleappdialog.ui" line="58"/>
         <source>Show details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../singleappdialog.cpp" line="58"/>
+        <location filename="../singleappdialog.ui" line="71"/>
+        <source>&amp;Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../singleappdialog.cpp" line="61"/>
         <source>Downloading Update ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../singleappdialog.cpp" line="60"/>
+        <location filename="../singleappdialog.cpp" line="63"/>
         <source>Downloading Updates</source>
         <translation type="unfinished"></translation>
     </message>
@@ -292,8 +266,28 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../singleappdialog.cpp" line="94"/>
+        <location filename="../singleappdialog.cpp" line="91"/>
+        <source>Close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../singleappdialog.cpp" line="97"/>
         <source> - Update Client</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../singleappdialog.cpp" line="193"/>
+        <source>Update &apos;%1&apos; installed successfully</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../singleappdialog.cpp" line="203"/>
+        <source>Update &apos;%1&apos; failed with error %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../singleappdialog.cpp" line="211"/>
+        <source>Update &apos;%1&apos; closed unexpected</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -305,8 +299,16 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commander.cpp" line="137"/>
+        <location filename="../commander.cpp" line="135"/>
         <source>Error: Update &apos;%1&apos; failed to start</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>UpdateNode::SystemTray</name>
+    <message>
+        <location filename="../systemtray.cpp" line="45"/>
+        <source>Software Update Manager</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -343,37 +345,37 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../usermessages.ui" line="124"/>
+        <location filename="../usermessages.ui" line="127"/>
         <source>Not Now</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../usermessages.cpp" line="59"/>
+        <location filename="../usermessages.cpp" line="66"/>
         <source> - Message</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../usermessages.cpp" line="61"/>
+        <location filename="../usermessages.cpp" line="68"/>
         <source> - Messages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../usermessages.cpp" line="76"/>
+        <location filename="../usermessages.cpp" line="83"/>
         <source>No unread messages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../usermessages.cpp" line="90"/>
+        <location filename="../usermessages.cpp" line="97"/>
         <source> (%1/%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../usermessages.cpp" line="99"/>
+        <location filename="../usermessages.cpp" line="106"/>
         <source>Loading %p% ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../usermessages.cpp" line="115"/>
+        <location filename="../usermessages.cpp" line="122"/>
         <source>Mark as read and close</source>
         <translation type="unfinished"></translation>
     </message>
@@ -386,47 +388,47 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../usernotofication.ui" line="63"/>
+        <location filename="../usernotofication.ui" line="57"/>
         <source>A new software update is available</source>
         <translation>A brand new software is available</translation>
     </message>
     <message>
-        <location filename="../usernotofication.ui" line="76"/>
+        <location filename="../usernotofication.ui" line="70"/>
         <source>Do you want to download and install the update now?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../usernotofication.ui" line="128"/>
+        <location filename="../usernotofication.ui" line="113"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../usernotofication.ui" line="133"/>
+        <location filename="../usernotofication.ui" line="118"/>
         <source>Version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../usernotofication.ui" line="138"/>
+        <location filename="../usernotofication.ui" line="123"/>
         <source>Size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../usernotofication.ui" line="153"/>
+        <location filename="../usernotofication.ui" line="138"/>
         <source>about:blank</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../usernotofication.ui" line="166"/>
+        <location filename="../usernotofication.ui" line="148"/>
         <source>Show Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../usernotofication.ui" line="189"/>
+        <location filename="../usernotofication.ui" line="171"/>
         <source>Not Now</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../usernotofication.ui" line="199"/>
+        <location filename="../usernotofication.ui" line="181"/>
         <source>Continue</source>
         <translation type="unfinished"></translation>
     </message>

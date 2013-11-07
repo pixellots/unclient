@@ -1,5 +1,6 @@
 #include <QtGui/QApplication>
 #include <QtGui/QMessageBox>
+#include <QSplashScreen>
 #include <QSharedMemory>
 #include <QSystemTrayIcon>
 #include <QMenu>
@@ -38,8 +39,9 @@ int printHelp()
             + "  -vc <code>     \tProduct Version Code\n"
             + "  -pc <code>     \tProduct Code\n"
             + "  -v <version>   \tProduct Version\n"
-            + "  -i <file>      \tMain Icon\n"
+            + "  -i <png_file>  \tMain PNG Icon\n"
             + "  -l <lang-code> \tLanguage Code\n"
+            + "  -sp <png_file> \tSplash screen (PNG)\n"
             + "  -s             \tSilent check\n"
             + "  -r             \tRelaunch client in temp directory (self update)\n"
             + "  -st            \tSystem Tray Icon (-check mode only)\n"
@@ -57,8 +59,26 @@ int returnANDlaunch(int result)
 
     if(!exec.isEmpty())
     {
+        UpdateNode::Logging() << "Lauching: " << exec;
+        exec = exec.replace("[UN_ERRORCODE]", QString::number(result));
+        if(UpdateNode::Config::Instance()->isSingleMode())
+        {
+            if(UpdateNode::Config::Instance()->updates().size()==1)
+            {
+                UpdateNode::Update update = UpdateNode::Config::Instance()->updates().at(0);
+                if(update.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION)
+                {
+                    UpdateNode::Settings settings;
+                    exec = exec.replace("[UN_VERSION]", settings.getProductVersion());
+                }
+            }
+        }
+
+        // set to emtpy in case the above if statement does not match
+        exec = exec.replace("[UN_VERSION]", "");
+
         if(!QProcess::startDetached(exec))
-            QMessageBox::critical(0, "TODO", QObject::tr("Unable to launch %1").arg(exec));
+            QMessageBox::critical(0, "TODO", QObject::tr("Unable to launch '%1'").arg(exec));
     }
 
     return result;
@@ -101,6 +121,8 @@ void getParametersFromFile(const QString& file)
         config->setLogging(settings->value("log").toString());
     if(settings->contains("exec_command"))
         config->setExec(settings->value("exec_command").toString());
+    if(settings->contains("splash"))
+        config->setSplashScreen(settings->value("splash").toString());
 
     delete settings;
 }
@@ -113,13 +135,18 @@ int main(int argc, char *argv[])
     UpdateNode::Config* config = UpdateNode::Config::Instance();
     UpdateNode::Service* service = new UpdateNode::Service(0);
 
-    QString mode = "-manager";
+    QString mode;
     QString argument;
     QStringList arguments = QCoreApplication::arguments();
 
     int config_index = arguments.indexOf("-config");
-    if(config_index>-1)
-        getParametersFromFile(arguments.at(config_index+1));
+    if(config_index>-1 || QFile::exists("unclient.cfg"))
+    {
+        if(config_index>-1)
+            getParametersFromFile(arguments.at(config_index+1));
+        else
+            getParametersFromFile("unclient.cfg");
+    }
 
     for (int i = 0; i < arguments.size(); ++i)
     {
@@ -158,6 +185,8 @@ int main(int argc, char *argv[])
             config->setLanguage(arguments.at(i+1));
         else if(arguments.at(i) == "-log")
             config->setLogging(arguments.at(i+1));
+        else if(arguments.at(i) == "-sp")
+            config->setSplashScreen(arguments.at(i+1));
         else if(arguments.at(i) == "-exec")
             config->setExec(arguments.at(i+1));
         else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help" || arguments.at(i) == "-help")
@@ -175,13 +204,18 @@ int main(int argc, char *argv[])
     else if(config->getVersion().isEmpty() && !config->getProductCode().isEmpty())
         return returnANDlaunch(UPDATENODE_PROCERROR_WRONG_PARAMETER);
 
+    if(mode.isEmpty() && config->isSingleMode())
+        mode = "-update";
+    else if(mode.isEmpty())
+        mode = "-manager";
+
     UpdateNode::Settings settings;
     if(mode == "-register" || mode == "-unregister")
     {
         if(mode == "-register")
-           return returnANDlaunch(settings.registerVersion() ? 0 : 1);
+           return settings.registerVersion() ? 0 : 1;
         else
-           return returnANDlaunch(settings.unRegisterVersion() ? 0 : 1);
+           return settings.unRegisterVersion() ? 0 : 1;
     }
 
     if(config->isRelaunch() && (mode == "-manager" || mode == "-update" || mode == "-execute") && un_app.relaunchUpdateSave(config->getKey()))
@@ -198,7 +232,6 @@ int main(int argc, char *argv[])
         if(config->getVersion().isEmpty() && config->getProductCode().isEmpty()
                 && config->getVersionCode().isEmpty())
             return returnANDlaunch(UPDATENODE_PROCERROR_WRONG_PARAMETER);
-
     }
 
     if(un_app.isAlreadyRunning(config->getKey()))
@@ -233,7 +266,7 @@ int main(int argc, char *argv[])
         if(config->getVersion().isEmpty() && config->getVersionCode().isEmpty() && config->getProductCode().isEmpty())
             settings.getRegisteredVersion();
 
-        if(config->configurations().size()==0)
+        if(config->getVersion().isEmpty() && config->getVersionCode().isEmpty() && config->getProductCode().isEmpty() && config->configurations().size()==0)
         {
             UpdateNode::Logging() << "ERROR: There are no versions registered";
             return returnANDlaunch(UPDATENODE_PROCERROR_REGISTER_FIRST);
@@ -242,9 +275,21 @@ int main(int argc, char *argv[])
     UserMessages messageDialog;
     SingleAppDialog singleDialog;
     MultiAppDialog manageDialog;
+    QSplashScreen splashScreen;
+    QPixmap splashScreen_pic;
 
     if(mode != "-check")
     {
+        if(!config->getSplashScreen().isEmpty())
+        {
+            splashScreen_pic.load(config->getSplashScreen());
+            splashScreen.setPixmap(splashScreen_pic);
+            splashScreen.showMessage(QObject::tr("Checking for updates ..."), Qt::AlignCenter | Qt::AlignBottom);
+            splashScreen.show();
+            QObject::connect(service, SIGNAL(done()), &splashScreen, SLOT(close()));
+            QObject::connect(service, SIGNAL(doneManager()), &splashScreen, SLOT(close()));
+        }
+
         if(config->isSingleMode())
         {
             if(mode == "-update" || mode == "-download" || mode == "-execute")

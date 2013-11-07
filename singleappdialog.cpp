@@ -7,8 +7,7 @@
 #include "usernotofication.h"
 #include "status.h"
 #include "logging.h"
-
-#include <QMessageBox>
+#include "version.h"
 
 SingleAppDialog::SingleAppDialog(QWidget *parent) :
     QDialog(parent, Qt::WindowCloseButtonHint),
@@ -87,8 +86,16 @@ void SingleAppDialog::install()
     }
 
     adjustSize();
-    show();
+    if(!UpdateNode::Config::Instance()->isSilent())
+        show();
+    else
+        accept();
     m_pUi->pushButton->setText(tr("Close"));
+}
+
+bool SingleAppDialog::toAssending(const UpdateNode::Update& a, const UpdateNode::Update& b)
+{
+    return UpdateNode::Version::compare(a.getTargetVersion().getVersion(), b.getTargetVersion().getVersion()) == -1;
 }
 
 void SingleAppDialog::serviceDone()
@@ -112,17 +119,24 @@ void SingleAppDialog::serviceDone()
 
     if(!m_bExecuteOnly)
     {
-        UserNotofication userNotify;
-        userNotify.updateView();
-        if(userNotify.exec() != QDialog::Accepted)
+        QList<UpdateNode::Update> update_list = config->updates();
+        qSort(update_list.begin(), update_list.end(), SingleAppDialog::toAssending);
+        config->clear();
+        config->addUpdate(update_list.at(0));
+
+        if(!config->isSilent())
         {
-            qApp->exit(UPDATENODE_PROCERROR_CANCELED);
-            return;
+            UserNotofication userNotify;
+            userNotify.updateView();
+            if(userNotify.exec() != QDialog::Accepted)
+            {
+                qApp->exit(UPDATENODE_PROCERROR_CANCELED);
+                return;
+            }
+
+            adjustSize();
+            show();
         }
-
-        adjustSize();
-        show();
-
         download();
     }
     else

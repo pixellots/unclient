@@ -17,9 +17,6 @@ Settings::Settings()
 
     m_strUUID = QString("uuid");
 
-    if(!id.isEmpty())
-        id = uuid();
-
     id += "/";
 
     m_strDownloadPath   = id + QString("DownloadPath");
@@ -257,6 +254,9 @@ QString Settings::getVersionCode(UpdateNode::Config* aConfig /* = null */)
 
 void Settings::setCachedFile(const QString& aCode, const QString& aFilename)
 {
+    if(aCode.isEmpty())
+        return;
+
     QString id = m_strUpdate + aCode + "/";
 
     this->setValue( id + "File" , aFilename);

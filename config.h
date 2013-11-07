@@ -74,6 +74,9 @@ namespace UpdateNode
             void setRelaunch(bool aEnable);
             bool isRelaunch();
 
+            void setSplashScreen(const QString& aFileName);
+            QString getSplashScreen();
+
         public:
             Config();
 
@@ -97,6 +100,7 @@ namespace UpdateNode
             QString m_strLanguage;
             QString m_strLogging;
             QString m_strExec;
+            QString m_strSplashImage;
 
             UpdateNode::Product m_oProduct;
             UpdateNode::ProductVersion m_oCurrentVersion;

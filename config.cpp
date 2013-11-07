@@ -242,6 +242,17 @@ bool Config::isRelaunch()
     return m_bRelaunch;
 }
 
+void Config::setSplashScreen(const QString& aFileName)
+{
+    m_strSplashImage = aFileName;
+}
+
+QString Config::getSplashScreen()
+{
+    return m_strSplashImage;
+}
+
+
 
 
 

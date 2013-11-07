@@ -2,7 +2,6 @@
 #include "ui_usernotofication.h"
 #include "config.h"
 #include "settings.h"
-#include "version.h"
 
 #include <QDesktopServices>
 
@@ -46,11 +45,6 @@ void UserNotofication::changeEvent(QEvent *e)
     }
 }
 
-bool UserNotofication::toAssending(const UpdateNode::Update& a, const UpdateNode::Update& b)
-{
-    return UpdateNode::Version::compare(a.getTargetVersion().getVersion(), b.getTargetVersion().getVersion()) == -1;
-}
-
 void UserNotofication::updateView()
 {
     UpdateNode::Config* config = UpdateNode::Config::Instance();
@@ -75,17 +69,12 @@ void UserNotofication::updateView()
     if(config->updates().size()>0)
     {
         QList<UpdateNode::Update> update_list = config->updates();
-        qSort(update_list.begin(), update_list.end(), UserNotofication::toAssending);
-
         QTreeWidgetItem* parent = new QTreeWidgetItem(ui->treeWidget);
         parent->setData(0, Qt::UserRole, QVariant::fromValue(update_list.at(0)));
         parent->setText(0, update_list.at(0).getTitle());
         parent->setText(1, update_list.at(0).getTargetVersion().getVersion());
         parent->setText(2, update_list.at(0).getFileSize());
         parent->setSelected(true);
-
-        config->clear();
-        config->addUpdate(update_list.at(0));
     }
 
     ui->treeWidget->header()->setResizeMode(0, QHeaderView::Stretch);

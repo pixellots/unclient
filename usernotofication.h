@@ -18,7 +18,6 @@ public:
 
 public:
     void updateView();
-    static bool toAssending(const UpdateNode::Update& a, const UpdateNode::Update& b);
 
 public slots:
     void openLink(const QUrl& aUrl);
