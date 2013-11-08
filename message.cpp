@@ -1,4 +1,7 @@
 #include "message.h"
+#include "commander.h"
+
+#include <QUrl>
 
 using namespace UpdateNode;
 
@@ -33,7 +36,7 @@ void Message::setLink(const QString& aLink)
 
 QString Message::getLink() const
 {
-    return m_strLink;
+    return UpdateNode::Commander::resolveGeneral(QUrl::fromUserInput(m_strLink).toEncoded());
 }
 
 void Message::setCode(const QString& aCode)

@@ -2,6 +2,7 @@
 #include <QtDebug>
 #include <QUrl>
 #include <QNetworkReply>
+#include <QNetworkProxyFactory>
 
 #include "updatenode_service.h"
 #include "config.h"
@@ -19,6 +20,9 @@ Service::Service(QObject* parent)
 {
     m_pManager = NULL;
     m_pDownloader = NULL;
+
+    // Use system proxy settings - if set
+    QNetworkProxyFactory::setUseSystemConfiguration(true);
 }
 
 Service::~Service()

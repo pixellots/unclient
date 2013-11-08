@@ -1,3 +1,4 @@
+#include <QApplication>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -5,6 +6,7 @@
 #include <QProcessEnvironment>
 #include <QSettings>
 
+#include "osdetection.h"
 #include "wincommander.h"
 #include "commander.h"
 #include "settings.h"
@@ -21,6 +23,12 @@ Commander::Commander(QObject *parent)
     connect(m_pProcess, SIGNAL(readyReadStandardError()), this, SIGNAL(processError()));
     connect(m_pProcess, SIGNAL(readyReadStandardOutput()), this, SIGNAL(processOutput()));
     connect(m_pProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SIGNAL(updateExit(int, QProcess::ExitStatus)));
+}
+
+Commander::~Commander()
+{
+    if(m_pProcess)
+        delete m_pProcess;
 }
 
 QString Commander::setCommandBasedOnOS() const
@@ -86,38 +94,36 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
 
     commandParameters.removeAll("");
 
-    if(m_bCopy && commandParameters.size() > 1)
+    if(m_bCopy && commandParameters.size() == 2 && (!m_oUpdate.isAdminRequired() || UpdateNode::WinCommander::isProcessElevated()))
     {
-        QFile file(commandParameters.at(0));
-        QFile destFile(commandParameters.at(1));
-
-        if(!file.exists())
-        {
-            emit updateExit(-1, QProcess::NormalExit);
-            return false;
-        }
-
-        if(QFileInfo(destFile).isFile() && destFile.exists())
-            if(!destFile.remove())
-            {
-                emit updateExit(-2, QProcess::NormalExit);
-                return false;
-            }
-
-        if(file.copy(commandParameters.at(1)))
-        {
+        bool ret = copy(commandParameters.at(0), commandParameters.at(1));
+        if(ret)
             emit updateExit(0, QProcess::NormalExit);
-            return true;
-        }
         else
-        {
-            UpdateNode::Logging() << file.errorString();
-            emit updateExit(file.error(), QProcess::NormalExit);
-            return false;
-        }
+            emit updateExit(-1, QProcess::NormalExit);
+    }
+    else if(m_bCopy && commandParameters.size() != 2)
+    {
+        UpdateNode::Logging() << "Copy command needs two parameters for source and destination file";
+        emit updateExit(-2, QProcess::NormalExit);
+        return false;
     }
     else
     {
+        // if copy is here, it needs to be run as root. Adjust the parameter
+        if(m_bCopy)
+        {
+            if(command.isEmpty())
+            {
+                command = qApp->applicationFilePath();
+                commandParameters.insert(0, "-copy");
+            }
+            else
+            {
+                commandParameters.insert(0, qApp->applicationFilePath());
+                commandParameters.insert(0, "-copy");
+            }
+        }
 #ifdef Q_OS_WIN // Windows
         if(m_oUpdate.isAdminRequired() && !UpdateNode::WinCommander::isProcessElevated())
         {
@@ -138,6 +144,24 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
         }
     }
     return true;
+}
+
+bool Commander::copy(const QString& aFrom, const QString& aTo)
+{
+    QFile file(aFrom);
+    QFile destFile(aTo);
+
+    if(!file.exists())
+        return false;
+
+    if(QFileInfo(destFile).isFile() && destFile.exists())
+        if(!destFile.remove())
+            return false;
+
+    if(file.copy(aTo))
+        return true;
+    else
+        return false;
 }
 
 QString Commander::readStdErr() const
@@ -166,10 +190,26 @@ QString Commander::resolve(const QString& aString)
     theString = theString.replace("[UN_FILE]", UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink()));
     theString = theString.replace("[UN_FILENAME]", QFileInfo(UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink())).fileName());
     theString = theString.replace("[UN_FILEEXT]", QFileInfo(UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink())).completeSuffix());
+
+    if(theString.indexOf("[UN_COPY_COMMAND]")>-1)
+        m_bCopy = true;
+
+    return resolveGeneral(theString);
+}
+
+QString Commander::resolveGeneral(const QString& aString)
+{
+    UpdateNode::Settings settings;
+    QString theString = aString;
+
+    // replace internals
     theString = theString.replace("[UN_SEP]", QDir::separator());
     theString = theString.replace("[UN_DOWNLOAD_PATH]", UpdateNode::LocalFile::getDownloadPath());
     theString = theString.replace("[UN_CLIENT_PATH]", settings.getCurrentClientDir());
     theString = theString.replace("[UN_VERSION]", UPDATENODE_CLIENT_VERSION);
+    theString = theString.replace("[UN_LANG]", UpdateNode::Config::Instance()->getLanguage());
+    theString = theString.replace("[UN_OS]", UpdateNode::OSDetection::getOS());
+    theString = theString.replace("[UN_ARCH]", UpdateNode::OSDetection::getArch());
 
     // replace environment vars
     QStringList env = QProcessEnvironment::systemEnvironment().toStringList();
@@ -214,11 +254,9 @@ QString Commander::resolve(const QString& aString)
         pos = theString.indexOf(QString("[@"), pos+1);
     }
 
-    if(theString.indexOf("[UN_COPY_COMMAND]")>-1)
-        m_bCopy = true;
-
     // remove letfovers
     theString = theString.replace(QRegExp("\\[[^]]*\\]"), "");
 
     return theString;
 }
+

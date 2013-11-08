@@ -73,20 +73,14 @@ void Downloader::downloadFinished(QNetworkReply *reply)
 
     QUrl url = reply->url();
     if (reply->error() != QNetworkReply::NoError)
-    {
-        qDebug("Download of %s failed: %s\n",
-             url.toEncoded().constData(),
-             qPrintable(reply->errorString()));
-
-    }
+        UpdateNode::Logging() << "Download of " << url.toEncoded().constData() << " failed: " << reply->errorString();
     else
     {
         QString filename;
         filename = UpdateNode::LocalFile::getDownloadLocation(url.toString());
 
         if (saveToDisk(filename, reply, update.getCode()))
-            qDebug("Download of %s succeeded (saved to %s)\n",
-                url.toEncoded().constData(), qPrintable(filename));
+            UpdateNode::Logging() << "Download of " << url.toEncoded().constData() << " succeeded (saved to " << filename << ")";
     }
 
     m_oCurrentDownloads.remove(reply);

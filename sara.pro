@@ -57,7 +57,6 @@ HEADERS += \
     multiappdialog.h \
     logging.h
 FORMS += \
-    settingsdialog.ui \
     singleappdialog.ui \
     usernotofication.ui \
     usermessages.ui \

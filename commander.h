@@ -12,6 +12,7 @@ namespace UpdateNode
         Q_OBJECT
         public:
             Commander(QObject *parent = 0);
+            ~Commander();
 
             bool run(const UpdateNode::Update& aUpdate);
 
@@ -20,6 +21,10 @@ namespace UpdateNode
 
             void setUpdate(const UpdateNode::Update& aUpdate);
             QString resolve(const QString& aString);
+
+        public:
+            static QString resolveGeneral(const QString& aString);
+            static bool copy(const QString& aFrom, const QString& aTo);
 
         signals:
             void processError();

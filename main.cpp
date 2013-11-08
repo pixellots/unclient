@@ -139,11 +139,27 @@ int main(int argc, char *argv[])
     QString argument;
     QStringList arguments = QCoreApplication::arguments();
 
-    int config_index = arguments.indexOf("-config");
-    if(config_index>-1 || QFile::exists("unclient.cfg"))
+    // check for copy commmand
+    int index = arguments.indexOf("-copy");
+    if(index>-1 && arguments.size()==4)
     {
-        if(config_index>-1)
-            getParametersFromFile(arguments.at(config_index+1));
+        if(UpdateNode::Commander::copy(arguments.at(2), arguments.at(3)))
+            return 0;
+        else
+            return -1;
+    }
+    else if (index>-1)
+    {
+        UpdateNode::Logging() << "Invalid parameter for copy command";
+        return UPDATENODE_PROCERROR_WRONG_PARAMETER;
+    }
+
+    // get config data
+    index = arguments.indexOf("-config");
+    if(index>-1 || QFile::exists("unclient.cfg"))
+    {
+        if(index>-1)
+            getParametersFromFile(arguments.at(index+1));
         else
             getParametersFromFile("unclient.cfg");
     }

@@ -8,7 +8,7 @@ using namespace UpdateNode;
 
 QString LocalFile::getDownloadLocation(const QString& aFileName)
 {
-    return LocalFile::getDownloadPath() + QDir::separator() + QFileInfo(aFileName).fileName();
+    return QDir::toNativeSeparators(LocalFile::getDownloadPath() + QDir::separator() + QFileInfo(aFileName).fileName());
 }
 
 QString LocalFile::getDownloadPath()
@@ -21,15 +21,15 @@ QString LocalFile::getDownloadPath()
     if(!QDir(settings.getDownloadPath() + QDir::separator() + "UpdateNode" + QDir::separator() + UpdateNode::Config::Instance()->getKey()).exists())
         QDir(settings.getDownloadPath() + QDir::separator() + "UpdateNode").mkdir(UpdateNode::Config::Instance()->getKey());
 
-    return settings.getDownloadPath()
+    return QDir::toNativeSeparators(settings.getDownloadPath()
             + QDir::separator()
             + "UpdateNode"
             + QDir::separator()
-            + UpdateNode::Config::Instance()->getKey();
+            + UpdateNode::Config::Instance()->getKey());
 }
 
 
 QString LocalFile::getCachePath()
 {
-    return getDownloadPath() + QDir::separator() + "cache";
+    return QDir::toNativeSeparators(getDownloadPath() + QDir::separator() + "cache");
 }

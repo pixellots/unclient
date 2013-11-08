@@ -120,7 +120,7 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>100</width>
+         <width>200</width>
          <height>25</height>
         </size>
        </property>
@@ -146,34 +146,14 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="2">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::MinimumExpanding</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>100</width>
-         <height>25</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="3" column="0">
-      <widget class="QPushButton" name="pshSettings">
-       <property name="text">
-        <string>Settings</string>
-       </property>
-       <property name="autoDefault">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="0">
       <widget class="QPushButton" name="pshCheck">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string>Check</string>
        </property>
@@ -189,6 +169,22 @@
        </property>
       </widget>
      </item>
+     <item row="3" column="0" colspan="3">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::MinimumExpanding</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>100</width>
+         <height>25</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
     </layout>
    </item>
   </layout>
@@ -202,7 +198,6 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>pshSettings</tabstop>
   <tabstop>pshClose</tabstop>
  </tabstops>
  <resources/>
