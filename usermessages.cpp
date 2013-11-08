@@ -80,11 +80,6 @@ void UserMessages::showMessage()
     {
         hide();
         qApp->quit();
-        ui->label->setText(tr("No unread messages"));
-        ui->webView->setContent("");
-        ui->pshRead->setDisabled(true);
-        ui->webView->hide();
-        adjustSize();
         return;
     }
 

@@ -74,8 +74,8 @@ int returnANDlaunch(int result)
             }
         }
 
-        // set to emtpy in case the above if statement does not match
-        exec = exec.replace("[UN_VERSION]", "");
+        // set to - in case the above if statement does not match
+        exec = exec.replace("[UN_VERSION]", "-");
 
         if(!QProcess::startDetached(exec))
             QMessageBox::critical(0, "TODO", QObject::tr("Unable to launch '%1'").arg(exec));
@@ -300,7 +300,10 @@ int main(int argc, char *argv[])
         {
             splashScreen_pic.load(config->getSplashScreen());
             splashScreen.setPixmap(splashScreen_pic);
-            splashScreen.showMessage(QObject::tr("Checking for updates ..."), Qt::AlignCenter | Qt::AlignBottom);
+            if(mode=="-messages")
+                splashScreen.showMessage(QObject::tr("Checking for messages ..."), Qt::AlignCenter | Qt::AlignBottom);
+            else
+                splashScreen.showMessage(QObject::tr("Checking for updates ..."), Qt::AlignCenter | Qt::AlignBottom);
             splashScreen.show();
             QObject::connect(service, SIGNAL(done()), &splashScreen, SLOT(close()));
             QObject::connect(service, SIGNAL(doneManager()), &splashScreen, SLOT(close()));
