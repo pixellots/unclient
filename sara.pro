@@ -9,13 +9,26 @@ TEMPLATE = app
 TRANSLATIONS = translations/en_US.ts translations/de_DE.ts
 CONFIG-=app_bundle
 
+RC_FILE = unclient.rc
+
+VERSION_HIGH=1
+VERSION_LOW=0
+VERSION_REV=0
+VERSION_BUILD=0
+
 VERSION=1.0
+
 QMAKE_TARGET_COMPANY = UpdateNode
-QMAKE_TARGET_PRODUCT = UpdateNode Client
+QMAKE_TARGET_PRODUCT ="UpdateNode Client"
 QMAKE_TARGET_DESCRIPTION = Client for software updates and messages
 QMAKE_TARGET_COPYRIGHT =©2013 UpdateNode UG. All rights reserved.
 
-RC_FILE = unclient.rc
+DEFINES += \
+APP_VERSION=$$VERSION \
+APP_VERSION_HIGH=$$VERSION_HIGH \
+APP_VERSION_LOW=$$VERSION_LOW   \
+APP_VERSION_REV=$$VERSION_REV   \
+APP_VERSION_BUILD=$$VERSION_BUILD
 
 SOURCES += main.cpp \
     config.cpp \
