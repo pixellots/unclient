@@ -28,7 +28,7 @@ namespace UpdateNode
              Downloader();
 
         public:
-             void doDownload(const QUrl& url, const UpdateNode::Update& aUpdate);
+             QNetworkReply* doDownload(const QUrl& url, const UpdateNode::Update& aUpdate);
              bool saveToDisk(const QString &filename, QIODevice *data, const QString& aCode);
              bool isDownloading();
 

@@ -1,10 +1,11 @@
-#include <QApplication>
+#include <QCoreApplication>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include "logging.h"
 #include <QProcessEnvironment>
 #include <QSettings>
+#include <QDebug>
 
 #include "osdetection.h"
 #include "wincommander.h"
@@ -27,8 +28,7 @@ Commander::Commander(QObject *parent)
 
 Commander::~Commander()
 {
-    if(m_pProcess)
-        delete m_pProcess;
+    m_pProcess->deleteLater();
 }
 
 QString Commander::setCommandBasedOnOS() const
@@ -78,19 +78,19 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
     {
         command = resolve(m_oUpdate.getCommand());
         if(!m_oUpdate.getCommandLine().isEmpty())
-            commandParameters = QStringList() << resolve(m_oUpdate.getCommandLine()).split(" ");
+            commandParameters = QStringList() << splitCommandLine(resolve(m_oUpdate.getCommandLine()));
     }
     else
     {
         commandParameters << resolve(m_oUpdate.getCommand());
         if(!m_oUpdate.getCommandLine().isEmpty())
-            commandParameters << resolve(m_oUpdate.getCommandLine()).split(" ");
+            commandParameters << splitCommandLine(resolve(m_oUpdate.getCommandLine()));
     }
 
     emit progressText(tr("Installing Update '%1'").arg(m_oUpdate.getTitle()));
 
     UpdateNode::Logging() << "command: " << command;
-    UpdateNode::Logging() << "commandlline: " << commandParameters.join(" ");
+    UpdateNode::Logging() << "commandlline (without quotes): " << commandParameters.join(" ");
 
     commandParameters.removeAll("");
 
@@ -146,8 +146,21 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
     return true;
 }
 
+bool Commander::waitForFinished()
+{
+    return m_pProcess->waitForFinished(-1);
+}
+
+int Commander::getReturnCode()
+{
+    return m_pProcess->exitCode();
+}
+
 bool Commander::copy(const QString& aFrom, const QString& aTo)
 {
+    if(aFrom.isEmpty() || aTo.isEmpty())
+        return false;
+
     QFile file(aFrom);
     QFile destFile(aTo);
 
@@ -259,4 +272,25 @@ QString Commander::resolveGeneral(const QString& aString)
 
     return theString;
 }
+
+QStringList Commander::splitCommandLine(const QString &aString)
+{
+    QStringList list;
+
+    int pos = aString.indexOf("\"");
+    if(pos>-1)
+    {
+        list << aString.left(pos).split(" ", QString::SkipEmptyParts);
+        int end = aString.indexOf("\"", pos+1);
+        if(end>-1)
+            list << aString.mid(pos+1, end-pos-1);
+        else
+            return aString.split(" ", QString::SkipEmptyParts);
+
+        return list << splitCommandLine(aString.mid(end+2));
+    }
+    else
+        return aString.split(" ", QString::SkipEmptyParts);
+}
+
 

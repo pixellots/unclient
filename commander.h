@@ -22,9 +22,13 @@ namespace UpdateNode
             void setUpdate(const UpdateNode::Update& aUpdate);
             QString resolve(const QString& aString);
 
+            bool waitForFinished();
+            int getReturnCode();
+
         public:
             static QString resolveGeneral(const QString& aString);
             static bool copy(const QString& aFrom, const QString& aTo);
+            static QStringList splitCommandLine(const QString& aString);
 
         signals:
             void processError();
@@ -34,6 +38,7 @@ namespace UpdateNode
 
         private:
             QString setCommandBasedOnOS() const;
+
 
         private:
             QProcess* m_pProcess;

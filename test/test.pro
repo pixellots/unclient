@@ -29,7 +29,8 @@ SOURCES += \
     ../xmlparser.cpp \
     ../wincommander.cpp \
     ../version.cpp \
-    tst_clienttest.cpp
+    tst_clienttest.cpp \
+    ../logging.cpp
 DEFINES += SRCDIR=..
 
 HEADERS += \
@@ -45,8 +46,11 @@ HEADERS += \
     ../update.h \
     ../xmlparser.h \
     ../wincommander.h \
-    ../version.h
+    ../version.h \
+    ../logging.h
 
 win32{
 LIBS+= Shell32.lib Advapi32.lib
 }
+
+QMAKE_POST_LINK += ./$$TARGET

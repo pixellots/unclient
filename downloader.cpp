@@ -12,14 +12,14 @@ Downloader::Downloader()
     connect(&m_oManager, SIGNAL(finished(QNetworkReply*)), SLOT(downloadFinished(QNetworkReply*)));
 }
 
-void Downloader::doDownload(const QUrl& url, const UpdateNode::Update& aUpdate)
+QNetworkReply* Downloader::doDownload(const QUrl& url, const UpdateNode::Update& aUpdate)
 {
     UpdateNode::Settings settings;
     QString cachedFile = settings.getCachedFile(aUpdate.getCode());
     if(!cachedFile.isEmpty() && QFile::exists(cachedFile))
     {
         emit done(aUpdate, QNetworkReply::NoError, QString());
-        return;
+        return NULL;
     }
 
     QNetworkRequest request(url);
@@ -29,6 +29,8 @@ void Downloader::doDownload(const QUrl& url, const UpdateNode::Update& aUpdate)
     connect(reply, SIGNAL(downloadProgress(qint64,qint64)), SIGNAL(downloadProgress(qint64,qint64)));
 
     m_oCurrentDownloads[reply] = aUpdate;
+
+    return reply;
 }
 
 void Downloader::cancel()

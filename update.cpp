@@ -36,7 +36,7 @@ void Update::setDownloadLink(const QString& aDownloadLink)
 
 QString Update::getDownloadLink() const
 {
-    return UpdateNode::Commander::resolveGeneral(QUrl::fromUserInput(m_strDownloadLink).toEncoded());
+    return QUrl::fromUserInput(UpdateNode::Commander::resolveGeneral(m_strDownloadLink)).toEncoded();
 }
 
 void Update::setCommand(const QString& aCommand)
