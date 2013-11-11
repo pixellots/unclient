@@ -128,6 +128,17 @@ void ClientTest::test_commander_split()
     QVERIFY2(list.at(3) == "-test", qPrintable(list.at(3)));
     QVERIFY2(list.at(4) == "*\"&", qPrintable(list.at(4)));
     QVERIFY2(list.at(5) == "test", qPrintable(list.at(5)));
+
+    list = UpdateNode::Commander::splitCommandLine("-a -m\"test \"test\" test\"now_one_without_ending \"quote");
+
+    QVERIFY2(list.size() == 7, qPrintable(QString::number(list.size())));
+    QVERIFY2(list.at(0) == "-a", qPrintable(list.at(0)));
+    QVERIFY2(list.at(1) == "-m", qPrintable(list.at(1)));
+    QVERIFY2(list.at(2) == "test ", qPrintable(list.at(2)));
+    QVERIFY2(list.at(3) == "test", qPrintable(list.at(3)));
+    QVERIFY2(list.at(4) == " test", qPrintable(list.at(4)));
+    QVERIFY2(list.at(5) == "now_one_without_ending", qPrintable(list.at(5)));
+    QVERIFY2(list.at(6) == "\"quote", qPrintable(list.at(6)));
 }
 
 void ClientTest::test_commander_run()
@@ -173,6 +184,33 @@ void ClientTest::test_commander_run()
     QVERIFY(QDir("test_dir").exists() && QDir("test_dir").count()>3);
     exec_update.setCommand("rm");
     exec_update.setCommandLine("-fr test_dir");
+    QVERIFY2(commander.run(exec_update), qPrintable(exec_update.getCommand() + " " + exec_update.getCommandLine()));
+    commander.waitForFinished();
+    QVERIFY2(commander.getReturnCode()==0, qPrintable(QString::number(commander.getReturnCode())));
+#endif
+#ifdef Q_OS_WIN
+    exec_update.setCommand("cmd.exe");
+    exec_update.setCommandLine("/C \"echo this is a unit test only > test.log\"");
+    QVERIFY2(commander.run(exec_update), qPrintable(exec_update.getCommand() + " " + exec_update.getCommandLine()));
+    commander.waitForFinished();
+    QVERIFY2(commander.getReturnCode()==0, qPrintable(QString::number(commander.getReturnCode())));
+    QVERIFY2(QFile::remove("test.log"), qPrintable(commander.readStdOut()));
+
+    exec_update.setCommand("ipconfig");
+    exec_update.setCommandLine("/allcompartments /all");
+    QVERIFY2(commander.run(exec_update), qPrintable(exec_update.getCommand() + " " + exec_update.getCommandLine()));
+    commander.waitForFinished();
+    QVERIFY2(commander.getReturnCode()==0, qPrintable(QString::number(commander.getReturnCode())));
+    QVERIFY2(!commander.readStdOut().isEmpty(), qPrintable(commander.readStdOut()));
+
+    exec_update.setCommand("cmd.exe");
+    exec_update.setCommandLine("/C \"mkdir test_dir && copy *.* test_dir\"");
+    QVERIFY2(commander.run(exec_update), qPrintable(exec_update.getCommand() + " " + exec_update.getCommandLine()));
+    commander.waitForFinished();
+    QVERIFY2(commander.getReturnCode()==0, qPrintable(QString::number(commander.getReturnCode())));
+    QVERIFY(QDir("test_dir").exists() && QDir("test_dir").count()>3);
+    exec_update.setCommand("cmd.exe");
+    exec_update.setCommandLine("/C \"rmdir /S /Q test_dir\"");
     QVERIFY2(commander.run(exec_update), qPrintable(exec_update.getCommand() + " " + exec_update.getCommandLine()));
     commander.waitForFinished();
     QVERIFY2(commander.getReturnCode()==0, qPrintable(QString::number(commander.getReturnCode())));

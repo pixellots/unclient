@@ -11,7 +11,7 @@ QT       -= gui
 TARGET = test
 CONFIG   += console
 CONFIG   -= app_bundle
-
+DESTDIR = ./
 TEMPLATE = app
 
 
@@ -53,4 +53,5 @@ win32{
 LIBS+= Shell32.lib Advapi32.lib
 }
 
-QMAKE_POST_LINK += ./$$TARGET
+unix:QMAKE_POST_LINK += ./$$TARGET
+win32:QMAKE_POST_LINK += $${TARGET}.exe

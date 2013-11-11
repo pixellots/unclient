@@ -287,7 +287,7 @@ QStringList Commander::splitCommandLine(const QString &aString)
         else
             return aString.split(" ", QString::SkipEmptyParts);
 
-        return list << splitCommandLine(aString.mid(end+2));
+        return list << splitCommandLine(aString.mid(end+1));
     }
     else
         return aString.split(" ", QString::SkipEmptyParts);
