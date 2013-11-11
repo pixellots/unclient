@@ -8,6 +8,7 @@
 #include "../version.h"
 #include "../config.h"
 #include "../downloader.h"
+#include "../localfile.h"
 
 class ClientTest : public QObject
 {
@@ -26,6 +27,7 @@ private Q_SLOTS:
 
 private:
     UpdateNode::Update update;
+    QString workingDir;
 };
 
 
@@ -53,6 +55,11 @@ ClientTest::ClientTest()
     UpdateNode::Config::Instance()->setKey("unittest");
     UpdateNode::Config::Instance()->setProductCode("product_code");
     UpdateNode::Config::Instance()->setVersion("version");
+
+    // make sure we always have a clean working dir
+    workingDir = QUuid::createUuid().toString();
+    QDir::current().mkdir(workingDir);
+    QDir::setCurrent(workingDir);
 }
 
 void ClientTest::test_commander_resolve()
@@ -86,7 +93,7 @@ void ClientTest::test_commander_copy()
     QVERIFY2(QFile::exists("test2"), "Does the new file exist after copying?");
     int first_try = QFileInfo("test2").size();
 
-    QVERIFY2(UpdateNode::Commander::copy("test.pro", "test2"), "coyping again the another file to test2");
+    QVERIFY2(UpdateNode::Commander::copy("../test.pro", "test2"), "coyping again the another file to test2");
     QVERIFY2(QFile::exists("test2"), "Does the new file exist after copying?");
     int second_try = QFileInfo("test2").size();
 
@@ -96,12 +103,12 @@ void ClientTest::test_commander_copy()
 
     QVERIFY2(!UpdateNode::Commander::copy("test.negative", "test2"), "File does not exist");
     QVERIFY2(!UpdateNode::Commander::copy("", ""), "Empty files are not allowed");
-    QVERIFY2(!UpdateNode::Commander::copy("test.pro", ""), "Empty files are not allowed");
+    QVERIFY2(!UpdateNode::Commander::copy("..7test.pro", ""), "Empty files are not allowed");
     QVERIFY2(!UpdateNode::Commander::copy("", "test2"), "Empty files are not allowed");
 
-    QVERIFY2(!UpdateNode::Commander::copy("test.pro", ".."), "Copying does only work for files, not dirs");
-    QVERIFY2(UpdateNode::Commander::copy("test.pro", "../test2"), "Relative copying is allowed");
-    QVERIFY2(UpdateNode::Commander::copy("../unclient.rc", "test2"), "Relative copying is allowed");
+    QVERIFY2(!UpdateNode::Commander::copy("../test.pro", ".."), "Copying does only work for files, not dirs");
+    QVERIFY2(UpdateNode::Commander::copy("../test.pro", "../test2"), "Relative copying is allowed");
+    QVERIFY2(UpdateNode::Commander::copy("../../unclient.rc", "test2"), "Relative copying is allowed");
 
     // clean up everything
     QVERIFY(QFile::remove("../test2"));
@@ -177,7 +184,7 @@ void ClientTest::test_commander_run()
     QVERIFY2(commander.readStdOut().split(" ").size()==2, qPrintable(commander.readStdOut()));
 
     exec_update.setCommand("/bin/sh");
-    exec_update.setCommandLine("-c \"mkdir test_dir && cp *.* test_dir\"");
+    exec_update.setCommandLine("-c \"mkdir test_dir && cp ../*.* test_dir\"");
     QVERIFY2(commander.run(exec_update), qPrintable(exec_update.getCommand() + " " + exec_update.getCommandLine()));
     commander.waitForFinished();
     QVERIFY2(commander.getReturnCode()==0, qPrintable(QString::number(commander.getReturnCode())));
@@ -204,7 +211,7 @@ void ClientTest::test_commander_run()
     QVERIFY2(!commander.readStdOut().isEmpty(), qPrintable(commander.readStdOut()));
 
     exec_update.setCommand("cmd.exe");
-    exec_update.setCommandLine("/C \"mkdir test_dir && copy *.* test_dir\"");
+    exec_update.setCommandLine("/C \"mkdir test_dir && copy ..\\*.* test_dir\"");
     QVERIFY2(commander.run(exec_update), qPrintable(exec_update.getCommand() + " " + exec_update.getCommandLine()));
     commander.waitForFinished();
     QVERIFY2(commander.getReturnCode()==0, qPrintable(QString::number(commander.getReturnCode())));
@@ -254,16 +261,25 @@ void ClientTest::test_version_compare()
 void ClientTest::test_downloader_download()
 {
     UpdateNode::Downloader downloader;
+    QUrl url("http://updatenode.com/updatenode_96.png");
 
-    QNetworkReply* reply = downloader.doDownload(QUrl("http://www.updatenode.com/index.php"), update);
+    QNetworkReply* reply = downloader.doDownload(url, update);
 
     QVERIFY(reply != NULL);
 
     QEventLoop loop;
-    QObject::connect(reply, SIGNAL(readyRead()), &loop, SLOT(quit()));
+    QObject::connect(&downloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), &loop, SLOT(quit()));
     loop.exec();
 
     QVERIFY(reply->error() == QNetworkReply::NoError);
+
+    QVERIFY2(QFile::exists(UpdateNode::LocalFile::getDownloadLocation(url.toString())), qPrintable(UpdateNode::LocalFile::getDownloadLocation(url.toString())));
+
+    reply = downloader.doDownload(url, update);
+    QVERIFY(reply == NULL);
+
+    QVERIFY(QFile::remove(UpdateNode::LocalFile::getDownloadLocation(url.toString())));
+
 }
 
 
