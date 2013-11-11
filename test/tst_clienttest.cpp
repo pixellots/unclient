@@ -1,3 +1,25 @@
+/****************************************************************************
+**
+** Copyright (C) 2013 UpdatNode UG.
+** Contact: code@updatenode.com
+**
+** This file is part of the UpdateNode Client.
+**
+** Commercial License Usage
+** Licensees holding valid commercial UpdateNode license may use this file
+** under the terms of the the Apache License, Version 2.0
+** Full license description file: LICENSE.COM
+**
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 3.0 as published by the Free Software
+** Foundation. Please review the following information to ensure the
+** GNU General Public License version 3.0 requirements will be met:
+** http://www.gnu.org/copyleft/gpl.html.
+** Full license description file: LICENSE.GPL
+**
+****************************************************************************/
+
 #include <QtCore/QString>
 #include <QtTest/QtTest>
 #include <QDateTime>
@@ -24,6 +46,7 @@ private Q_SLOTS:
     void test_commander_split();
     void test_commander_run();
     void test_downloader_download();
+    void test_localfile_location();
 
 private:
     UpdateNode::Update update;
@@ -170,7 +193,7 @@ void ClientTest::test_commander_run()
     QVERIFY2(QFile::remove("test.log"), qPrintable(commander.readStdOut()));
 
     exec_update.setCommand("/bin/sh");
-    exec_update.setCommandLine("-c \"dir | grep cpp > test.log\"");
+    exec_update.setCommandLine("-c \"dir .. | grep cpp > test.log\"");
     QVERIFY2(commander.run(exec_update), qPrintable(exec_update.getCommand() + " " + exec_update.getCommandLine()));
     commander.waitForFinished();
     QVERIFY2(commander.getReturnCode()==0, qPrintable(QString::number(commander.getReturnCode())));
@@ -280,8 +303,31 @@ void ClientTest::test_downloader_download()
 
     QVERIFY(QFile::remove(UpdateNode::LocalFile::getDownloadLocation(url.toString())));
 
+    // negative test
+    url = url.fromUserInput("www.updatenode.com/fail");
+    reply = downloader.doDownload(url, update);
+
+    QVERIFY(reply != NULL);
+
+    QObject::connect(&downloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), &loop, SLOT(quit()));
+    loop.exec();
+
+    QVERIFY(reply->error() != QNetworkReply::NoError);
+
+    QVERIFY2(!QFile::exists(UpdateNode::LocalFile::getDownloadLocation(url.toString())), qPrintable(UpdateNode::LocalFile::getDownloadLocation(url.toString())));
 }
 
+void ClientTest::test_localfile_location()
+{
+    QString tempPath = QDir::tempPath() + QDir::separator() + "UpdateNode" + QDir::separator() + UpdateNode::Config::Instance()->getKey();
+
+    QVERIFY2(QDir(UpdateNode::LocalFile::getDownloadLocation("www.updatenode.com/hello.exe")) == QDir(tempPath + QDir::separator() + "hello.exe"), qPrintable(UpdateNode::LocalFile::getDownloadLocation("www.updatenode.com/hello.exe") + " NOT " + tempPath + QDir::separator() + "hello.exe"));
+    QVERIFY(QDir(UpdateNode::LocalFile::getDownloadLocation("www.updatenode.com/hello")) == QDir(tempPath + QDir::separator() + "hello"));
+    QVERIFY(QDir(UpdateNode::LocalFile::getDownloadLocation("http://www.updatenode.com/hello.world.exe")) == QDir(tempPath + QDir::separator() + "hello.world.exe"));
+    QVERIFY(QDir(UpdateNode::LocalFile::getDownloadLocation("www.updatenode.com/hello.ini")) == QDir(tempPath + QDir::separator() + "hello.ini"));
+    QVERIFY(QDir(UpdateNode::LocalFile::getDownloadLocation("www.updatenode.com")) == QDir(tempPath + QDir::separator() + "www.updatenode.com"));
+    QVERIFY(QDir(UpdateNode::LocalFile::getDownloadLocation("")) == QDir(tempPath + QDir::separator()));
+}
 
 QTEST_MAIN(ClientTest)
 

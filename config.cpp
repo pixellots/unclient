@@ -1,10 +1,79 @@
+/****************************************************************************
+**
+** Copyright (C) 2013 UpdatNode UG.
+** Contact: code@updatenode.com
+**
+** This file is part of the UpdateNode Client.
+**
+** Commercial License Usage
+** Licensees holding valid commercial UpdateNode license may use this file
+** under the terms of the the Apache License, Version 2.0
+** Full license description file: LICENSE.COM
+**
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 3.0 as published by the Free Software
+** Foundation. Please review the following information to ensure the
+** GNU General Public License version 3.0 requirements will be met:
+** http://www.gnu.org/copyleft/gpl.html.
+** Full license description file: LICENSE.GPL
+**
+****************************************************************************/
+
 #include <QLocale>
 #include <stdlib.h>
 #include "config.h"
 
 using namespace UpdateNode;
 
+/*!
+\class UpdateNode::Config
+\brief The QCursor class provides a mouse cursor with an arbitrary
+shape.
+\n
+This class is mainly used to create mouse cursors that are
+associated with particular widgets and to get and set the position
+of the mouse cursor.
+Qt has a number of standard cursor shapes, but you can also make
+custom cursor shapes based on a QBitmap, a mask and a hotspot.
+To associate a cursor with a widget, use QWidget::setCursor(). To
+associate a cursor with all widgets (normally for a short period
+of time), use QGuiApplication::setOverrideCursor().
+To set a cursor shape use QCursor::setShape() or use the QCursor
+constructor which takes the shape as argument, or you can use one
+of the predefined cursors defined in the \l Qt::CursorShape enum.
+If you want to create a cursor with your own bitmap, either use
+the QCursor constructor which takes a bitmap and a mask or the
+constructor which takes a pixmap as arguments.
+To set or get the position of the mouse cursor use the static
+methods QCursor::pos() and QCursor::setPos().
+\b{Note:} It is possible to create a QCursor before
+QGuiApplication, but it is not useful except as a place-holder for a
+real QCursor created after QGuiApplication. Attempting to use a
+QCursor that was created before QGuiApplication will result in a
+crash.
+*/
+
 Config* Config::m_pInstance = NULL;
+
+/*!
+Constructs a custom pixmap cursor.
+\a pixmap is the image. It is usual to give it a mask (set using
+QPixmap::setMask()). \a hotX and \a hotY define the cursor's hot
+spot.
+\code
+QString key = UpdateNode::Config::Instance()->getKey();
+\endcode
+If \a hotX is negative, it is set to the \c{pixmap().width()/2}.
+If \a hotY is negative, it is set to the \c{pixmap().height()/2}.
+Valid cursor sizes depend on the display hardware (or the
+underlying window system). We recommend using 32 x 32 cursors,
+because this size is supported on all platforms. Some platforms
+also support 16 x 16, 48 x 48, and 64 x 64 cursors.
+\note On Windows CE, the cursor size is fixed. If the pixmap
+is bigger than the system size, it will be scaled.
+\sa QPixmap::QPixmap(), QPixmap::setMask()
+*/
 
 Config* Config::Instance()
 {
