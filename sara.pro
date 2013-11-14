@@ -7,7 +7,7 @@ QT = network \
 TARGET = unclient
 TEMPLATE = app
 TRANSLATIONS = translations/en_US.ts translations/de_DE.ts
-CONFIG-=app_bundle
+#CONFIG-=app_bundle
 
 RC_FILE = unclient.rc
 
@@ -86,6 +86,7 @@ win32{
 LIBS+= Shell32.lib Advapi32.lib
 }
 
+ICON += images/unclient.icns
 
 QMAKE_PRE_LINK  += @echo ++++++QMAKE_PRE_LINK++++++
 QMAKE_POST_LINK += @echo ++++++QMAKE_POST_LINK++++++
