@@ -74,7 +74,8 @@ int printHelp()
             + "  -st            \tSystem Tray Icon (-check mode only)\n"
             + "  -log <file>    \tEnables Logging\n"
             + "  -exec <command>\tLaunches command before terminating\n"
-            + "  -config <file> \tLoads parameter settings from file\n";
+            + "  -config <file> \tLoads parameter settings from file\n"
+            + "\n";
 
 #ifdef Q_OS_UNIX
     printf("%s\n%s\n\n%s", appName.toStdString().c_str(), APP_COPYRIGHT, message.toStdString().c_str());
@@ -93,9 +94,9 @@ int printHelp()
     QWidget window;
     window.setWindowTitle(appName);
     window.setLayout(&layout);
+    window.resize(640, 400);
     window.show();
     qApp->exec();
-    //QMessageBox::information(NULL, appName, message);
     return 1;
 }
 
