@@ -20,7 +20,7 @@ TRANSLATIONS = \
 
 #### MAC: uncomment this if you need a bundle instead of a single binary
 #ICON += images/unclient.icns
-#CONFIG-=app_bundle
+CONFIG-=app_bundle
 
 VERSION_HIGH=1
 VERSION_LOW=0
