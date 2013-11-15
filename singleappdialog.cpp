@@ -111,7 +111,10 @@ void SingleAppDialog::install()
     if(!UpdateNode::Config::Instance()->isSilent())
         show();
     else
+    {
+        m_oCommander.waitForFinished();
         accept();
+    }
     m_pUi->pushButton->setText(tr("Close"));
 }
 

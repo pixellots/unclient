@@ -25,6 +25,8 @@
 #include <QSplashScreen>
 #include <QSharedMemory>
 #include <QSystemTrayIcon>
+#include <QPushButton>
+#include <QVBoxLayout>
 #include <QMenu>
 #include <QTranslator>
 #include "logging.h"
@@ -71,7 +73,22 @@ int printHelp()
             + "  -exec <command>\tLaunches command before terminating\n"
             + "  -config <file> \tLoads parameter settings from file\n";
 
-    QMessageBox::information(NULL, appName, message);
+    QTextEdit textEdit;
+    QPushButton quitButton(QObject::tr("Quit"));
+
+    textEdit.setText(message);
+    QObject::connect(&quitButton, SIGNAL(clicked()), qApp, SLOT(quit()));
+
+    QVBoxLayout layout;
+    layout.addWidget(&textEdit);
+    layout.addWidget(&quitButton);
+
+    QWidget window;
+    window.setWindowTitle(appName);
+    window.setLayout(&layout);
+    window.show();
+    qApp->exec();
+    //QMessageBox::information(NULL, appName, message);
     return 1;
 }
 
@@ -102,6 +119,8 @@ int returnANDlaunch(int result)
         if(!QProcess::startDetached(exec))
             QMessageBox::critical(0, "TODO", QObject::tr("Unable to launch '%1'").arg(exec));
     }
+
+    UpdateNode::Logging() << "unclient finished with error code " << QString::number(result);
 
     return result;
 }

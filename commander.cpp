@@ -212,9 +212,6 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
 
     emit progressText(tr("Installing Update '%1'").arg(m_oUpdate.getTitle()));
 
-    UpdateNode::Logging() << "command: " << command;
-    UpdateNode::Logging() << "commandlline (without quotes): " << commandParameters.join(" ");
-
     commandParameters.removeAll("");
 
     if(m_bCopy && commandParameters.size() == 2 && (!m_oUpdate.isAdminRequired() || UpdateNode::WinCommander::isProcessElevated()))
@@ -243,10 +240,18 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
             }
             else
             {
-                commandParameters.insert(0, qApp->applicationFilePath());
+#ifdef Q_OS_UNIX
+                commandParameters = splitCommandLine("\"" + resolve(qApp->applicationFilePath() + " -copy " + m_oUpdate.getCommandLine()) + "\"");
+#else
                 commandParameters.insert(0, "-copy");
+                commandParameters.insert(0, qApp->applicationFilePath());
+#endif
             }
         }
+
+        UpdateNode::Logging() << "command: " << command;
+        UpdateNode::Logging() << "commandline (without quotes): " << commandParameters.join(" ");
+
 #ifdef Q_OS_WIN // Windows
         if(m_oUpdate.isAdminRequired() && !UpdateNode::WinCommander::isProcessElevated())
         {

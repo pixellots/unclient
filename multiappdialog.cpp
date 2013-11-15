@@ -46,6 +46,8 @@ MultiAppDialog::MultiAppDialog(QWidget *parent) :
 {
     m_pUI->setupUi(this);
 
+    m_iNewUpdates = 0;
+
     m_oTextEdit.hide();
 
     connect(&m_oCommander, SIGNAL(processError()), this, SLOT(processError()));
@@ -158,6 +160,8 @@ void MultiAppDialog::serviceDone()
     updateCounter();
 
     m_pUI->pshUpdate->setFocus();
+    checkSelection();
+
     if(!config->isSilent())
         show();
     else
@@ -191,6 +195,7 @@ void MultiAppDialog::serviceDoneManager()
     updateCounter();
 
     m_pUI->pshUpdate->setFocus();
+    checkSelection();
 
     if(!globalConfig->isSilent())
         show();
