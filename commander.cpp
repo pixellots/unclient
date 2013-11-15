@@ -38,6 +38,94 @@
 
 using namespace UpdateNode;
 
+/*!
+\class UpdateNode::Commander
+\brief The UpdateNode::Commander class is used to start external programs,
+defined in UpdateNode.com
+\n\n
+This class is mainly used to execute programs with and without root privilages.
+It provides methods to resolve variables embedded in the command, or commandline
+parameters.
+\n
+Variables need to be embed in brakets. For exampple: [UN_FILE] or [UN_FILENAME][UN_FILE_EXT]
+\n
+unclient supports 4 types of variables:
+\n
+- Native settings
+- INI settings
+- Environment variables
+- Internal variables
+
+
+\n \n
+These are the possible variables which can be resolved within a command or commandline parameter definition:
+\n
+\pre Native Settings
+-------------------------
+Native settings depends on the selected platform. On Windows, this refer to the registry, on Linux that an INI format and on Mac OS it is plist format by default.
+\n
+To get values from your native settings, use following syntax:
+\n
+~~~~~~~~~~~~~~~~~~~~~
+[@<PATH>:<KEY>]
+~~~~~~~~~~~~~~~~~~~~~
+\n
+Examples:
+\n
+~~~~~~~~~~~~~~~~~~~~~
+[@HKEY_CURRENT_USER\\MySoft\\Star Runner\\Galaxy:General]
+~~~~~~~~~~~~~~~~~~~~~
+or
+~~~~~~~~~~~~~~~~~~~~~
+[@[HOME]/.config/UpdateNode/Client.conf:uuid]
+~~~~~~~~~~~~~~~~~~~~~
+\n
+INI Settings
+-------------------------
+You can read ini files from on any system using the following syntax:
+\n
+~~~~~~~~~~~~~~~~~~~~~
+[INI@<PATH>:<KEY>]
+~~~~~~~~~~~~~~~~~~~~~
+\n
+Examples:
+\n
+~~~~~~~~~~~~~~~~~~~~~
+[INI@[HOME][UN_SEP]settings.ini:Language]
+~~~~~~~~~~~~~~~~~~~~~
+\n
+Internal Variables (Connected to your update definition of www.updatenode.com)
+-------------------------
+Variable            | Description                         | Example
+-------------       | -------------                       | -------------
+UN_FILE             | The downloaded file                 | c:\\temp\\setup.exe
+UN_FILENAME         | File name of the downloaded file    | setup.exe
+UN_FILEEXT          | The extension of the downloaded file| exe
+UN_UP_SIZE_REAL     | Real size of the downloaded file\n in Bytes| 25444000
+UN_UP_CODE          | The update code which is internally\n used to identify your update | {c7a20520-4dcf-11e3-94e8-0002a5d5c51b}
+UN_UP_LINK          | The download link\n UpdateNode:::Commander::resolveGeneral resolved | http://updatenode.com/example/custom_value/setup.exe
+UN_UP_SIZE          | Size of the downloaded file as specifiec in UpdateNode.com | 25 MB
+UN_UP_TARGETVERSION | The update's target version         | 2.0
+UN_UP_TARGETCODE    | The update target's version code    | my_new_version_code_1234
+UN_UP_TYPE          | The update type (Installer (1), or \n client based update (2) | 1
+\n\n
+Internal Variables (Not related to www.updatenode.com settings)
+-------------------------
+Variable            | Description                         | Example
+-------------       | -------------                       | -------------
+UN_SEP              | Native separator                    | \\ or /
+UN_DOWNLOAD_PATH    | The download path where all file are\n downloaded thru | /tmp/UpdateNode/62525142523515263
+UN_CLIENT_PATH      | The directory where the unclient is \n launched from | C:\\Program Files\\My Product\\Update
+UN_VERSION          | The current unclient version        | 1.0
+UN_LANG             | Language set in unclient, or system\n language if no language was specified | de-DE
+UN_OS               | Operating system's name and version | Windows 6.2
+UN_ARCH             | Operating system's architecture     | x86
+
+*/
+
+/*!
+Constructs a Commander object with the given parent.
+*/
 Commander::Commander(QObject *parent)
     : QObject(parent)
 {
@@ -48,11 +136,17 @@ Commander::Commander(QObject *parent)
     connect(m_pProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SIGNAL(updateExit(int, QProcess::ExitStatus)));
 }
 
+/*!
+Destructs the Commander object.
+*/
 Commander::~Commander()
 {
     m_pProcess->deleteLater();
 }
 
+/*!
+Predefines the command which needs to be executed based on internal decisions.
+*/
 QString Commander::setCommandBasedOnOS() const
 {
     QString command;
@@ -77,11 +171,19 @@ QString Commander::setCommandBasedOnOS() const
     return command;
 }
 
+/*!
+Sets the current Update object required to resolve internal variables
+*/
 void Commander::setUpdate(const Update &aUpdate)
 {
     m_oUpdate = aUpdate;
 }
 
+/*!
+Resolves and runs the update as specified in Update.
+\n Retruns true on success, returns false when the process was not able to start.
+\note This function emits the signal Commander::updateExit in each situation
+*/
 bool Commander::run(const UpdateNode::Update& aUpdate)
 {
     QString command;
@@ -168,16 +270,29 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
     return true;
 }
 
+/*!
+Waits forever until the current running process is not finished
+\n This function always returns true, as waitForFinished is called without timeout
+*/
 bool Commander::waitForFinished()
 {
     return m_pProcess->waitForFinished(-1);
 }
 
+/*!
+Returns the exit code from the last run process
+*/
 int Commander::getReturnCode()
 {
     return m_pProcess->exitCode();
 }
 
+/*!
+Copies a file from \a aFrom to \a aTo. Both parameters needs to be files, not directories.
+\n
+Returns true if the copy command was successfully, or false in case the destination \a aTo
+file cannot be deleted or the copy command failes due to another reasons
+*/
 bool Commander::copy(const QString& aFrom, const QString& aTo)
 {
     if(aFrom.isEmpty() || aTo.isEmpty())
@@ -199,17 +314,26 @@ bool Commander::copy(const QString& aFrom, const QString& aTo)
         return false;
 }
 
+/*!
+Returns data which has been written to stderr
+*/
 QString Commander::readStdErr() const
 {
     return m_pProcess->readAllStandardError();
 }
 
+/*!
+Returns data which has been written to stdout
+*/
 QString Commander::readStdOut() const
 {
     return m_pProcess->readAllStandardOutput();
 }
 
-/// command = "ld.exe [HOME] [INI@/home/user/.config/UpdateNode/Client.conf:uuid] [SHELL] [@[HOME]/.config/UpdateNode/Client.conf:uuid]";
+/*!
+Resolved all variables passed as \a aString and returns the resolved string
+\note [UN_COPY_COMMAND] is a special variable which enforces to execute the UpdateNode::Commander::copy method
+*/
 QString Commander::resolve(const QString& aString)
 {
     UpdateNode::Settings settings;
@@ -223,6 +347,7 @@ QString Commander::resolve(const QString& aString)
     theString = theString.replace("[UN_UP_TARGETCODE]", m_oUpdate.getTargetVersion().getCode());
     theString = theString.replace("[UN_UP_TYPE]", QString::number(m_oUpdate.getType()));
     theString = theString.replace("[UN_FILE]", UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink()));
+    theString = theString.replace("[UN_FILE_SIZE]",QString::number( QFileInfo(UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink())).size()));
     theString = theString.replace("[UN_FILENAME]", QFileInfo(UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink())).fileName());
     theString = theString.replace("[UN_FILEEXT]", QFileInfo(UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink())).completeSuffix());
 
@@ -232,6 +357,10 @@ QString Commander::resolve(const QString& aString)
     return resolveGeneral(theString);
 }
 
+/*!
+Resolves all independent variables from the given string \a aString and
+returns the resolved string.
+*/
 QString Commander::resolveGeneral(const QString& aString)
 {
     UpdateNode::Settings settings;
@@ -295,6 +424,21 @@ QString Commander::resolveGeneral(const QString& aString)
     return theString;
 }
 
+/*!
+Command line parameters gets splitted in by quotes
+\n
+~~~~~~~~~~~~~~~~~~~~~
+QStringList list = UpdateNode::Commander::splitCommandLine("-i main.png -v 1.2.0 \\"This should be in quotes\\" hello");
+~~~~~~~~~~~~~~~~~~~~~
+will result in a QStringList with following items:
+
+- -i
+- main.png
+- -v
+- 1.2.0
+- This should be in quotes
+- hello
+*/
 QStringList Commander::splitCommandLine(const QString &aString)
 {
     QStringList list;
