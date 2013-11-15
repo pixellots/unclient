@@ -6,6 +6,9 @@ QT = network \
 
 TARGET = unclient
 TEMPLATE = app
+
+DESTDIR = $$(PWD)
+
 TRANSLATIONS = \
     translations/en_US.ts \
     translations/de_DE.ts \
@@ -14,6 +17,7 @@ TRANSLATIONS = \
     translations/es_ES.ts \
     translations/ru_RU.ts \
     translations/fr_FR.ts
+
 
 #CONFIG-=app_bundle
 

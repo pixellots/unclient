@@ -88,7 +88,7 @@
    </item>
    <item row="3" column="0" colspan="2">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="2" column="3">
+     <item row="3" column="3">
       <widget class="QPushButton" name="pshClose">
        <property name="text">
         <string>Close</string>
@@ -150,7 +150,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0" colspan="3">
+     <item row="3" column="0" colspan="3">
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -170,6 +170,13 @@
       <widget class="QToolButton" name="toolCancel">
        <property name="text">
         <string>X</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0" colspan="4">
+      <widget class="QLabel" name="labelProgress">
+       <property name="text">
+        <string/>
        </property>
       </widget>
      </item>
