@@ -241,7 +241,10 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
             else
             {
 #ifdef Q_OS_UNIX
-                commandParameters = splitCommandLine("\"" + resolve(qApp->applicationFilePath() + " -copy " + m_oUpdate.getCommandLine()) + "\"");
+                QString description = UpdateNode::Config::Instance()->product().getName();
+                if(description.isEmpty())
+                    description = m_oUpdate.getTitle() ;
+                commandParameters = splitCommandLine("--description \"" + description + "\"\"" + resolve(qApp->applicationFilePath() + " -copy " + m_oUpdate.getCommandLine()) + "\"");
 #else
                 commandParameters.insert(0, "-copy");
                 commandParameters.insert(0, qApp->applicationFilePath());
