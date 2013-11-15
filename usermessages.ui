@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string/>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="1" column="0">
@@ -28,7 +28,7 @@
      <item>
       <widget class="QToolButton" name="toolLeft">
        <property name="text">
-        <string>&lt;</string>
+        <string/>
        </property>
        <property name="icon">
         <iconset resource="res.qrc">
@@ -57,7 +57,7 @@
         </font>
        </property>
        <property name="text">
-        <string>TextLabel</string>
+        <string/>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -67,7 +67,7 @@
      <item>
       <widget class="QToolButton" name="toolRight">
        <property name="text">
-        <string>&gt;</string>
+        <string/>
        </property>
        <property name="icon">
         <iconset resource="res.qrc">

@@ -53,9 +53,8 @@ unclient supports 4 types of variables:
 \n
 - Native settings
 - INI settings
-- Environment variables
 - Internal variables
-
+- Environment variables
 
 \n \n
 These are the possible variables which can be resolved within a command or commandline parameter definition:

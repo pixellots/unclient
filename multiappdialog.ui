@@ -71,7 +71,7 @@
      </attribute>
      <column>
       <property name="text">
-       <string>1</string>
+       <string/>
       </property>
      </column>
     </widget>
@@ -84,65 +84,17 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="url">
-      <url>
-       <string>about:blank</string>
-      </url>
-     </property>
     </widget>
    </item>
    <item row="3" column="0" colspan="2">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="3" column="3">
+     <item row="2" column="3">
       <widget class="QPushButton" name="pshClose">
        <property name="text">
         <string>Close</string>
        </property>
        <property name="autoDefault">
         <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0" colspan="4">
-      <widget class="QLabel" name="labelProgress">
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1" colspan="2">
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::MinimumExpanding</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>200</width>
-         <height>25</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="0" column="3">
-      <widget class="QPushButton" name="pshUpdate">
-       <property name="text">
-        <string>Install</string>
-       </property>
-       <property name="autoDefault">
-        <bool>true</bool>
-       </property>
-       <property name="default">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0" colspan="3">
-      <widget class="QProgressBar" name="progressBar">
-       <property name="value">
-        <number>24</number>
        </property>
       </widget>
      </item>
@@ -162,14 +114,43 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="3">
-      <widget class="QToolButton" name="toolCancel">
-       <property name="text">
-        <string>x</string>
+     <item row="0" column="1" colspan="2">
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::MinimumExpanding</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>200</width>
+         <height>25</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="0" colspan="3">
+      <widget class="QProgressBar" name="progressBar">
+       <property name="value">
+        <number>24</number>
        </property>
       </widget>
      </item>
-     <item row="3" column="0" colspan="3">
+     <item row="0" column="3">
+      <widget class="QPushButton" name="pshUpdate">
+       <property name="text">
+        <string>Install</string>
+       </property>
+       <property name="autoDefault">
+        <bool>true</bool>
+       </property>
+       <property name="default">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0" colspan="3">
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -184,6 +165,13 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="1" column="3">
+      <widget class="QToolButton" name="toolCancel">
+       <property name="text">
+        <string>X</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

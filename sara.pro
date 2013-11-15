@@ -6,7 +6,15 @@ QT = network \
 
 TARGET = unclient
 TEMPLATE = app
-TRANSLATIONS = translations/en_US.ts translations/de_DE.ts
+TRANSLATIONS = \
+    translations/en_US.ts \
+    translations/de_DE.ts \
+    translations/ja_JP.ts \
+    translations/zh_CN.ts \
+    translations/es_ES.ts \
+    translations/ru_RU.ts \
+    translations/fr_FR.ts
+
 #CONFIG-=app_bundle
 
 RC_FILE = unclient.rc
