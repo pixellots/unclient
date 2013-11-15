@@ -41,11 +41,14 @@
 #include "usermessages.h"
 #include "systemtray.h"
 
+#ifndef APP_COPYRIGHT
+#define APP_COPYRIGHT "©2013 UpdateNode UG. All rights reserved."
+#endif
+
 int printHelp()
 {
-    QString appName = QString("%1 %2 %3").arg(UPDATENODE_COMPANY_STR).arg(UPDATENODE_APPLICATION_STR).arg(UPDATENODE_CLIENT_VERSION);
-
-    QString message = QString("Command Line Parameters: \n\n%1 <options> mode").arg(QFileInfo(qApp->arguments().at(0)).fileName())
+    QString appName =   QString("%1 %2 %3").arg(UPDATENODE_COMPANY_STR).arg(UPDATENODE_APPLICATION_STR).arg(UPDATENODE_CLIENT_VERSION);
+    QString message =   QString("Command Line Parameters: \n\n%1 <options> mode").arg(QFileInfo(qApp->arguments().at(0)).fileName())
             + "\n\n"
             + "Mode:\n\n"
             + "  -check          \tchecks for update\n"
@@ -66,13 +69,17 @@ int printHelp()
             + "  -i <png_file>  \tMain PNG Icon\n"
             + "  -l <lang-code> \tLanguage Code\n"
             + "  -sp <png_file> \tSplash screen (PNG)\n"
-            + "  -s             \tSilent check\n"
+            + "  -s             \tSilent mode\n"
             + "  -r             \tRelaunch client in temp directory (self update)\n"
             + "  -st            \tSystem Tray Icon (-check mode only)\n"
             + "  -log <file>    \tEnables Logging\n"
             + "  -exec <command>\tLaunches command before terminating\n"
             + "  -config <file> \tLoads parameter settings from file\n";
 
+#ifdef Q_OS_UNIX
+    printf("%s\n%s\n\n%s", appName.toStdString().c_str(), APP_COPYRIGHT, message.toStdString().c_str());
+    return 1;
+#endif
     QTextEdit textEdit;
     QPushButton quitButton(QObject::tr("Quit"));
 
