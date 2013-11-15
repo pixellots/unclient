@@ -99,6 +99,7 @@ LIBS+= Shell32.lib Advapi32.lib
 }
 
 ICON += images/unclient.icns
+#QMAKE_INFO_PLIST = Info.plist
 
 QMAKE_PRE_LINK  += @echo ++++++QMAKE_PRE_LINK++++++
 QMAKE_POST_LINK += @echo ++++++QMAKE_POST_LINK++++++
