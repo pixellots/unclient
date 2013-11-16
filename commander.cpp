@@ -56,10 +56,10 @@ unclient supports 4 types of variables:
 - Internal variables
 - Environment variables
 
-\n \n
+\n\n
 These are the possible variables which can be resolved within a command or commandline parameter definition:
 \n
-\pre Native Settings
+Native Settings
 -------------------------
 Native settings depends on the selected platform. On Windows, this refer to the registry, on Linux that an INI format and on Mac OS it is plist format by default.
 \n
@@ -152,11 +152,14 @@ QString Commander::setCommandBasedOnOS() const
 #ifdef Q_OS_LINUX // Linux
     if(m_oUpdate.isAdminRequired())
     {
-        QString desktop = getenv("DESKTOP_SESSION");
-        if(desktop.indexOf("kubuntu") != -1 || desktop.indexOf("kde") != -1)
-            command = "/usr/bin/kdesudo";
-        else
+        if(QFile::exists("/usr/bin/gksudo"))
             command = "/usr/bin/gksudo";
+        else if(QFile::exists("/usr/bin/kdesudo"))
+            command = "/usr/bin/kdesudo";
+        else if(QFile::exists("/usr/bin/pkexec"))
+            command = "/usr/bin/pkexec";
+        else
+            return command;
     }
 #else
 #ifdef Q_OS_WIN // Windows
@@ -244,7 +247,14 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
                 QString description = UpdateNode::Config::Instance()->product().getName();
                 if(description.isEmpty())
                     description = m_oUpdate.getTitle() ;
-                commandParameters = splitCommandLine("--description \"" + description + "\"\"" + resolve(qApp->applicationFilePath() + " -copy " + m_oUpdate.getCommandLine()) + "\"");
+
+                if(command.indexOf("gksudo")>-1)
+                    commandParameters = splitCommandLine("--description \"" + description + "\"\"" + resolve(qApp->applicationFilePath() + " -copy " + m_oUpdate.getCommandLine()) + "\"");
+                else if(command.indexOf("pkexec")>-1)
+                    commandParameters = splitCommandLine(resolve(qApp->applicationFilePath() + " -copy " + m_oUpdate.getCommandLine()));
+                else
+                    commandParameters = splitCommandLine("\"" + resolve(qApp->applicationFilePath() + " -copy " + m_oUpdate.getCommandLine()) + "\"");
+
 #else
                 commandParameters.insert(0, "-copy");
                 commandParameters.insert(0, qApp->applicationFilePath());
@@ -252,8 +262,8 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
             }
         }
 
-        UpdateNode::Logging() << "command: " << command;
-        UpdateNode::Logging() << "commandline (without quotes): " << commandParameters.join(" ");
+        UpdateNode::Logging() << "command:" << command;
+        UpdateNode::Logging() << "commandline (without quotes):" << commandParameters.join(" ");
 
 #ifdef Q_OS_WIN // Windows
         if(m_oUpdate.isAdminRequired() && !UpdateNode::WinCommander::isProcessElevated())

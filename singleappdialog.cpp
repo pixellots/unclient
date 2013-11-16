@@ -113,7 +113,6 @@ void SingleAppDialog::install()
     else
     {
         m_oCommander.waitForFinished();
-        accept();
     }
     m_pUi->pushButton->setText(tr("Close"));
 }
@@ -212,7 +211,7 @@ void SingleAppDialog::processError()
 void SingleAppDialog::processOutput()
 {
     m_pUi->chkDetails->show();
-    m_pUi->textProgress->setTextColor(Qt::black);
+    m_pUi->textProgress->setTextColor(Qt::blue);
     m_pUi->textProgress->append(m_oCommander.readStdOut());
     m_pUi->textProgress->show();
 }
@@ -251,6 +250,9 @@ void SingleAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus
         UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << " crashed!";
         m_iErrorCode = UPDATENODE_PROCERROR_UPDATE_EXEC_CRASHED;
     }
+
+    if(UpdateNode::Config::Instance()->isSilent())
+        qApp->exit(m_iErrorCode);
 }
 
 void SingleAppDialog::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)

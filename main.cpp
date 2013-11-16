@@ -128,7 +128,7 @@ int returnANDlaunch(int result)
             QMessageBox::critical(0, "TODO", QObject::tr("Unable to launch '%1'").arg(exec));
     }
 
-    UpdateNode::Logging() << "unclient finished with error code " << QString::number(result);
+    UpdateNode::Logging() << "unclient finished with return code" << QString::number(result);
 
     return result;
 }
@@ -178,6 +178,22 @@ void getParametersFromFile(const QString& file)
 
 int main(int argc, char *argv[])
 {
+    if(argc > 1 && strcmp(argv[1],"-copy") == 0)
+    {
+        // check for copy commmand
+        QCoreApplication app(argc, argv);
+        QStringList args = app.arguments();
+        int index = args.indexOf("-copy");
+        if(index>-1 && args.size()==4)
+        {
+            if(UpdateNode::Commander::copy(args.at(2), args.at(3)))
+                return 0;
+            else
+                return -1;
+        }
+        return UPDATENODE_PROCERROR_WRONG_PARAMETER;
+    }
+
     QApplication a(argc, argv);
     UpdateNode::Application un_app;
 
@@ -186,25 +202,10 @@ int main(int argc, char *argv[])
 
     QString mode;
     QString argument;
-    QStringList arguments = QCoreApplication::arguments();
-
-    // check for copy commmand
-    int index = arguments.indexOf("-copy");
-    if(index>-1 && arguments.size()==4)
-    {
-        if(UpdateNode::Commander::copy(arguments.at(2), arguments.at(3)))
-            return 0;
-        else
-            return -1;
-    }
-    else if (index>-1)
-    {
-        UpdateNode::Logging() << "Invalid parameter for copy command";
-        return UPDATENODE_PROCERROR_WRONG_PARAMETER;
-    }
+    QStringList arguments = a.arguments();
 
     // get config data
-    index = arguments.indexOf("-config");
+    int index = arguments.indexOf("-config");
     if(index>-1 || QFile::exists("unclient.cfg"))
     {
         if(index>-1)
@@ -321,7 +322,7 @@ int main(int argc, char *argv[])
     {
          if(style.open(QIODevice::ReadOnly))
          {
-             a.setStyleSheet(style.readAll());
+             qApp->setStyleSheet(style.readAll());
              style.close();
          }
     }

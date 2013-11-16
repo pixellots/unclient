@@ -36,13 +36,19 @@ Logging::Logging()
         {
             m_pFile = new QFile();
             if(m_pFile->open(stderr, QIODevice::WriteOnly))
+            {
                 m_pStream = new QTextStream(m_pFile);
+                *m_pStream << "LOG: ";
+            }
         }
         else
         {
             m_pFile = new QFile(Config::Instance()->getLoggingFile());
             if(m_pFile->open(QIODevice::WriteOnly | QIODevice::Append))
+            {
                 m_pStream = new QTextStream(m_pFile);
+                *m_pStream << "LOG: ";
+            }
         }
     }
 }
