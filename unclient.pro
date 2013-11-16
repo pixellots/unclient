@@ -10,13 +10,13 @@ TEMPLATE = app
 DESTDIR = $$(PWD)
 
 TRANSLATIONS = \
-    translations/en_US.ts \
-    translations/de_DE.ts \
-    translations/ja_JP.ts \
-    translations/zh_CN.ts \
-    translations/es_ES.ts \
-    translations/ru_RU.ts \
-    translations/fr_FR.ts
+    translations/$${TARGET}_en.ts \
+    translations/$${TARGET}_de.ts \
+    translations/$${TARGET}_ja.ts \
+    translations/$${TARGET}_zh.ts \
+    translations/$${TARGET}_es.ts \
+    translations/$${TARGET}_ru.ts \
+    translations/$${TARGET}_fr.ts
 
 #### MAC: uncomment this if you need a bundle instead of a single binary
 #ICON += images/unclient.icns
@@ -91,7 +91,8 @@ FORMS += \
     usernotofication.ui \
     usermessages.ui \
     multiappdialog.ui
-RESOURCES += res.qrc
+RESOURCES += res.qrc \
+    translations.qrc
 
 win32{
 LIBS+= Shell32.lib Advapi32.lib

@@ -26,6 +26,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QSharedMemory>
+#include <QTranslator>
 
 namespace UpdateNode
 {
@@ -42,12 +43,15 @@ namespace UpdateNode
             bool isHidden();
             void killOther();
 
+            bool installTranslations();
+
         public slots:
             void setVisible(bool aShown = true);
             void killMeOrNot();
 
 
         private:
+            QTranslator m_oTranslator;
             QSharedMemory m_oSharedMemory;
             QTimer m_oTimer;
             bool m_visible;

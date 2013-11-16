@@ -313,19 +313,7 @@ int main(int argc, char *argv[])
     else
         un_app.setVisible();
 
-    QTranslator translator;
-    translator.load(config->getLanguage(), "translations");
-    a.installTranslator(&translator);
-
-    QFile style("default.qss");
-    if(style.exists())
-    {
-         if(style.open(QIODevice::ReadOnly))
-         {
-             qApp->setStyleSheet(style.readAll());
-             style.close();
-         }
-    }
+    un_app.installTranslations();
 
     if(mode == "-manager" || mode.isEmpty() || (mode == "-check" && !config->isSingleMode()))
     {

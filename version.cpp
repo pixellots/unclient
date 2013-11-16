@@ -26,6 +26,19 @@
 
 using namespace UpdateNode;
 
+/*!
+\class UpdateNode::Version
+\brief Class container for comparing two version strings
+*/
+
+/*!
+Compares two version strings and returns 0 when both versions match. -1 when first paramenter version is newer, 1 when second parameter is newer
+\code
+UpdateNode::Version::compare("2.0", "1.0.0") // returns -1
+UpdateNode::Version::compare("2.0.0.0.1", "3.0") // returns 1
+UpdateNode::Version::compare("1.0", "1.0.0") // returns 0
+\endcode
+*/
 int Version::compare(const QString &aVersionA, const QString &aVersionB)
 {
     QStringList versionListA = aVersionA.split(".");

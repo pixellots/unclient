@@ -32,67 +32,67 @@
 <context>
     <name>MultiAppDialog</name>
     <message>
-        <location filename="../multiappdialog.cpp" line="134"/>
+        <location filename="../multiappdialog.cpp" line="136"/>
         <source> - Update Manager</source>
         <translation>- Update Manager</translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="233"/>
+        <location filename="../multiappdialog.cpp" line="238"/>
         <source> (Size: %1)</source>
         <translation>(Größe: %1)</translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="171"/>
+        <location filename="../multiappdialog.cpp" line="175"/>
         <source>Software Update Manager</source>
         <translation>Software Update Manager</translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="258"/>
+        <location filename="../multiappdialog.cpp" line="263"/>
         <source>There is %1 new software update available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="260"/>
+        <location filename="../multiappdialog.cpp" line="265"/>
         <source>There are %1 new software updates available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="262"/>
+        <location filename="../multiappdialog.cpp" line="267"/>
         <source>Your software is up to date</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="308"/>
+        <location filename="../multiappdialog.cpp" line="313"/>
         <source>Downloading Update %1 ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="318"/>
+        <location filename="../multiappdialog.cpp" line="323"/>
         <source>All updates have been installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="360"/>
+        <location filename="../multiappdialog.cpp" line="365"/>
         <source>Installing Update &quot;%1&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="366"/>
+        <location filename="../multiappdialog.cpp" line="371"/>
         <source>Update failed:&lt;br&gt;%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="366"/>
+        <location filename="../multiappdialog.cpp" line="371"/>
         <source>Unable to execute the command!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="397"/>
+        <location filename="../multiappdialog.cpp" line="402"/>
         <source>Update &apos;%1&apos; installed successfully</source>
         <translation>Update &apos;%1&apos; erfolgreich installiert</translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="417"/>
+        <location filename="../multiappdialog.cpp" line="422"/>
         <source>Update &apos;%1&apos; failed with error %2</source>
         <translation>Update &apos;%1&apos; fehlgeschlagen mit Fehler %2</translation>
     </message>
@@ -145,17 +145,22 @@
         <translation>Undefinierter Zustand</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="103"/>
+        <location filename="../main.cpp" line="85"/>
+        <source>Quit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../main.cpp" line="128"/>
         <source>Unable to launch &apos;%1&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="326"/>
+        <location filename="../main.cpp" line="354"/>
         <source>Checking for messages ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="328"/>
+        <location filename="../main.cpp" line="356"/>
         <source>Checking for updates ...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -193,27 +198,27 @@
         <translation>Update wird installiert ...</translation>
     </message>
     <message>
-        <location filename="../singleappdialog.cpp" line="115"/>
+        <location filename="../singleappdialog.cpp" line="117"/>
         <source>Close</source>
         <translation type="unfinished">Schließen</translation>
     </message>
     <message>
-        <location filename="../singleappdialog.cpp" line="126"/>
+        <location filename="../singleappdialog.cpp" line="128"/>
         <source> - Update Client</source>
         <translation>- Update Client</translation>
     </message>
     <message>
-        <location filename="../singleappdialog.cpp" line="229"/>
+        <location filename="../singleappdialog.cpp" line="231"/>
         <source>Update &apos;%1&apos; installed successfully</source>
         <translation type="unfinished">Update &apos;%1&apos; erfolgreich installiert</translation>
     </message>
     <message>
-        <location filename="../singleappdialog.cpp" line="239"/>
+        <location filename="../singleappdialog.cpp" line="241"/>
         <source>Update &apos;%1&apos; failed with error %2</source>
         <translation type="unfinished">Update &apos;%1&apos; fehlgeschlagen mit Fehler %2</translation>
     </message>
     <message>
-        <location filename="../singleappdialog.cpp" line="247"/>
+        <location filename="../singleappdialog.cpp" line="249"/>
         <source>Update &apos;%1&apos; closed unexpected</source>
         <translation type="unfinished"></translation>
     </message>
@@ -221,12 +226,12 @@
 <context>
     <name>UpdateNode::Commander</name>
     <message>
-        <location filename="../commander.cpp" line="214"/>
+        <location filename="../commander.cpp" line="216"/>
         <source>Installing Update &apos;%1&apos;</source>
         <translation>Update &apos;%1&apos; wird installiert</translation>
     </message>
     <message>
-        <location filename="../commander.cpp" line="265"/>
+        <location filename="../commander.cpp" line="282"/>
         <source>Error: Update &apos;%1&apos; failed to start</source>
         <translation>Fehler: Update &apos;%1&apos; konnte nicht gestartet werden</translation>
     </message>

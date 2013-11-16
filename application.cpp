@@ -21,8 +21,9 @@
 ****************************************************************************/
 
 #include "application.h"
-#include <QApplication>
 #include "logging.h"
+#include "config.h"
+#include <QApplication>
 #include <QThread>
 #include <QDir>
 #include <QFileInfo>
@@ -35,6 +36,41 @@ using namespace UpdateNode;
 Application::Application(QObject *parent) :
     QObject(parent)
 {
+    QFile style("default.qss");
+    if(style.exists())
+    {
+         if(style.open(QIODevice::ReadOnly))
+         {
+             qApp->setStyleSheet(style.readAll());
+             style.close();
+         }
+    }
+}
+
+bool Application::installTranslations()
+{
+    UpdateNode::Config* config = UpdateNode::Config::Instance();
+
+    QString translationFrom;
+    if(!m_oTranslator.load("unclient_" + config->getLanguage()))
+    {
+        if(!m_oTranslator.load("translations/unclient_" + config->getLanguage()))
+        {
+            if(m_oTranslator.load(":/translations/unclient_" + config->getLanguage()))
+                translationFrom = "*internal resource*";
+        }
+        else
+            translationFrom = "translations";
+    }
+    else
+        translationFrom = ".";
+
+    qApp->installTranslator(&m_oTranslator);
+
+    if(!translationFrom.isEmpty())
+        UpdateNode::Logging() << "Translation for" << config->getLanguage() << "loaded from:" << translationFrom;
+
+    return !translationFrom.isEmpty();
 }
 
 bool Application::relaunchUpdateSave(const QString& aKey)
