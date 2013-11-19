@@ -40,6 +40,8 @@ build.no.temp
 Makefile*
 unclient
 ui_*.h
+moc_*.cpp
+qrc_*.cpp
 *.pdb
 debug/
 release/
