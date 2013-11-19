@@ -139,22 +139,21 @@ void MultiAppDialog::serviceDone()
     m_pUI->treeUpdate->clear();
     m_pUI->webView->setContent("");
 
-    if(!config->product().getIconUrl().isEmpty())
+    if(!config->mainIcon().isEmpty())
     {
-        if(!config->mainIcon().isEmpty())
-        {
-            m_pUI->labelLogo->setPixmap(QPixmap(config->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
-            m_pUI->labelLogo->show();
-            setWindowIcon(QPixmap(config->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
-        }
-        else
-        {
-            m_pUI->labelLogo->hide();
-            setWindowIcon(QPixmap(config->product().getLocalIcon()).scaledToHeight(64, Qt::SmoothTransformation));
-        }
+        m_pUI->labelLogo->setPixmap(QPixmap(config->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
+        m_pUI->labelLogo->show();
+        setWindowIcon(QPixmap(config->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
+    }
+    else if(!config->product().getIconUrl().isEmpty())
+    {
+        m_pUI->labelLogo->hide();
+        setWindowIcon(QPixmap(config->product().getLocalIcon()).scaledToHeight(64, Qt::SmoothTransformation));
     }
     else
         m_pUI->labelLogo->hide();
+
+    qApp->setWindowIcon(windowIcon());
 
     updateUpdateView();
     updateCounter();

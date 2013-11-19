@@ -43,3 +43,4 @@ ui_*.h
 *.pdb
 debug/
 release/
+unclient.pro.user*
