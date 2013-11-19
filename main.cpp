@@ -40,9 +40,10 @@
 #include "status.h"
 #include "usermessages.h"
 #include "systemtray.h"
+#include "helpdialog.h"
 
 #ifndef APP_COPYRIGHT
-#define APP_COPYRIGHT "©2013 UpdateNode UG. All rights reserved."
+#define APP_COPYRIGHT "\xA9 2013 UpdateNode UG. All rights reserved."
 #endif
 
 int printHelp()
@@ -67,37 +68,24 @@ int printHelp()
             + "  -pc <code>     \tProduct Code\n"
             + "  -v <version>   \tProduct Version\n"
             + "  -i <png_file>  \tMain PNG Icon\n"
-            + "  -l <lang-code> \tLanguage Code\n"
-            + "  -sp <png_file> \tSplash screen (PNG)\n"
             + "  -s             \tSilent mode\n"
             + "  -r             \tRelaunch client in temp directory (self update)\n"
             + "  -st            \tSystem Tray Icon (-check mode only)\n"
             + "  -log <file>    \tEnables Logging\n"
-            + "  -exec <command>\tLaunches command before terminating\n"
             + "  -config <file> \tLoads parameter settings from file\n"
+            + "  -l <lang-code> \tLanguage Code\n"
+            + "  -sp <png_file> \tSplash screen (PNG)\n"
+            + "  -exec <command>\tLaunches command before terminating\n"
             + "\n";
 
 #ifdef Q_OS_UNIX
     printf("%s\n%s\n\n%s", appName.toStdString().c_str(), APP_COPYRIGHT, message.toStdString().c_str());
-    return 1;
+    return 0;
 #endif
-    QTextEdit textEdit;
-    QPushButton quitButton(QObject::tr("Quit"));
-
-    textEdit.setText(message);
-    QObject::connect(&quitButton, SIGNAL(clicked()), qApp, SLOT(quit()));
-
-    QVBoxLayout layout;
-    layout.addWidget(&textEdit);
-    layout.addWidget(&quitButton);
-
-    QWidget window;
-    window.setWindowTitle(appName);
-    window.setLayout(&layout);
-    window.resize(640, 400);
-    window.show();
-    qApp->exec();
-    return 1;
+    Helpdialog help;
+    help.setText(appName, QString(APP_COPYRIGHT) + "\n\n" + message);
+    help.exec();
+    return 0;
 }
 
 int returnANDlaunch(int result)
@@ -217,27 +205,28 @@ int main(int argc, char *argv[])
     for (int i = 0; i < arguments.size(); ++i)
     {
         argument = arguments.at(i);
+        bool hasNext = (i+1) < arguments.size();
         
-        if(argument == "-k")
+        if(argument == "-k" && hasNext)
             config->setKey(arguments.at(i+1));
-        else if(argument == "-t")
+        else if(argument == "-t" && hasNext)
             config->setTestKey(arguments.at(i+1));
-        else if(argument == "-vc")
+        else if(argument == "-vc" && hasNext)
         {
             config->setSingleMode(true);
             config->setVersionCode(arguments.at(i+1));
         }
-        else if(argument == "-pc")
+        else if(argument == "-pc" && hasNext)
         {
             config->setSingleMode(true);
             config->setProductCode(arguments.at(i+1));
         }
-        else if(argument == "-v")
+        else if(argument == "-v" && hasNext)
         {
             config->setSingleMode(true);
             config->setVersion(arguments.at(i+1));
         }
-        else if(argument == "-host")
+        else if(argument == "-host" && hasNext)
             config->setHost(arguments.at(i+1));
         else if(argument == "-s")
             config->setSilent(TRUE);
@@ -245,18 +234,18 @@ int main(int argc, char *argv[])
             config->setRelaunch(true);
         else if(argument == "-st")
             config->setSystemTray(true);
-        else if(argument == "-i")
+        else if(argument == "-i" && hasNext)
         {
             config->setMainIcon(arguments.at(i+1));
             a.setWindowIcon(QPixmap(arguments.at(i+1)));
         }
-        else if(arguments.at(i) == "-l")
+        else if(arguments.at(i) == "-l" && hasNext)
             config->setLanguage(arguments.at(i+1));
-        else if(arguments.at(i) == "-log")
+        else if(arguments.at(i) == "-log" && hasNext)
             config->setLogging(arguments.at(i+1));
-        else if(arguments.at(i) == "-sp")
+        else if(arguments.at(i) == "-sp" && hasNext)
             config->setSplashScreen(arguments.at(i+1));
-        else if(arguments.at(i) == "-exec")
+        else if(arguments.at(i) == "-exec" && hasNext)
             config->setExec(arguments.at(i+1));
         else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help" || arguments.at(i) == "-help")
             return printHelp();

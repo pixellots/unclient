@@ -109,7 +109,7 @@ bool Service::checkForUpdates(UpdateNode::Config* aConfig)
     else
         url.addQueryItem("versionCode", settings.getVersionCode(aConfig));
 
-    UpdateNode::Logging() << "REQUEST: " << url.toString();
+    //UpdateNode::Logging() << "REQUEST: " << url.toString();
     request.setUrl(url);
     request.setRawHeader("charset", "utf-8" );
     request.setRawHeader("User-Agent", QString("UpdateNodeClient %1 (%2)").arg(UPDATENODE_CLIENT_VERSION).arg(globalConfig->getOS()).toAscii());

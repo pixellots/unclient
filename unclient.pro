@@ -46,7 +46,7 @@ VERSION=1.0
 QMAKE_TARGET_COMPANY = UpdateNode
 QMAKE_TARGET_PRODUCT = "UpdateNode Client"
 QMAKE_TARGET_DESCRIPTION = Client for software updates and messages
-QMAKE_TARGET_COPYRIGHT =©2013 UpdateNode UG. All rights reserved.
+QMAKE_TARGET_COPYRIGHT = Copyright by (C) UpdateNode UG. All rights reserved.
 
 DEFINES += \
 APP_VERSION=$${VERSION} \
@@ -76,7 +76,8 @@ SOURCES += main.cpp \
     application.cpp \
     systemtray.cpp \
     multiappdialog.cpp \
-    logging.cpp
+    logging.cpp \
+    helpdialog.cpp
 
 HEADERS += \
     config.h \
@@ -100,13 +101,15 @@ HEADERS += \
     application.h \
     systemtray.h \
     multiappdialog.h \
-    logging.h
+    logging.h \
+    helpdialog.h
 
 FORMS += \
     singleappdialog.ui \
     usernotofication.ui \
     usermessages.ui \
-    multiappdialog.ui
+    multiappdialog.ui \
+    helpdialog.ui
 
 RESOURCES += res.qrc \
     translations.qrc

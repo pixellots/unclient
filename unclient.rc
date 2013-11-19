@@ -22,7 +22,7 @@ BEGIN
             VALUE "OriginalFilename", "unclient.exe\0"
             VALUE "ProductName", "UpdateNode Client\0"
             VALUE "ProductVersion", "1.0\0"
-            VALUE "LegalCopyright", "© UpdateNode UG. All rights reserved.\0"
+            VALUE "LegalCopyright", "\xA9 UpdateNode UG. All rights reserved.\0"
         END
     END
     BLOCK "VarFileInfo"
