@@ -246,7 +246,10 @@ int main(int argc, char *argv[])
         else if(argument == "-st")
             config->setSystemTray(true);
         else if(argument == "-i")
+        {
             config->setMainIcon(arguments.at(i+1));
+            a.setWindowIcon(QPixmap(arguments.at(i+1)));
+        }
         else if(arguments.at(i) == "-l")
             config->setLanguage(arguments.at(i+1));
         else if(arguments.at(i) == "-log")
