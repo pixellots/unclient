@@ -102,7 +102,7 @@ UN_FILENAME         | File name of the downloaded file    | setup.exe
 UN_FILEEXT          | The extension of the downloaded file| exe
 UN_UP_SIZE_REAL     | Real size of the downloaded file\n in Bytes| 25444000
 UN_UP_CODE          | The update code which is internally\n used to identify your update | {c7a20520-4dcf-11e3-94e8-0002a5d5c51b}
-UN_UP_LINK          | The download link\n UpdateNode:::Commander::resolveGeneral resolved | http://updatenode.com/example/custom_value/setup.exe
+UN_UP_LINK          | The download link\n UpdateNode::Commander::resolveGeneral resolved | http://updatenode.com/example/custom_value/setup.exe
 UN_UP_SIZE          | Size of the downloaded file as specifiec in UpdateNode.com | 25 MB
 UN_UP_TARGETVERSION | The update's target version         | 2.0
 UN_UP_TARGETCODE    | The update target's version code    | my_new_version_code_1234
@@ -445,7 +445,7 @@ QString Commander::resolveGeneral(const QString& aString)
 Command line parameters gets splitted in by quotes
 \n
 ~~~~~~~~~~~~~~~~~~~~~
-QStringList list = UpdateNode::Commander::splitCommandLine("-i main.png -v 1.2.0 \\"This should be in quotes\\" hello");
+QStringList list = UpdateNode::Commander::splitCommandLine("-i main.png -v 1.2.0 \"This should be in quotes\" hello");
 ~~~~~~~~~~~~~~~~~~~~~
 will result in a QStringList with following items:
 
