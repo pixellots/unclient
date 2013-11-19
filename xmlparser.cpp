@@ -28,6 +28,17 @@
 
 using namespace UpdateNode;
 
+/*!
+\class UpdateNode::XmlParser
+\brief Class to parse the returned xml data returned by UpdateNode.com
+\n\n
+UpdateNode::XmlParser is parsing the xml data and filling the data into the provided
+UpdateNode::Config configuration.
+*/
+
+/*!
+Constructs an empty XmlParser object.
+*/
 XmlParser::XmlParser(QObject* parent, UpdateNode::Config* aConfig)
     : QObject(parent)
 {
@@ -35,12 +46,33 @@ XmlParser::XmlParser(QObject* parent, UpdateNode::Config* aConfig)
     m_pConfig = aConfig;
 }
 
+/*!
+Desctructs a XmlParser object.
+*/
 XmlParser::~XmlParser()
 {
     if(m_pDocument)
         delete m_pDocument;
 }
 
+/*!
+This method is reading and parsing the whole xml data specified in \a aXmlData. \n
+\code
+UpdateNode::Config *myConfig = new UpdateNode::Config();
+UpdateNode::XmlParser* parser = new UpdateNode::XmlParser(0, myConfig);
+
+if(!parser.parse(yourXmlFromUpdateNode))
+    // return some error
+else
+{
+    // access your data
+    QList<UpdateNode::Update> list = myConfig->updates()
+    foreach(UpdateNode::Update update, list)
+        // do something with your update object
+}
+\endcode
+The method returns true if xml is valid and all parts have been parsed correctly, otherwise false
+*/
 bool XmlParser::parse(const QString& aXmlData)
 {
     QString errorMsg;
@@ -63,6 +95,12 @@ bool XmlParser::parse(const QString& aXmlData)
     return true;
 }
 
+/*!
+ * XmlParser::parseStatus is reading the status block
+ * \return true on success, otherwise false
+ * \sa UpdateNode::XmlParser::getStatus
+ * \sa UpdateNode::XmlParser::getStatusString
+ */
 bool XmlParser::parseStatus()
 {
     QDomNodeList list = m_pDocument->elementsByTagName("status");
@@ -88,7 +126,11 @@ bool XmlParser::parseStatus()
     return true;
 }
 
-bool XmlParser::parseProduct()
+/*!
+ * XmlParser::parseProduct is reading the product block
+ * \return true on success, otherwise false
+ */
+ bool XmlParser::parseProduct()
 {
     QDomNodeList list = m_pDocument->elementsByTagName("product");
 
@@ -119,6 +161,10 @@ bool XmlParser::parseProduct()
     return true;
 }
 
+/*!
+* XmlParser::parseVersion a common method for reading the version block
+* \return UpdateNode::ProductVersion
+*/
 UpdateNode::ProductVersion XmlParser::parseVersion(QDomNode aNode)
 {
     UpdateNode::ProductVersion version;
@@ -141,6 +187,10 @@ UpdateNode::ProductVersion XmlParser::parseVersion(QDomNode aNode)
     return version;
 }
 
+/*!
+* XmlParser::parseVersion is reading the current version block
+* \return true on success, otherwise false
+*/
 bool XmlParser::parseVersion()
 {
     QDomNodeList list = m_pDocument->elementsByTagName("version");
@@ -157,6 +207,10 @@ bool XmlParser::parseVersion()
     return true;
 }
 
+/*!
+* XmlParser::parseUpdate is reading a single update block
+* \return UpdateNode::Update
+*/
 UpdateNode::Update XmlParser::parseUpdate(QDomNode aNode)
 {
     UpdateNode::Update update;
@@ -193,6 +247,10 @@ UpdateNode::Update XmlParser::parseUpdate(QDomNode aNode)
     return update;
 }
 
+/*!
+* XmlParser::parseMessage is reading a single message block
+* \return UpdateNode::Message
+*/
 UpdateNode::Message XmlParser::parseMessage(QDomNode aNode)
 {
     UpdateNode::Message message;
@@ -217,6 +275,10 @@ UpdateNode::Message XmlParser::parseMessage(QDomNode aNode)
     return message;
 }
 
+/*!
+* XmlParser::parseUpdates is parsing all updates
+* \return true on success, otherwise false
+*/
 bool XmlParser::parseUpdates()
 {
     QDomNodeList list = m_pDocument->elementsByTagName("updates");
@@ -238,6 +300,10 @@ bool XmlParser::parseUpdates()
     return true;
 }
 
+/*!
+* XmlParser::parseMessages is parsing all messages
+* \return true on success, otherwise false
+*/
 bool XmlParser::parseMessages()
 {
     QDomNodeList list = m_pDocument->elementsByTagName("messages");
@@ -259,11 +325,19 @@ bool XmlParser::parseMessages()
     return true;
 }
 
+/*!
+* XmlParser::getStatus returns the status code, returned by the UpdateNode service
+* \return status code (0 = success)
+*/
 int XmlParser::getStatus()
 {
     return m_iStatus;
 }
 
+/*!
+* XmlParser::getStatusString returns the status string, returned by the UpdateNode service
+* \return error string
+*/
 QString XmlParser::getStatusString()
 {
     return m_strStatus;
