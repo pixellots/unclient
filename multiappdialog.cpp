@@ -59,7 +59,6 @@ MultiAppDialog::MultiAppDialog(QWidget *parent) :
     connect(m_pDownloader, SIGNAL(downloadProgress(qint64,qint64)), SLOT(downloadProgress(qint64, qint64)));
     connect(m_pDownloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), SLOT(downloadDone(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)));
 
-    m_pUI->labelLogo->hide();
     m_pUI->labelProgress->hide();
     m_pUI->toolCancel->hide();
     m_pUI->progressBar->hide();
@@ -140,18 +139,9 @@ void MultiAppDialog::serviceDone()
     m_pUI->webView->setContent("");
 
     if(!config->mainIcon().isEmpty())
-    {
-        m_pUI->labelLogo->setPixmap(QPixmap(config->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
-        m_pUI->labelLogo->show();
         setWindowIcon(QPixmap(config->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
-    }
     else if(!config->product().getIconUrl().isEmpty())
-    {
-        m_pUI->labelLogo->hide();
         setWindowIcon(QPixmap(config->product().getLocalIcon()).scaledToHeight(64, Qt::SmoothTransformation));
-    }
-    else
-        m_pUI->labelLogo->hide();
 
     qApp->setWindowIcon(windowIcon());
 
@@ -178,13 +168,9 @@ void MultiAppDialog::serviceDoneManager()
     m_pUI->webView->setContent("");
 
     if(!globalConfig->mainIcon().isEmpty())
-    {
-        m_pUI->labelLogo->setPixmap(QPixmap(globalConfig->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
-        m_pUI->labelLogo->show();
         setWindowIcon(QPixmap(globalConfig->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
-    }
-    else
-        m_pUI->labelLogo->hide();
+
+    qApp->setWindowIcon(windowIcon());
 
     m_pUI->pshCheck->hide();
 

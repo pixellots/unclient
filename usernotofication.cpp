@@ -72,18 +72,21 @@ void UserNotofication::updateView()
     UpdateNode::Config* config = UpdateNode::Config::Instance();
 
     setWindowTitle(config->product().getName() + tr(" - Update Client"));
+
+    if(!config->mainIcon().isEmpty())
+        setWindowIcon(QPixmap(config->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
+    else if(!config->product().getIconUrl().isEmpty())
+        setWindowIcon(QPixmap(config->product().getLocalIcon()).scaledToHeight(64, Qt::SmoothTransformation));
+
+    qApp->setWindowIcon(windowIcon());
+
     if(!config->product().getIconUrl().isEmpty())
     {
-        setWindowIcon(QPixmap(config->product().getLocalIcon()).scaledToHeight(64, Qt::SmoothTransformation));
-        if(!config->mainIcon().isEmpty())
-            ui->labelLogo->setPixmap(QPixmap(config->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
-        else
-            ui->labelLogo->setPixmap(QPixmap(config->product().getLocalIcon()).scaledToHeight(64, Qt::SmoothTransformation));
+        ui->labelLogo->setPixmap(QPixmap(config->product().getLocalIcon()).scaledToHeight(64, Qt::SmoothTransformation));
         ui->labelLogo->show();
     }
     else if(!config->mainIcon().isEmpty())
     {
-        setWindowIcon(QPixmap(config->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
         ui->labelLogo->setPixmap(QPixmap(config->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
         ui->labelLogo->show();
     }
