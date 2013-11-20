@@ -21,26 +21,38 @@
 ****************************************************************************/
 
 #include "usermessages.h"
-#include "ui_usermessages.h"
 #include "config.h"
 #include "settings.h"
 #include "localfile.h"
+
+#ifdef QT_WEBKIT_LIB
+#include <QtWebKit>
+#include "ui_usermessages_ex.h"
+#else
+#include <QTextBrowser>
+#include "ui_usermessages.h"
+#endif
 
 #include <QNetworkDiskCache>
 #include <QDesktopServices>
 
 UserMessages::UserMessages(QWidget *parent) :
     QDialog(parent, Qt::WindowCloseButtonHint),
+#ifdef QT_WEBKIT_LIB
+    ui(new Ui::UserMessagesEx)
+#else
     ui(new Ui::UserMessages)
+#endif
 {
     ui->setupUi(this);
 
     QNetworkDiskCache* cache = new QNetworkDiskCache(this);
     cache->setCacheDirectory(UpdateNode::LocalFile::getCachePath());
+#ifdef QT_WEBKIT_LIB
     ui->webView->page()->networkAccessManager()->setCache(cache);
-
     ui->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     connect(ui->webView, SIGNAL(linkClicked(const QUrl&)), SLOT(openLink(const QUrl&)));
+#endif
     connect(ui->toolLeft, SIGNAL(clicked()), SLOT(onLeft()));
     connect(ui->toolRight, SIGNAL(clicked()), SLOT(onRight()));
     connect(ui->pshRead, SIGNAL(clicked()), SLOT(onRead()));
@@ -50,7 +62,9 @@ UserMessages::UserMessages(QWidget *parent) :
 
 UserMessages::~UserMessages()
 {
+#ifdef QT_WEBKIT_LIB
     delete ui->webView->page()->networkAccessManager()->cache();
+#endif
     delete ui;
 }
 
@@ -115,11 +129,18 @@ void UserMessages::showMessage()
     else
         ui->label->setText(m_listMessages.at(m_iCurrentIndex).getTitle());
 
+#ifdef QT_WEBKIT_LIB
     if(!m_listMessages.at(m_iCurrentIndex).getMessage().isEmpty())
         ui->webView->setContent(m_listMessages.at(m_iCurrentIndex).getMessage().toUtf8());
     else
         ui->webView->load(m_listMessages.at(m_iCurrentIndex).getLink());
-
+#else
+    if(!m_listMessages.at(m_iCurrentIndex).getMessage().isEmpty())
+        ui->textBrowser->setHtml(m_listMessages.at(m_iCurrentIndex).getMessage());
+    ui->pshRead->setEnabled(true);
+    //else
+      //  ui->textBrowser->load(m_listMessages.at(m_iCurrentIndex).getLink());
+#endif
     ui->progressBar->setFormat(tr("Loading %p% ..."));
 
     if(m_listMessages.size()==m_iCurrentIndex+1)

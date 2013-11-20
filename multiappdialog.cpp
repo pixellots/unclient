@@ -21,7 +21,6 @@
 ****************************************************************************/
 
 #include <QFile>
-#include <QtWebKit>
 #include <QMessageBox>
 #include <QDesktopServices>
 
@@ -68,9 +67,9 @@ MultiAppDialog::MultiAppDialog(QWidget *parent) :
     connect(m_pUI->pshUpdate, SIGNAL(clicked()), SLOT(startInstall()));
     connect(m_pUI->toolCancel, SIGNAL(clicked()), SLOT(cancelProgress()));
 
-    m_pUI->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+    //m_pUI->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+    //connect(m_pUI->webView, SIGNAL(linkClicked(const QUrl&)), SLOT(openLink(const QUrl&)));
 
-    connect(m_pUI->webView, SIGNAL(linkClicked(const QUrl&)), SLOT(openLink(const QUrl&)));
     connect(m_pUI->treeUpdate, SIGNAL(itemSelectionChanged()), SLOT(updateSelectedUpdate()));
     connect(m_pUI->treeUpdate, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(checkSelection()));
 
@@ -115,7 +114,7 @@ void MultiAppDialog::updateSelectedUpdate()
         QTreeWidgetItem* item = m_pUI->treeUpdate->selectedItems().at(0);
 
         UpdateNode::Update update = item->data(0, Qt::UserRole).value<UpdateNode::Update>();
-        m_pUI->webView->setContent(update.getDescription().toUtf8());
+        m_pUI->textBrowser->setHtml(update.getDescription()     );
     }
 }
 
@@ -136,7 +135,7 @@ void MultiAppDialog::serviceDone()
 
     m_iNewUpdates = 0;
     m_pUI->treeUpdate->clear();
-    m_pUI->webView->setContent("");
+    m_pUI->textBrowser->setHtml("");
 
     if(!config->mainIcon().isEmpty())
         setWindowIcon(QPixmap(config->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
@@ -165,7 +164,7 @@ void MultiAppDialog::serviceDoneManager()
 
     m_iNewUpdates = 0;
     m_pUI->treeUpdate->clear();
-    m_pUI->webView->setContent("");
+    m_pUI->textBrowser->setHtml("");
 
     if(!globalConfig->mainIcon().isEmpty())
         setWindowIcon(QPixmap(globalConfig->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));

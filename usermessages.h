@@ -31,7 +31,11 @@
 #include "updatenode_service.h"
 
 namespace Ui {
+#ifdef QT_WEBKIT_LIB
+class UserMessagesEx;
+#else
 class UserMessages;
+#endif
 }
 
 class UserMessages : public QDialog
@@ -55,7 +59,11 @@ private:
     void showMessage();
 
 private:
+#ifdef QT_WEBKIT_LIB
+    Ui::UserMessagesEx *ui;
+#else
     Ui::UserMessages *ui;
+#endif
     UpdateNode::Service* m_pService;
     QList<UpdateNode::Message> m_listMessages;
 

@@ -21,6 +21,7 @@
 ****************************************************************************/
 
 #include <QDir>
+#include <QDebug>
 #include "logging.h"
 #include "downloader.h"
 #include "localfile.h"
@@ -31,7 +32,17 @@ using namespace UpdateNode;
 
 Downloader::Downloader()
 {
-    connect(&m_oManager, SIGNAL(finished(QNetworkReply*)), SLOT(downloadFinished(QNetworkReply*)));
+}
+
+void Downloader::doDownload(const QUrl& url, const QString& aFileName)
+{
+    QNetworkRequest request(url);
+
+    connect(&m_oManager, SIGNAL(finished(QNetworkReply*)), SLOT(downloadFileFinished(QNetworkReply*)));
+
+    QNetworkReply *reply = m_oManager.get(request);
+
+    m_oCurrentFileDownloads[reply] = aFileName;
 }
 
 QNetworkReply* Downloader::doDownload(const QUrl& url, const UpdateNode::Update& aUpdate)
@@ -43,6 +54,8 @@ QNetworkReply* Downloader::doDownload(const QUrl& url, const UpdateNode::Update&
         emit done(aUpdate, QNetworkReply::NoError, QString());
         return NULL;
     }
+
+    connect(&m_oManager, SIGNAL(finished(QNetworkReply*)), SLOT(downloadFinished(QNetworkReply*)));
 
     QNetworkRequest request(url);
 
@@ -84,6 +97,14 @@ bool Downloader::saveToDisk(const QString &filename, QIODevice *data, const QStr
     settings.setCachedFile(aCode, filename);
 
     return true;
+}
+
+void Downloader::downloadFileFinished(QNetworkReply *reply)
+{
+    if(reply->error() == QNetworkReply::NoError)
+        emit done(reply->readAll(), m_oCurrentFileDownloads.take(reply));
+
+    reply->deleteLater();
 }
 
 void Downloader::downloadFinished(QNetworkReply *reply)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>UserMessages</class>
- <widget class="QDialog" name="UserMessages">
+ <class>UserMessagesEx</class>
+ <widget class="QDialog" name="UserMessagesEx">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string/>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -68,23 +68,6 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="0">
-    <widget class="UpdateNode::TextBrowser" name="textBrowser">
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <property name="html">
-      <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="openExternalLinks">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
@@ -138,13 +121,22 @@ p, li { white-space: pre-wrap; }
      </item>
     </layout>
    </item>
+   <item row="1" column="0">
+    <widget class="QWebView" name="webView">
+     <property name="url">
+      <url>
+       <string>about:blank</string>
+      </url>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>UpdateNode::TextBrowser</class>
-   <extends>QTextBrowser</extends>
-   <header>textbrowser.h</header>
+   <class>QWebView</class>
+   <extends>QWidget</extends>
+   <header>QtWebKit/QWebView</header>
   </customwidget>
  </customwidgets>
  <resources>
@@ -154,7 +146,7 @@ p, li { white-space: pre-wrap; }
   <connection>
    <sender>pshClose</sender>
    <signal>clicked()</signal>
-   <receiver>UserMessages</receiver>
+   <receiver>UserMessagesEx</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -164,6 +156,70 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>223</x>
      <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>webView</sender>
+   <signal>loadFinished(bool)</signal>
+   <receiver>pshRead</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>118</x>
+     <y>219</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>61</x>
+     <y>481</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>webView</sender>
+   <signal>loadProgress(int)</signal>
+   <receiver>progressBar</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>221</x>
+     <y>163</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>325</x>
+     <y>483</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>webView</sender>
+   <signal>loadFinished(bool)</signal>
+   <receiver>progressBar</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>354</x>
+     <y>206</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>370</x>
+     <y>480</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>webView</sender>
+   <signal>loadStarted()</signal>
+   <receiver>progressBar</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>253</x>
+     <y>214</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>326</x>
+     <y>480</y>
     </hint>
    </hints>
   </connection>

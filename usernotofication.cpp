@@ -36,14 +36,14 @@ UserNotofication::UserNotofication(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-    connect(ui->webView, SIGNAL(linkClicked(const QUrl&)), SLOT(openLink(const QUrl&)));
+    //ui->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+    //connect(ui->webView, SIGNAL(linkClicked(const QUrl&)), SLOT(openLink(const QUrl&)));
 
     connect(ui->treeWidget, SIGNAL(itemSelectionChanged()), SLOT(updateSelectedUpdate()));
     connect(ui->pshDetails, SIGNAL(clicked()), SLOT(detailsClicked()));
 
     ui->treeWidget->hide();
-    ui->webView->hide();
+    ui->textBrowser->hide();
 
     ui->labelLogo->hide();
 
@@ -106,6 +106,8 @@ void UserNotofication::updateView()
     ui->treeWidget->resizeColumnToContents(2);
     ui->treeWidget->resizeColumnToContents(1);
 
+    updateSelectedUpdate();
+
     adjustSize();
 }
 
@@ -116,12 +118,12 @@ void UserNotofication::openLink(const QUrl& aUrl)
 
 void UserNotofication::updateSelectedUpdate()
 {
-    if(ui->treeWidget->selectedItems().size()>0)
+    if(ui->treeWidget->topLevelItem(0))
     {
-        QTreeWidgetItem* item = ui->treeWidget->selectedItems().at(0);
+        QTreeWidgetItem* item = ui->treeWidget->topLevelItem(0);
 
         UpdateNode::Update update = item->data(0, Qt::UserRole).value<UpdateNode::Update>();
-        ui->webView->setHtml(update.getDescription());
+        ui->textBrowser->setHtml(update.getDescription());
     }
 }
 
@@ -130,14 +132,14 @@ void UserNotofication::detailsClicked()
     if(ui->treeWidget->isVisible())
     {
         ui->treeWidget->hide();
-        ui->webView->setHidden(true);
+        ui->textBrowser->setHidden(true);
         ui->pshDetails->setText("Show Details");
         adjustSize();
     }
     else
     {
         ui->treeWidget->show();
-        ui->webView->show();
+        ui->textBrowser->show();
         ui->pshDetails->setText("Hide Details");
     }
     layout()->setSizeConstraint(QLayout::SetMinimumSize);

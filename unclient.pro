@@ -1,12 +1,14 @@
 QT = network \
     xml \
     gui \
-    core \
-    webkit
+    core 
+
+### QT_WEBKIT_LIB
+#QT += webkit
 
 TARGET = unclient
 TEMPLATE = app
-CONFIG += release
+#CONFIG += release
 
 TRANSLATIONS = \
     translations/$${TARGET}_de.ts \
@@ -40,7 +42,7 @@ QMAKE_EXTRA_TARGETS += deploy
 #### MAC: uncomment 'ICON += images/unclient.icns' 
 ####      and comment 'CONFIG-=app_bundle'
 ####      if you need a bundle instead of a single binary
-# ICON += images/unclient.icns
+#ICON += images/unclient.icns
 CONFIG-=app_bundle
 
 ### version needs to be checked here
@@ -85,7 +87,8 @@ SOURCES += main.cpp \
     systemtray.cpp \
     multiappdialog.cpp \
     logging.cpp \
-    helpdialog.cpp
+    helpdialog.cpp \
+    textbrowser.cpp
 
 HEADERS += \
     config.h \
@@ -110,14 +113,16 @@ HEADERS += \
     systemtray.h \
     multiappdialog.h \
     logging.h \
-    helpdialog.h
+    helpdialog.h \
+    textbrowser.h
 
 FORMS += \
     singleappdialog.ui \
     usernotofication.ui \
     usermessages.ui \
     multiappdialog.ui \
-    helpdialog.ui
+    helpdialog.ui \
+    usermessages_ex.ui
 
 RESOURCES += res.qrc \
     translations.qrc

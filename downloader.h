@@ -50,6 +50,7 @@ namespace UpdateNode
              Downloader();
 
         public:
+             void doDownload(const QUrl& url, const QString& aFileName);
              QNetworkReply* doDownload(const QUrl& url, const UpdateNode::Update& aUpdate);
              bool saveToDisk(const QString &filename, QIODevice *data, const QString& aCode);
              bool isDownloading();
@@ -58,14 +59,17 @@ namespace UpdateNode
 
          public slots:
              void downloadFinished(QNetworkReply *reply);
+             void downloadFileFinished(QNetworkReply *reply);
 
         signals:
+             void done(QByteArray array, const QString& fileName);
              void done(const UpdateNode::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString);
              void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
 
         private:
              QNetworkAccessManager m_oManager;
              QMap<QNetworkReply*, UpdateNode::Update> m_oCurrentDownloads;
+             QMap<QNetworkReply*, QString> m_oCurrentFileDownloads;
      };
 
 
