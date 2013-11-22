@@ -21,6 +21,8 @@
 ****************************************************************************/
 
 #include <QLocale>
+#include <QCryptographicHash>
+
 #include <stdlib.h>
 #include "config.h"
 
@@ -99,6 +101,11 @@ void Config::setKey(const QString& aKey)
 QString Config::getKey() const
 {
     return m_strKey;
+}
+
+QString Config::getKeyHashed() const
+{
+    return QString(QCryptographicHash::hash(getKey().toAscii(), QCryptographicHash::Md5).toHex());
 }
 
 void Config::setTestKey(const QString& aTestKey)

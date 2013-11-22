@@ -35,7 +35,7 @@ Settings::Settings()
     : QSettings(UPDATENODE_COMPANY_STR, UPDATENODE_APPLICATION_STR, 0)
 {
 
-    QString id = UpdateNode::Config::Instance()->getKey();
+    QString id = UpdateNode::Config::Instance()->getKeyHashed();
 
     m_strUUID = QString("uuid");
 
@@ -293,10 +293,10 @@ QString Settings::getCachedFile(const QString& aCode)
 
 void Settings::setCurrentClientDir(const QString& aClientDir)
 {
-    this->setValue( m_strClientPath + Config::Instance()->getKey() , aClientDir);
+    this->setValue( m_strClientPath + Config::Instance()->getKeyHashed() , aClientDir);
 }
 
 QString Settings::getCurrentClientDir()
 {
-    return this->value( m_strClientPath + Config::Instance()->getKey()).toString();
+    return this->value( m_strClientPath + Config::Instance()->getKeyHashed()).toString();
 }

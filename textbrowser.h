@@ -10,7 +10,9 @@ namespace UpdateNode
     {
         Q_OBJECT
         public:
-            explicit TextBrowser(QWidget *parent = 0);
+            TextBrowser(QWidget *parent = 0);
+            ~TextBrowser();
+
         protected:
             QVariant loadResource( int type, const QUrl & name );
 

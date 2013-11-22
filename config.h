@@ -46,6 +46,8 @@ namespace UpdateNode
 
             void setKey(const QString& aKey);
             QString getKey() const;
+            QString getKeyHashed() const;
+
             void setTestKey(const QString& aTestKey);
             QString getTestKey() const;
             void setVersionCode(const QString& aVersionCode);

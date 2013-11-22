@@ -40,14 +40,14 @@ QString LocalFile::getDownloadPath()
     if(!QDir(settings.getDownloadPath() + QDir::separator() + "UpdateNode").exists())
         QDir(settings.getDownloadPath()).mkdir("UpdateNode");
 
-    if(!QDir(settings.getDownloadPath() + QDir::separator() + "UpdateNode" + QDir::separator() + UpdateNode::Config::Instance()->getKey()).exists())
-        QDir(settings.getDownloadPath() + QDir::separator() + "UpdateNode").mkdir(UpdateNode::Config::Instance()->getKey());
+    if(!QDir(settings.getDownloadPath() + QDir::separator() + "UpdateNode" + QDir::separator() + UpdateNode::Config::Instance()->getKeyHashed()).exists())
+        QDir(settings.getDownloadPath() + QDir::separator() + "UpdateNode").mkdir(UpdateNode::Config::Instance()->getKeyHashed());
 
     return QDir::toNativeSeparators(settings.getDownloadPath()
             + QDir::separator()
             + "UpdateNode"
             + QDir::separator()
-            + UpdateNode::Config::Instance()->getKey());
+            + UpdateNode::Config::Instance()->getKeyHashed());
 }
 
 

@@ -276,10 +276,10 @@ int main(int argc, char *argv[])
            return settings.unRegisterVersion() ? 0 : 1;
     }
 
-    if(config->isRelaunch() && (mode == "-manager" || mode == "-update" || mode == "-execute") && un_app.relaunchUpdateSave(config->getKey()))
+    if(config->isRelaunch() && (mode == "-manager" || mode == "-update" || mode == "-execute") && un_app.relaunchUpdateSave(config->getKeyHashed()))
     {
         settings.setCurrentClientDir(qApp->applicationDirPath());
-        un_app.relaunch(config->getKey());
+        un_app.relaunch(config->getKeyHashed());
         return 0;
     }
     else if (mode != "-manager")
@@ -292,7 +292,7 @@ int main(int argc, char *argv[])
             return returnANDlaunch(UPDATENODE_PROCERROR_WRONG_PARAMETER);
     }
 
-    if(un_app.isAlreadyRunning(config->getKey()))
+    if(un_app.isAlreadyRunning(config->getKeyHashed()))
     {
         if(!un_app.isHidden())
             return returnANDlaunch(0);

@@ -14,6 +14,12 @@ TextBrowser::TextBrowser(QWidget *parent) :
     connect( &m_oDownloader, SIGNAL(done(QByteArray, const QString&)), this, SLOT(done(QByteArray, const QString&)));
 }
 
+TextBrowser::~TextBrowser()
+{
+    foreach(QString item, m_oDownloadList)
+        QFile::remove(item);
+}
+
 QVariant TextBrowser::loadResource( int type, const QUrl & name )
 {
     switch(type)
