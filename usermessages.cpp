@@ -107,6 +107,10 @@ void UserMessages::serviceDone()
     layout()->setSizeConstraint(QLayout::SetMinimumSize);
 
     showMessage();
+
+    setWindowState( (windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+    raise();
+    activateWindow();
 }
 
 

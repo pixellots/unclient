@@ -43,7 +43,9 @@ QMAKE_EXTRA_TARGETS += deploy
 ####      and comment 'CONFIG-=app_bundle'
 ####      if you need a bundle instead of a single binary
 #ICON += images/unclient.icns
-CONFIG-=app_bundle
+macx:CONFIG-=app_bundle
+macx:LIBS += -framework CoreFoundation
+macx:LIBS += -framework Security
 
 ### version needs to be checked here
 VERSION_HIGH=1
@@ -81,7 +83,6 @@ SOURCES += main.cpp \
     usernotofication.cpp \
     usermessages.cpp \
     updatenode_service.cpp \
-    wincommander.cpp \
     version.cpp \
     application.cpp \
     systemtray.cpp \
@@ -89,6 +90,11 @@ SOURCES += main.cpp \
     logging.cpp \
     helpdialog.cpp \
     textbrowser.cpp
+
+win32:SOURCES += wincommander.cpp
+win32:HEADERS += wincommander.h
+macx:SOURCES += maccommander.cpp
+macx:HEADERS += maccommander.h
 
 HEADERS += \
     config.h \
@@ -108,7 +114,6 @@ HEADERS += \
     usernotofication.h \
     usermessages.h \
     updatenode_service.h \
-    wincommander.h \
     application.h \
     systemtray.h \
     multiappdialog.h \

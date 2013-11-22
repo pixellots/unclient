@@ -109,6 +109,10 @@ void UserNotofication::updateView()
     updateSelectedUpdate();
 
     adjustSize();
+
+    setWindowState( (windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+    raise();
+    activateWindow();
 }
 
 void UserNotofication::openLink(const QUrl& aUrl)

@@ -30,7 +30,12 @@
 #include <QDebug>
 
 #include "osdetection.h"
+#ifdef Q_OS_MACX
+#include "maccommander.h"
+#endif
+#ifdef Q_OS_WIN
 #include "wincommander.h"
+#endif
 #include "commander.h"
 #include "settings.h"
 #include "localfile.h"
@@ -166,7 +171,15 @@ QString Commander::setCommandBasedOnOS() const
 // Do nothing on Windows
 #else
 #ifdef Q_OS_MAC // Mac
-// Do nothing on Mac
+    if(m_oUpdate.isAdminRequired())
+    {
+        if(QFile::exists("/usr/bin/cocoasudo"))
+            command = "/usr/bin/cocoasudo";
+        else if(QFile::exists("cocoasudo"))
+            command = "cocoasudo";
+        else
+            return command;
+    }
 #endif
 #endif
 #endif
@@ -180,6 +193,23 @@ void Commander::setUpdate(const Update &aUpdate)
 {
     m_oUpdate = aUpdate;
 }
+
+/*!
+Checks whether the current process is already elevated, or not
+*/
+bool Commander::isProcessElevated()
+{
+#ifdef Q_OS_WIN
+    return UpdateNode::WinCommander::isProcessElevated();
+#else
+#ifdef Q_OS_MACX
+    return UpdateNode::MacCommander::isProcessElevated();
+#else // Q_OS_LINUX & others
+    return false;
+#endif
+#endif
+}
+
 
 /*!
 Resolves and runs the update as specified in Update.
@@ -217,7 +247,7 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
 
     commandParameters.removeAll("");
 
-    if(m_bCopy && commandParameters.size() == 2 && (!m_oUpdate.isAdminRequired() || UpdateNode::WinCommander::isProcessElevated()))
+    if(m_bCopy && commandParameters.size() == 2 && (!m_oUpdate.isAdminRequired() || UpdateNode::Commander::isProcessElevated()))
     {
         bool ret = copy(commandParameters.at(0), commandParameters.at(1));
         if(ret)
@@ -269,6 +299,22 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
         if(m_oUpdate.isAdminRequired() && !UpdateNode::WinCommander::isProcessElevated())
         {
             uint result = UpdateNode::WinCommander::runProcessElevated(command, commandParameters, QDir::currentPath());
+            emit updateExit(result, QProcess::NormalExit);
+            return true;
+        }
+#endif
+#ifdef Q_OS_MACX // MACX
+        QString description = UpdateNode::Config::Instance()->product().getName();
+        if(description.isEmpty())
+            description = m_oUpdate.getTitle() ;
+
+        QString icon = UpdateNode::Config::Instance()->mainIcon();
+        if(icon.isEmpty())
+            icon = !UpdateNode::Config::Instance()->product().getIconUrl().isEmpty() ? UpdateNode::Config::Instance()->product().getLocalIcon() : QString();
+
+        if(m_oUpdate.isAdminRequired() && !UpdateNode::MacCommander::isProcessElevated())
+        {
+            uint result = UpdateNode::MacCommander::runProcessElevated(command, commandParameters, description, icon);
             emit updateExit(result, QProcess::NormalExit);
             return true;
         }

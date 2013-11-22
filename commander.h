@@ -60,6 +60,7 @@ namespace UpdateNode
 
         private:
             QString setCommandBasedOnOS() const;
+            bool isProcessElevated();
 
 
         private:

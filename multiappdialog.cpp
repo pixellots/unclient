@@ -151,7 +151,13 @@ void MultiAppDialog::serviceDone()
     checkSelection();
 
     if(!config->isSilent())
+    {
         show();
+
+        setWindowState( (windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+        raise();
+        activateWindow();
+    }
     else
         startInstall();
 }
@@ -182,7 +188,13 @@ void MultiAppDialog::serviceDoneManager()
     checkSelection();
 
     if(!globalConfig->isSilent())
+    {
         show();
+
+        setWindowState( (windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+        raise();
+        activateWindow();
+    }
     else
         startInstall();
 }
