@@ -2,6 +2,7 @@
 #include "localfile.h"
 
 #include <QDebug>
+#include <QStringList>
 #include <QTimer>
 #include <QLayout>
 #include <QTemporaryFile>
@@ -18,6 +19,27 @@ TextBrowser::~TextBrowser()
 {
     foreach(QString item, m_oDownloadList)
         QFile::remove(item);
+}
+
+void TextBrowser::loadHtml(const QUrl& address)
+{
+    QString fileName = UpdateNode::LocalFile::getDownloadPath() + "/cache/" + QFileInfo(address.toString()).fileName();
+    if(QFile::exists(fileName))
+    {
+        QString html;
+        QFile file(fileName);
+        if(file.open(QIODevice::ReadOnly))
+        {
+            html = file.readAll();
+            file.close();
+        }
+        setHtml(html);
+    }
+    else if(!m_oDownloadList.contains(fileName))
+    {
+        m_oDownloadList.append(fileName);
+        m_oDownloader.doDownload(address, fileName);
+    }
 }
 
 QVariant TextBrowser::loadResource( int type, const QUrl & name )
@@ -45,10 +67,29 @@ void TextBrowser::done(QByteArray array, const QString& fileName)
 {
     if(!array.isEmpty())
     {
-        QImage image = QImage::fromData(array);
+        QFileInfo info(fileName);
+        QStringList supported_images;
+        supported_images << "png" << "jpeg" << "jpg" << "gif" << "tiff";
 
-        if(image.save(fileName))
-            setHtml(toHtml());
+        if(supported_images.indexOf(info.suffix().toLower()) >-1)
+        {
+            QImage image = QImage::fromData(array);
+
+            if(image.save(fileName))
+                setHtml(toHtml());
+            return;
+        }
+        else
+        {
+            QFile file(fileName);
+            if(file.open(QIODevice::WriteOnly))
+            {
+                QTextStream stream(&file);
+                stream << QString::fromUtf8(array.data(), array.size());
+                file.close();
+            }
+            setHtml(QString::fromUtf8(array.data(), array.size()));
+        }
     }
 }
 

@@ -141,9 +141,9 @@ void UserMessages::showMessage()
 #else
     if(!m_listMessages.at(m_iCurrentIndex).getMessage().isEmpty())
         ui->textBrowser->setHtml(m_listMessages.at(m_iCurrentIndex).getMessage());
+    else
+        ui->textBrowser->loadHtml(m_listMessages.at(m_iCurrentIndex).getLink());
     ui->pshRead->setEnabled(true);
-    //else
-      //  ui->textBrowser->load(m_listMessages.at(m_iCurrentIndex).getLink());
 #endif
     ui->progressBar->setFormat(tr("Loading %p% ..."));
 

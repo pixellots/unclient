@@ -13,6 +13,8 @@ namespace UpdateNode
             TextBrowser(QWidget *parent = 0);
             ~TextBrowser();
 
+            void loadHtml(const QUrl& address);
+
         protected:
             QVariant loadResource( int type, const QUrl & name );
 
