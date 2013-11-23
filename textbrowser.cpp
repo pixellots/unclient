@@ -34,7 +34,7 @@ QVariant TextBrowser::loadResource( int type, const QUrl & name )
                 m_oDownloadList.append(fileName);
                 m_oDownloader.doDownload(name, fileName);
             }
-            return QTextBrowser::loadResource(type, name);
+            return QPixmap(":/images/empty.png");
         }
         default:
             return QTextBrowser::loadResource(type, name);
