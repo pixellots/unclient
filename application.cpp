@@ -33,6 +33,17 @@
 
 using namespace UpdateNode;
 
+/*!
+\class UpdateNode::Application
+\brief Main application class which cares about application wide instructions,
+like installing language, single instance when application is hidden, or relaunching on a save place
+*/
+
+/*!
+Constructs a Application object.
+This constructor checks the existance of the default.qss file which contains the custom stylesheet.
+\n If no default.qss file is located in the current working dir, no style sheet is set.
+*/
 Application::Application(QObject *parent) :
     QObject(parent)
 {
@@ -47,6 +58,13 @@ Application::Application(QObject *parent) :
     }
 }
 
+/*!
+Installs the set language as specified in Update::Config::getLanguage. This always checks for the
+existance of the language file - even for english (en, en-US, etc.) \n
+If the language has been successfully loaded, \a true is returned. In case of any error, false is returned.
+\note This method searches for language files in this order: \l working directory \l <working_dir>/translations \l internal resource
+\note the translation file needs the following naming: unclient_<language_code>.qm
+*/
 bool Application::installTranslations()
 {
     UpdateNode::Config* config = UpdateNode::Config::Instance();
@@ -73,6 +91,12 @@ bool Application::installTranslations()
     return !translationFrom.isEmpty();
 }
 
+/*!
+Relaunches the current client in system's temp directory. Before doing that, the launched client is copied to TMP.
+Once copied, it is checking its checksum against the version in TMP. If the client already exists in TMP and the
+checksum is invalid, the client in TMP gets deleted and this function is re-called.
+Returns true on success, false when in, or out file cannot be read/written.
+*/
 bool Application::relaunchUpdateSave(const QString& aKey)
 {
     QDir newClientPath(QDir::tempPath() + QDir::separator() + aKey);
@@ -132,6 +156,11 @@ bool Application::relaunchUpdateSave(const QString& aKey)
 
 }
 
+/*!
+Relaunches the cloned client, previously created with UpdateNode::Application::relaunchUpdateSave.\n
+The process is launched detached. So that the initialy called client exits immediately.
+Returns true if the process was started successfully.
+*/
 bool Application::relaunch(const QString& aKey)
 {
     QString clientExecutable(QFileInfo(qApp->applicationFilePath()).fileName());
@@ -142,6 +171,10 @@ bool Application::relaunch(const QString& aKey)
     return QProcess::startDetached(newClient, args);
 }
 
+/*!
+This method checks if the current instance is already running, or not.
+Returns true when the process is running already, otherwise false
+*/
 bool Application::isAlreadyRunning(const QString& aKey)
 {
     m_oSharedMemory.setKey(aKey);
@@ -164,6 +197,11 @@ bool Application::isAlreadyRunning(const QString& aKey)
     return false;
 }
 
+/*!
+Checks whether the process is running hidden (unvisible to the user), or not.
+Returns true if hidden
+\sa Application::setVisible
+*/
 bool Application::isHidden()
 {
     m_oSharedMemory.lock();
@@ -182,11 +220,18 @@ bool Application::isHidden()
     return false;
 }
 
+/*!
+ Sets the visible state as specified by /a aShown
+\sa Application::isHidden
+*/
 void Application::setVisible(bool aShown)
 {
     m_visible = aShown;
 }
 
+/*!
+Kills the other hidden process
+*/
 void Application::killOther()
 {
     m_oSharedMemory.lock();
@@ -199,6 +244,10 @@ void Application::killOther()
     m_oSharedMemory.unlock();
 }
 
+/*!
+This method is killing the current process if the another process has
+given the signal to terminate.
+*/
 void Application::killMeOrNot()
 {
     m_oSharedMemory.lock();

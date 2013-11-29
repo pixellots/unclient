@@ -4,7 +4,7 @@ QT = network \
     core 
 
 ### QT_WEBKIT_LIB
-#QT += webkit
+QT += webkit
 
 TARGET = unclient
 TEMPLATE = app
@@ -32,7 +32,7 @@ message("The build number has been increased to $$cat(build.no)")
 
 #### deploy target
 #### to be used for creating a new release
-win32::deploy.commands = del /Y build.no.temp && @echo DONE!!!
+win32::deploy.commands = del build.no.temp && @echo DONE!!!
 unix::deploy.commands = rm build.no.temp && echo DONE!!!
 win32::deploy.depends = clean updateqm release
 unix::deploy.depends = clean updateqm all
