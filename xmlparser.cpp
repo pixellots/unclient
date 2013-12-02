@@ -268,6 +268,8 @@ UpdateNode::Message XmlParser::parseMessage(QDomNode aNode)
             message.setMessage(e.text());
         else if(e.tagName()=="link")
             message.setLink(e.text());
+        else if(e.tagName()=="external_link")
+            message.setOpenExternal(e.text().toInt()==1);
 
         n = n.nextSibling();
     }

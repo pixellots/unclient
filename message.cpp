@@ -115,3 +115,14 @@ QString Message::getCode() const
     return m_strCode;
 }
 
+void Message::setOpenExternal(bool aEnable)
+{
+    m_bOpenExternal = aEnable;
+}
+
+bool Message::isOpenExternal() const
+{
+    return m_bOpenExternal;
+}
+
+

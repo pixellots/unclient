@@ -33,6 +33,7 @@
 #include "ui_usermessages.h"
 #endif
 
+#include <QMessageBox>
 #include <QNetworkDiskCache>
 #include <QDesktopServices>
 
@@ -58,6 +59,7 @@ UserMessages::UserMessages(QWidget *parent) :
     connect(ui->pshRead, SIGNAL(clicked()), SLOT(onRead()));
 
     ui->progressBar->hide();
+    hide();
 }
 
 UserMessages::~UserMessages()
@@ -102,7 +104,6 @@ void UserMessages::serviceDone()
             setWindowTitle(config->product().getName() + tr(" - Message"));
         else
             setWindowTitle(config->product().getName() + tr(" - Messages"));
-        show();
     }
     layout()->setSizeConstraint(QLayout::SetMinimumSize);
 
@@ -118,7 +119,6 @@ void UserMessages::showMessage()
 {
     if(m_listMessages.isEmpty())
     {
-        hide();
         qApp->quit();
         return;
     }
@@ -133,18 +133,42 @@ void UserMessages::showMessage()
     else
         ui->label->setText(m_listMessages.at(m_iCurrentIndex).getTitle());
 
+    if(m_listMessages.at(m_iCurrentIndex).isOpenExternal() &&
+            !m_listMessages.at(m_iCurrentIndex).getLink().isEmpty())
+    {
+        QMessageBox box(this);
+
+        box.setWindowTitle(UpdateNode::Config::Instance()->product().getName() + tr(" - Message"));
+        box.addButton(QMessageBox::Yes);
+        box.addButton(tr("Not now"), QMessageBox::RejectRole);
+        box.setText(tr("There is a new message available:<br><br>"
+                       "<b>%1</b><br><br>"
+                       "Do you want to read this message in your standard browser now?").arg(m_listMessages.at(m_iCurrentIndex).getTitle()));
+
+        if(box.exec() == QMessageBox::Yes)
+        {
+            QDesktopServices::openUrl(QUrl::fromUserInput(m_listMessages.at(m_iCurrentIndex).getLink()));
+            UpdateNode::Settings settings;
+            settings.setMessage(m_listMessages.at(m_iCurrentIndex), true, true);
+        }
+        qApp->quit();
+        return;
+    }
+    else
+    {
 #ifdef QT_WEBKIT_LIB
-    if(!m_listMessages.at(m_iCurrentIndex).getMessage().isEmpty())
-        ui->webView->setContent(m_listMessages.at(m_iCurrentIndex).getMessage().toUtf8());
-    else
-        ui->webView->load(m_listMessages.at(m_iCurrentIndex).getLink());
+        if(!m_listMessages.at(m_iCurrentIndex).getMessage().isEmpty())
+            ui->webView->setContent(m_listMessages.at(m_iCurrentIndex).getMessage().toUtf8());
+        else
+            ui->webView->load(m_listMessages.at(m_iCurrentIndex).getLink());
 #else
-    if(!m_listMessages.at(m_iCurrentIndex).getMessage().isEmpty())
-        ui->textBrowser->setHtml(m_listMessages.at(m_iCurrentIndex).getMessage());
-    else
-        ui->textBrowser->loadHtml(m_listMessages.at(m_iCurrentIndex).getLink());
-    ui->pshRead->setEnabled(true);
+        if(!m_listMessages.at(m_iCurrentIndex).getMessage().isEmpty())
+            ui->textBrowser->setHtml(m_listMessages.at(m_iCurrentIndex).getMessage());
+        else
+            ui->textBrowser->loadHtml(m_listMessages.at(m_iCurrentIndex).getLink());
+        ui->pshRead->setEnabled(true);
 #endif
+    }
     ui->progressBar->setFormat(tr("Loading %p% ..."));
 
     if(m_listMessages.size()==m_iCurrentIndex+1)
@@ -163,6 +187,7 @@ void UserMessages::showMessage()
         ui->toolRight->hide();
         ui->pshRead->setText(tr("Mark as read and close"));
     }
+    show();
 }
 
 void UserMessages::onLeft()

@@ -42,6 +42,9 @@ namespace UpdateNode
             void setLink(const QString& aLink);
             QString getLink() const;
 
+            void setOpenExternal(bool aEnable);
+            bool isOpenExternal() const;
+
             void setCode(const QString& aCode);
             QString getCode() const;
 
@@ -50,6 +53,8 @@ namespace UpdateNode
             QString m_strMessage;
             QString m_strLink;
             QString m_strCode;
+
+            bool    m_bOpenExternal;
     };
 }
 
