@@ -39,14 +39,16 @@ namespace UpdateNode
         Q_OBJECT
 
         public:
-            Service(QObject* parent);
+            Service(QObject* parent = 0);
             ~Service();
 
-            enum Status { NOTHING = 0, UPDATE, MESSAGE, UPDATES, MESSAGES,
-                          UPDATE_MESSAGE, UPDATE_MESSAGES, UPDATES_MESSAGE, UPDATES_MESSAGES };
+            enum Status { NOTHING = 0, UPDATE, MESSAGE, UPDATE_MESSAGE };
 
             bool checkForUpdates();
             bool checkForUpdates(UpdateNode::Config* aConfig);
+
+            int status();
+            QString statusText() const;
 
             int returnCodeManager();
             int returnCode(UpdateNode::Config* config = NULL);
@@ -65,6 +67,9 @@ namespace UpdateNode
             QNetworkAccessManager* m_pManager;
             UpdateNode::Downloader* m_pDownloader;
             QMap<QNetworkReply*, Config*> m_mapConfig;
+
+            int m_iStatus;
+            QString m_strStatus;
     };
 }
 

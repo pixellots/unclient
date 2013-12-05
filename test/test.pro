@@ -30,7 +30,8 @@ SOURCES += \
     ../wincommander.cpp \
     ../version.cpp \
     tst_clienttest.cpp \
-    ../logging.cpp
+    ../logging.cpp \
+    ../updatenode_service.cpp
 DEFINES += SRCDIR=..
 
 HEADERS += \
@@ -47,7 +48,8 @@ HEADERS += \
     ../xmlparser.h \
     ../wincommander.h \
     ../version.h \
-    ../logging.h
+    ../logging.h \
+    ../updatenode_service.h
 
 win32{
 LIBS+= Shell32.lib Advapi32.lib

@@ -358,6 +358,8 @@ file cannot be deleted or the copy command failes due to another reasons
 */
 bool Commander::copy(const QString& aFrom, const QString& aTo)
 {
+    UpdateNode::Logging() << QString("Copying %1 to %2").arg(aFrom).arg(aTo);
+
     if(aFrom.isEmpty() || aTo.isEmpty())
         return false;
 

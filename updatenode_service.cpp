@@ -42,6 +42,7 @@ Service::Service(QObject* parent)
 {
     m_pManager = NULL;
     m_pDownloader = NULL;
+    m_iStatus = -1;
 
     // Use system proxy settings - if set
     QNetworkProxyFactory::setUseSystemConfiguration(true);
@@ -56,6 +57,8 @@ Service::~Service()
 bool Service::checkForUpdates()
 {
     UpdateNode::Config* config = UpdateNode::Config::Instance();
+
+    m_iStatus = -1;
 
     if(!m_pManager)
     {
@@ -109,7 +112,7 @@ bool Service::checkForUpdates(UpdateNode::Config* aConfig)
     else
         url.addQueryItem("versionCode", settings.getVersionCode(aConfig));
 
-    //UpdateNode::Logging() << "REQUEST: " << url.toString();
+    UpdateNode::Logging() << "REQUEST: " << url.toString();
     request.setUrl(url);
     request.setRawHeader("charset", "utf-8" );
     request.setRawHeader("User-Agent", QString("UpdateNodeClient %1 (%2)").arg(UPDATENODE_CLIENT_VERSION).arg(globalConfig->getOS()).toAscii());
@@ -136,6 +139,8 @@ void Service::requestReceived(QNetworkReply* reply)
 
             UpdateNode::XmlParser* parser = new UpdateNode::XmlParser(this, config);
             parser->parse(replyText);
+            m_strStatus = parser->getStatusString();
+            m_iStatus = parser->getStatus();
             UpdateNode::Logging() << "RESULT: " << parser->getStatusString() << "(" << parser->getStatus() << ")";
         }
         else if (v >= 300 && v < 400) // Redirection
@@ -278,3 +283,14 @@ QString Service::notificationTextManager()
     }
     return text;
 }
+
+int Service::status()
+{
+    return m_iStatus;
+}
+
+QString Service::statusText() const
+{
+    return m_strStatus;
+}
+

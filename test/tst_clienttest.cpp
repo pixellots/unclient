@@ -31,6 +31,8 @@
 #include "../config.h"
 #include "../downloader.h"
 #include "../localfile.h"
+#include "../settings.h"
+#include "../updatenode_service.h"
 
 class ClientTest : public QObject
 {
@@ -47,6 +49,7 @@ private Q_SLOTS:
     void test_commander_run();
     void test_downloader_download();
     void test_localfile_location();
+    void test_service_check();
 
 private:
     UpdateNode::Update update;
@@ -77,7 +80,8 @@ ClientTest::ClientTest()
     UpdateNode::Config::Instance()->setLogging("-");
     UpdateNode::Config::Instance()->setKey("unittest");
     UpdateNode::Config::Instance()->setProductCode("product_code");
-    UpdateNode::Config::Instance()->setVersion("version");
+    UpdateNode::Config::Instance()->setVersion("1.0");
+    UpdateNode::Config::Instance()->setSingleMode(true);
 
     // make sure we always have a clean working dir
     workingDir = QUuid::createUuid().toString();
@@ -319,7 +323,7 @@ void ClientTest::test_downloader_download()
 
 void ClientTest::test_localfile_location()
 {
-    QString tempPath = QDir::tempPath() + QDir::separator() + "UpdateNode" + QDir::separator() + UpdateNode::Config::Instance()->getKey();
+    QString tempPath = QDir::tempPath() + QDir::separator() + "UpdateNode" + QDir::separator() + UpdateNode::Config::Instance()->getKeyHashed();
 
     QVERIFY2(QDir(UpdateNode::LocalFile::getDownloadLocation("www.updatenode.com/hello.exe")) == QDir(tempPath + QDir::separator() + "hello.exe"), qPrintable(UpdateNode::LocalFile::getDownloadLocation("www.updatenode.com/hello.exe") + " NOT " + tempPath + QDir::separator() + "hello.exe"));
     QVERIFY(QDir(UpdateNode::LocalFile::getDownloadLocation("www.updatenode.com/hello")) == QDir(tempPath + QDir::separator() + "hello"));
@@ -327,6 +331,110 @@ void ClientTest::test_localfile_location()
     QVERIFY(QDir(UpdateNode::LocalFile::getDownloadLocation("www.updatenode.com/hello.ini")) == QDir(tempPath + QDir::separator() + "hello.ini"));
     QVERIFY(QDir(UpdateNode::LocalFile::getDownloadLocation("www.updatenode.com")) == QDir(tempPath + QDir::separator() + "www.updatenode.com"));
     QVERIFY(QDir(UpdateNode::LocalFile::getDownloadLocation("")) == QDir(tempPath + QDir::separator()));
+}
+
+void ClientTest::test_service_check()
+{
+    UpdateNode::Service service;
+
+    UpdateNode::Config::Instance()->setKey("73ddf26f0d79fdb70b5dcfe738fbe685");
+    UpdateNode::Config::Instance()->setTestKey("ef5dc6f7019738a18ee6b1573bcfbf5c");
+    UpdateNode::Config::Instance()->setProductCode("unittest");
+    UpdateNode::Config::Instance()->setVersion("3.0");
+
+    UpdateNode::Config::Instance()->setSingleMode(true);
+    UpdateNode::Config::Instance()->setSilent(true);
+
+    QVERIFY(UpdateNode::Config::Instance()->isSingleMode());
+    QEventLoop loop;
+    QObject::connect(&service, SIGNAL(done()), &loop, SLOT(quit()));
+
+    // version 3.0 has no updates and messages defined
+    QVERIFY(service.checkForUpdates());
+    loop.exec();
+    QVERIFY(service.returnCode() == UpdateNode::Service::NOTHING);
+    QVERIFY(service.status() == 0);
+
+    // version 4.0 does not exists
+    UpdateNode::Config::Instance()->setVersion("4.0");
+    QVERIFY(service.checkForUpdates());
+    loop.exec();
+    QVERIFY(service.returnCode() == UpdateNode::Service::NOTHING);
+    QVERIFY(service.status() == 1003);
+
+    // version 1.0 has 1 update and 1 message
+    UpdateNode::Config::Instance()->setVersion("1.0");
+    QVERIFY(service.checkForUpdates());
+    loop.exec();
+    QVERIFY(service.returnCode() == UpdateNode::Service::UPDATE_MESSAGE);
+    QVERIFY(service.status() == 0);
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getTitle() == "unittest_update1");
+    QVERIFY2(UpdateNode::Config::Instance()->updates().at(0).getDescription().toUtf8() == "<p>äüößÄÖÜ?!\"§$%&amp;/()=*'_:&lt;&gt;|^°`´+#-.@\\\\</p>", UpdateNode::Config::Instance()->updates().at(0).getDescription().toUtf8());
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getDownloadLink() == "http://updatenode.com/test/initial.data");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getFileSize() == "1 Test");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getTargetVersion().getVersion() == "2.0");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getTargetVersion().getCode() == "unittest_2");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getTargetVersion().getName() == "unittest_2_name");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getType() == 2);
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getCommand() == "[UN_COPY_COMMAND]");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getCommandLine() == "[UN_FILE] [TMP][UN_SEP]test.unit");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).isAdminRequired() == false);
+    QVERIFY(UpdateNode::Config::Instance()->messages().at(0).getTitle() == "unittest_message1");
+    QVERIFY(UpdateNode::Config::Instance()->messages().at(0).getMessage().toUtf8() == "<p>unittest_message1</p>");
+    QVERIFY(UpdateNode::Config::Instance()->messages().at(0).getLink().isEmpty());
+    QVERIFY(UpdateNode::Config::Instance()->messages().at(0).isOpenExternal() == false);
+
+    // download
+    UpdateNode::Downloader downloader;
+    QUrl url(UpdateNode::Config::Instance()->updates().at(0).getDownloadLink());
+    QNetworkReply* reply = downloader.doDownload(url, UpdateNode::Config::Instance()->updates().at(0));
+    if(reply != NULL)
+    {
+        QObject::connect(&downloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), &loop, SLOT(quit()));
+        loop.exec();
+        QVERIFY(reply->error() == QNetworkReply::NoError);
+    }
+    // execute command
+    UpdateNode::Commander commander;
+    QVERIFY(commander.run(UpdateNode::Config::Instance()->updates().at(0)));
+    commander.waitForFinished();
+
+    commander.setUpdate(UpdateNode::Config::Instance()->updates().at(0));
+    QVERIFY(QFile::exists(commander.resolve("[TMP][UN_SEP]test.unit")));
+
+    QVERIFY(commander.getReturnCode()==0);
+
+    // this is normally done via settings class for Type 2 updates
+    UpdateNode::Config::Instance()->setVersion("2.0");
+
+    // clean
+    UpdateNode::Config::Instance()->clear();
+
+    // check again
+    QVERIFY(service.checkForUpdates());
+    loop.exec();
+    QVERIFY(service.returnCode() == UpdateNode::Service::UPDATE);
+    QVERIFY(service.status() == 0);
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getTitle() == "unittest_update2");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getDescription().toUtf8() == "<p>This is the second update</p>");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getDownloadLink() == "http://updatenode.com/test/initial.data");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getFileSize() == "2 Test");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getTargetVersion().getVersion() == "3.0");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getTargetVersion().getCode() == "unittest_3");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getTargetVersion().getName() == "unittest_3_name");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getType() == 1);
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getCommand() == "[UN_COPY_COMMAND]");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getCommandLine() == "[UN_FILE] [TMP][UN_SEP][UN_FILENAME].tmp");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).isAdminRequired() == false);
+
+    // execute command
+    QVERIFY(commander.run(UpdateNode::Config::Instance()->updates().at(0)));
+    commander.waitForFinished();
+
+    commander.setUpdate(UpdateNode::Config::Instance()->updates().at(0));
+    QVERIFY(QFile::exists(commander.resolve("[TMP][UN_SEP][UN_FILENAME].tmp")));
+
+    QVERIFY(commander.getReturnCode()==0);
 }
 
 QTEST_MAIN(ClientTest)
