@@ -180,7 +180,6 @@ bool Settings::isVersionMapped(const QString& aProductCode, const QString& aVers
     if(!this->value(id + "Name").isNull()
         && this->value(id + "Version/Version").toString() != aVersion)
     {
-        // Currently single products only are supported
         m_strMappedProductCode = aProductCode;
 
         m_strMappedVersion = this->value(id + "Version/Version").toString();

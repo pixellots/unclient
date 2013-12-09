@@ -59,9 +59,6 @@ namespace UpdateNode
             QString getProductVersion(UpdateNode::Config* aConfig = NULL);
             QString getVersionCode(UpdateNode::Config* aConfig = NULL);
 
-            QString getMappedProductCode() const;
-            QString getMappedVersionCode() const;
-            QString getMappedVersion() const;
 
             bool messageShownAndLoaded(const QString& aMessageCode);
 
@@ -74,6 +71,10 @@ namespace UpdateNode
         private:
             bool isVersionMapped(const QString& aProductCode, const QString& aVersion);
             bool isVersionMapped(const QString& aVersionCode);
+
+            QString getMappedProductCode() const;
+            QString getMappedVersionCode() const;
+            QString getMappedVersion() const;
 
 
         private:

@@ -30,7 +30,7 @@
 #include "config.h"
 #include "downloader.h"
 
-#define UPDATENODE_SERVICE_URL            "https://updatenode.com/sara/service"
+#define UPDATENODE_SERVICE_URL            "http://localhost/sara/service"
 
 namespace UpdateNode
 {
