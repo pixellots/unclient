@@ -47,8 +47,10 @@ private Q_SLOTS:
     void test_commander_resolve();
     void test_commander_split();
     void test_commander_run();
-    void test_downloader_download();
     void test_localfile_location();
+    void test_settings_register();
+    void test_settings_map();
+    void test_downloader_download();
     void test_service_check();
 
 private:
@@ -435,6 +437,66 @@ void ClientTest::test_service_check()
     QVERIFY(QFile::exists(commander.resolve("[TMP][UN_SEP][UN_FILENAME].tmp")));
 
     QVERIFY(commander.getReturnCode()==0);
+}
+
+void ClientTest::test_settings_register()
+{
+    UpdateNode::Settings settings;
+
+    UpdateNode::Config::Instance()->setProductCode("unittest_register_test");
+    UpdateNode::Config::Instance()->setVersion("1.0");
+    UpdateNode::Config::Instance()->setSingleMode(true);
+
+    QVERIFY(settings.registerVersion());
+    UpdateNode::Config::Instance()->setProductCode("");
+    UpdateNode::Config::Instance()->setVersion("");
+    QVERIFY(settings.getRegisteredVersion());
+    QVERIFY(UpdateNode::Config::Instance()->configurations().size() == 1);
+    for(int i = 0; i < UpdateNode::Config::Instance()->configurations().size(); i++)
+    {
+        QVERIFY(UpdateNode::Config::Instance()->configurations().at(i)->getProductCode() == "unittest_register_test");
+        QVERIFY(UpdateNode::Config::Instance()->configurations().at(i)->getVersion() == "1.0");
+    }
+    UpdateNode::Config::Instance()->clear();
+
+    UpdateNode::Config::Instance()->setProductCode("unittest_register_test");
+    UpdateNode::Config::Instance()->setVersion("1.0");
+    QVERIFY(settings.unRegisterVersion());
+    QVERIFY(settings.getRegisteredVersion());
+    QVERIFY(UpdateNode::Config::Instance()->configurations().size() == 0);
+}
+
+void ClientTest::test_settings_map()
+{
+    UpdateNode::Settings settings;
+
+    UpdateNode::Product product;
+    UpdateNode::ProductVersion version;
+    product.setCode("product_1234");
+    product.setName("unittest_product");
+    version.setCode("version_1234");
+    version.setVersion("2.0");
+    version.setName("unittest_version_name_2.0");
+
+    UpdateNode::Config::Instance()->setProductCode("product_1234");
+    UpdateNode::Config::Instance()->setVersion("1.0");
+    UpdateNode::Config::Instance()->setSingleMode(true);
+
+    settings.setNewVersion(UpdateNode::Config::Instance(), product, version);
+
+    QVERIFY(settings.getProductCode()=="product_1234");
+    QVERIFY(settings.getVersionCode()=="version_1234");
+    QVERIFY(settings.getProductVersion()=="2.0");
+
+    version.setCode("version_1234_2");
+    version.setVersion("3.0");
+
+    settings.setNewVersion(UpdateNode::Config::Instance(), product, version);
+
+    QVERIFY(settings.getProductCode()=="product_1234");
+    QVERIFY(settings.getProductVersion()=="3.0");
+    QVERIFY(settings.getVersionCode()=="version_1234_2");
+
 }
 
 QTEST_MAIN(ClientTest)
