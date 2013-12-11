@@ -24,6 +24,7 @@
 #define SYSTEMTRAY_H
 
 #include <QObject>
+#include <QAction>
 #include <QMenu>
 #include <QSystemTrayIcon>
 
@@ -38,16 +39,19 @@ namespace UpdateNode
 
             void showMessage(const QString& aText);
             void hide();
+            void actionsBasedOnReturn(int aRetrunCode);
+
         signals:
             void launchClient();
-
+            void launchMessages();
         public slots:
             void onActivatedactivated(QSystemTrayIcon::ActivationReason aReason);
 
         private:
             QSystemTrayIcon m_oSystemTray;
             QMenu           m_oMenu;
-
+            QAction*        m_pUpdateAction;
+            QAction*        m_pMessageAction;
     };
 }
 

@@ -29,8 +29,9 @@
 
 #include "config.h"
 #include "downloader.h"
+#include "status.h"
 
-#define UPDATENODE_SERVICE_URL            "http://localhost/sara/service"
+#define UPDATENODE_SERVICE_URL            "https://updatenode.com/sara/service"
 
 namespace UpdateNode
 {
@@ -42,7 +43,7 @@ namespace UpdateNode
             Service(QObject* parent = 0);
             ~Service();
 
-            enum Status { NOTHING = 0, UPDATE, MESSAGE, UPDATE_MESSAGE };
+            enum Status { NOTHING = UPDATENODE_PROCERROR_NO_UPDATES, UPDATE, MESSAGE, UPDATE_MESSAGE };
 
             bool checkForUpdates();
             bool checkForUpdates(UpdateNode::Config* aConfig);

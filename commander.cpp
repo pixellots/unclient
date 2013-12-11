@@ -243,7 +243,7 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
             commandParameters << splitCommandLine(resolve(m_oUpdate.getCommandLine()));
     }
 
-    emit progressText(tr("Installing Update '%1'").arg(m_oUpdate.getTitle()));
+    emit progressText(tr("Installing update '%1'").arg(m_oUpdate.getTitle()));
 
     commandParameters.removeAll("");
 

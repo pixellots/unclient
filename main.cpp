@@ -394,11 +394,19 @@ int main(int argc, char *argv[])
             {
                 UpdateNode::SystemTray tray;
                 QObject::connect(&tray, SIGNAL(launchClient()), &un_app, SLOT(setVisible()));
+                QObject::connect(&tray, SIGNAL(launchMessages()), &un_app, SLOT(setVisible()));
 
                 if(config->isSingleMode())
                     QObject::connect(&tray, SIGNAL(launchClient()), &singleDialog, SLOT(serviceDone()));
                 else
                     QObject::connect(&tray, SIGNAL(launchClient()), &manageDialog, SLOT(serviceDoneManager()));
+                QObject::connect(&tray, SIGNAL(launchClient()), &messageDialog, SLOT(serviceDone()));
+
+                if(config->isSingleMode())
+                    tray.actionsBasedOnReturn(service->returnCode());
+                else
+                    tray.actionsBasedOnReturn(service->returnCodeManager());
+
                 tray.showMessage(text);
                 int tray_res = a.exec();
                 tray.hide();

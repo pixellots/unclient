@@ -92,7 +92,7 @@ bool Service::checkForUpdates(UpdateNode::Config* aConfig)
     QUrl url(UPDATENODE_SERVICE_URL);
 
     if(!globalConfig->getHost().isEmpty())
-        url.setHost(globalConfig->getHost());
+        url = url.fromUserInput(globalConfig->getHost());
 
     url.addQueryItem("key", globalConfig->getKey());
 

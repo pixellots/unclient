@@ -27,6 +27,7 @@
 
 #include "config.h"
 #include "systemtray.h"
+#include "updatenode_service.h"
 
 using namespace UpdateNode;
 
@@ -49,10 +50,14 @@ SystemTray::SystemTray(QObject *parent) :
     else
         m_oSystemTray.setIcon(QIcon(":/images/updatenode.png"));
 
-    QAction* action = m_oMenu.addAction(QObject::tr("Launch Update Client"));
+    m_pUpdateAction = m_oMenu.addAction(QObject::tr("Launch Update Client"));
 
     QObject::connect(&m_oSystemTray, SIGNAL(messageClicked()), this, SIGNAL(launchClient()));
-    QObject::connect(action, SIGNAL(triggered()), this, SIGNAL(launchClient()));
+    QObject::connect(m_pUpdateAction, SIGNAL(triggered()), this, SIGNAL(launchClient()));
+
+    m_pMessageAction = m_oMenu.addAction(QObject::tr("Read Messages"));
+    QObject::connect(m_pMessageAction, SIGNAL(triggered()), this, SIGNAL(launchMessages()));
+
     m_oMenu.addSeparator();
     QObject::connect(m_oMenu.addAction(QObject::tr("Close")), SIGNAL(triggered()), qApp, SLOT(quit()));
 }
@@ -76,4 +81,31 @@ void SystemTray::onActivatedactivated(QSystemTrayIcon::ActivationReason aReason)
 void SystemTray::hide()
 {
     m_oSystemTray.hide();
+}
+
+void SystemTray::actionsBasedOnReturn(int aRetrunCode)
+{
+    switch(aRetrunCode)
+    {
+        case UpdateNode::Service::NOTHING:
+            m_pUpdateAction->setDisabled(true);
+            m_pMessageAction->setDisabled(true);
+            break;
+        case UpdateNode::Service::UPDATE:
+            m_pUpdateAction->setDisabled(false);
+            m_pMessageAction->setDisabled(true);
+            break;
+        case UpdateNode::Service::MESSAGE:
+            m_pUpdateAction->setDisabled(true);
+            m_pMessageAction->setDisabled(false);
+            break;
+        case UpdateNode::Service::UPDATE_MESSAGE:
+            m_pUpdateAction->setDisabled(false);
+            m_pMessageAction->setDisabled(false);
+            break;
+        default:
+            m_pUpdateAction->setDisabled(true);
+            m_pMessageAction->setDisabled(true);
+            break;
+    }
 }

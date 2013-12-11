@@ -256,7 +256,7 @@ void MultiAppDialog::updateCounter()
     QString strMessage;
 
     if(m_iNewUpdates==1)
-        strMessage = tr("There is %1 new software update available").arg(m_iNewUpdates);
+        strMessage = tr("There is a new software update available").arg(m_iNewUpdates);
     else if(m_iNewUpdates>1)
         strMessage = tr("There are %1 new software updates available").arg(m_iNewUpdates);
     else
@@ -306,7 +306,7 @@ void MultiAppDialog::startInstall()
         m_currentItem = (*it);
         m_currentItem->setSelected(true);
         UpdateNode::Update update = m_currentItem->data(0, Qt::UserRole).value<UpdateNode::Update>();
-        m_pUI->labelProgress->setText(tr("Downloading Update %1 ...").arg(update.getTitle()));
+        m_pUI->labelProgress->setText(tr("Downloading update %1 ...").arg(update.getTitle()));
         m_pDownloader->doDownload(update.getDownloadLink(), update);
         return;
     }
@@ -316,7 +316,7 @@ void MultiAppDialog::startInstall()
     m_pUI->toolCancel->hide();
     m_pUI->progressBar->hide();
     m_pUI->pshCheck->show();
-    m_pUI->labelProgress->setText(tr("All updates have been installed"));
+    m_pUI->labelProgress->setText(tr("All updates have been installed successfully"));
     qApp->processEvents();
 }
 
@@ -358,7 +358,7 @@ void MultiAppDialog::install()
 
     m_oCurrentUpdate = m_oReadyUpdates.takeFirst();
 
-    m_pUI->labelProgress->setText(tr("Installing Update \"%1\"").arg(m_oCurrentUpdate.getTitle()));
+    m_pUI->labelProgress->setText(tr("Installing update \"%1\"").arg(m_oCurrentUpdate.getTitle()));
 
     if(!m_oCommander.run(m_oCurrentUpdate))
     {

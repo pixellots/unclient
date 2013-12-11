@@ -79,9 +79,9 @@ void SingleAppDialog::download()
     for(int i = 0; i < update_list.size(); i++)
     {
         if(update_list.size() == 1)
-            m_pUi->labelProgress->setText(tr("Downloading Update ..."));
+            m_pUi->labelProgress->setText(tr("Downloading update ..."));
         else
-            m_pUi->labelProgress->setText(tr("Downloading Updates"));
+            m_pUi->labelProgress->setText(tr("Downloading updates"));
 
         m_pDownloader->doDownload(update_list.at(i).getDownloadLink(), update_list.at(i));
     }
@@ -97,7 +97,7 @@ void SingleAppDialog::install()
 
     m_oCurrentUpdate = m_oReadyUpdates.takeFirst();
 
-    m_pUi->labelProgress->setText(tr("Installing Update ..."));
+    m_pUi->labelProgress->setText(tr("Installing update ..."));
     m_pUi->progressBar->hide();
     hide();
 
