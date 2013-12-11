@@ -113,17 +113,22 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../systemtray.cpp" line="43"/>
+        <location filename="../systemtray.cpp" line="44"/>
         <source>%1 %2</source>
         <translation>%1 %2</translation>
     </message>
     <message>
-        <location filename="../systemtray.cpp" line="52"/>
+        <location filename="../systemtray.cpp" line="53"/>
         <source>Launch Update Client</source>
         <translation>Update Client starten</translation>
     </message>
     <message>
-        <location filename="../systemtray.cpp" line="57"/>
+        <location filename="../systemtray.cpp" line="58"/>
+        <source>Read Messages</source>
+        <translation>Nachrichten lesen</translation>
+    </message>
+    <message>
+        <location filename="../systemtray.cpp" line="62"/>
         <source>Close</source>
         <translation>Schließen</translation>
     </message>
@@ -252,7 +257,7 @@
 <context>
     <name>UpdateNode::SystemTray</name>
     <message>
-        <location filename="../systemtray.cpp" line="67"/>
+        <location filename="../systemtray.cpp" line="72"/>
         <source>Software Update Manager</source>
         <translation>Software Update Manager</translation>
     </message>

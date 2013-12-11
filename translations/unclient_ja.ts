@@ -128,17 +128,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../systemtray.cpp" line="43"/>
+        <location filename="../systemtray.cpp" line="44"/>
         <source>%1 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../systemtray.cpp" line="52"/>
+        <location filename="../systemtray.cpp" line="53"/>
         <source>Launch Update Client</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../systemtray.cpp" line="57"/>
+        <location filename="../systemtray.cpp" line="58"/>
+        <source>Read Messages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../systemtray.cpp" line="62"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
@@ -252,7 +257,7 @@
 <context>
     <name>UpdateNode::SystemTray</name>
     <message>
-        <location filename="../systemtray.cpp" line="67"/>
+        <location filename="../systemtray.cpp" line="72"/>
         <source>Software Update Manager</source>
         <translation type="unfinished"></translation>
     </message>
