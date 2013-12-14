@@ -114,7 +114,7 @@ void SingleAppDialog::install()
     {
         m_oCommander.waitForFinished();
     }
-    m_pUi->pushButton->setText(tr("Close"));
+    m_pUi->pushButton->setText(QObject::tr("Close"));
 }
 
 bool SingleAppDialog::toAssending(const UpdateNode::Update& a, const UpdateNode::Update& b)

@@ -129,7 +129,7 @@ void UserMessages::showMessage()
     ui->pshRead->setDisabled(true);
 
     if(m_listMessages.size()>1)
-        ui->label->setText(m_listMessages.at(m_iCurrentIndex).getTitle() +  tr(" (%1/%2)").arg(m_iCurrentIndex+1).arg(m_listMessages.size()));
+        ui->label->setText(m_listMessages.at(m_iCurrentIndex).getTitle() +  QString(" (%1/%2)").arg(m_iCurrentIndex+1).arg(m_listMessages.size()));
     else
         ui->label->setText(m_listMessages.at(m_iCurrentIndex).getTitle());
 

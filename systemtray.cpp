@@ -41,7 +41,7 @@ SystemTray::SystemTray(QObject *parent) :
     connect(&m_oSystemTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(onActivatedactivated(QSystemTrayIcon::ActivationReason)));
 
     if(config->isSingleMode())
-        m_oSystemTray.setToolTip(QObject::tr("%1 %2").arg(config->product().getName()).arg(config->getVersion()));
+        m_oSystemTray.setToolTip(QString("%1 %2").arg(config->product().getName()).arg(config->getVersion()));
 
     if(config->mainIcon().isEmpty() && config->isSingleMode())
         m_oSystemTray.setIcon(QIcon(config->product().getLocalIcon()));

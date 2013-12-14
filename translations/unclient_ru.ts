@@ -23,19 +23,9 @@
         <source>Install</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../multiappdialog.ui" line="169"/>
-        <source>X</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>Helpdialog</name>
-    <message>
-        <location filename="../helpdialog.ui" line="14"/>
-        <source>Dialog</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <location filename="../helpdialog.ui" line="42"/>
         <source>Close</source>
@@ -128,11 +118,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../systemtray.cpp" line="44"/>
-        <source>%1 %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../systemtray.cpp" line="53"/>
         <source>Launch Update Client</source>
         <translation type="unfinished"></translation>
@@ -143,6 +128,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../singleappdialog.cpp" line="117"/>
         <location filename="../systemtray.cpp" line="62"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
@@ -216,11 +202,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../singleappdialog.cpp" line="117"/>
-        <source>Close</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../singleappdialog.cpp" line="128"/>
         <source> - Update Client</source>
         <translation type="unfinished"></translation>
@@ -283,11 +264,6 @@
     <message>
         <location filename="../usermessages.cpp" line="106"/>
         <source> - Messages</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../usermessages.cpp" line="132"/>
-        <source> (%1/%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
