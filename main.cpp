@@ -400,7 +400,7 @@ int main(int argc, char *argv[])
                     QObject::connect(&tray, SIGNAL(launchClient()), &singleDialog, SLOT(serviceDone()));
                 else
                     QObject::connect(&tray, SIGNAL(launchClient()), &manageDialog, SLOT(serviceDoneManager()));
-                QObject::connect(&tray, SIGNAL(launchClient()), &messageDialog, SLOT(serviceDone()));
+                QObject::connect(&tray, SIGNAL(launchMessages()), &messageDialog, SLOT(serviceDone()));
 
                 if(config->isSingleMode())
                     tray.actionsBasedOnReturn(service->returnCode());
