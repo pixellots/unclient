@@ -334,6 +334,7 @@
     </message>
     <message>
         <location filename="../usernotofication.ui" line="165"/>
+        <location filename="../usernotofication.cpp" line="140"/>
         <source>Show Details</source>
         <translation>Mostrar Detalles</translation>
     </message>
@@ -351,6 +352,11 @@
         <location filename="../usernotofication.cpp" line="74"/>
         <source> - Update Client</source>
         <translation> - Actualizar Cliente</translation>
+    </message>
+    <message>
+        <location filename="../usernotofication.cpp" line="147"/>
+        <source>Hide Details</source>
+        <translation>Ocultar detalles</translation>
     </message>
 </context>
 </TS>

@@ -137,14 +137,14 @@ void UserNotofication::detailsClicked()
     {
         ui->treeWidget->hide();
         ui->textBrowser->setHidden(true);
-        ui->pshDetails->setText("Show Details");
+        ui->pshDetails->setText(tr("Show Details"));
         adjustSize();
     }
     else
     {
         ui->treeWidget->show();
         ui->textBrowser->show();
-        ui->pshDetails->setText("Hide Details");
+        ui->pshDetails->setText(tr("Hide Details"));
     }
     layout()->setSizeConstraint(QLayout::SetMinimumSize);
 

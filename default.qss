@@ -1,3 +1,4 @@
+/*
 *{ background: #999999;}
 QPushButton { color: #white; 
  border: 1px solid black;
@@ -13,3 +14,5 @@ QPushButton { color: #white;
 }
 
 QDialog { min-width: 500px;}
+
+*/
