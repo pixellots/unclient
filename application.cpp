@@ -60,7 +60,7 @@ Application::Application(QObject *parent) :
 
 /*!
 Installs the set language as specified in Update::Config::getLanguage. This always checks for the
-existance of the language file - even for english (en, en-US, etc.) \n
+existance of the language file - even for english (en, en_US, etc.) \n
 If the language has been successfully loaded, \a true is returned. In case of any error, false is returned.
 \note This method searches for language files in this order: \l working directory \l <working_dir>/translations \l internal resource
 \note the translation file needs the following naming: unclient_<language_code>.qm
