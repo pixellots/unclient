@@ -15,8 +15,7 @@ TRANSLATIONS = \
     translations/$${TARGET}_ja.ts \
     translations/$${TARGET}_zh.ts \
     translations/$${TARGET}_es.ts \
-    translations/$${TARGET}_ru.ts \
-    translations/$${TARGET}_fr.ts
+    translations/$${TARGET}_ru.ts
 
 ### when deploying, always generate new qm files
 updateqm.commands = lrelease unclient.pro

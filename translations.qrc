@@ -2,7 +2,6 @@
     <qresource prefix="/">
         <file>translations/unclient_de.qm</file>
         <file>translations/unclient_es.qm</file>
-        <file>translations/unclient_fr.qm</file>
         <file>translations/unclient_ja.qm</file>
         <file>translations/unclient_ru.qm</file>
         <file>translations/unclient_zh.qm</file>
