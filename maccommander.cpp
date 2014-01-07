@@ -7,11 +7,26 @@
 
 using namespace UpdateNode;
 
+/*!
+\class UpdateNode::MacCommander
+\brief Executing admin commands on Mac
+*/
+
+/*!
+Checks whether process is already running as admin, or not
+*/
 bool MacCommander::isProcessElevated()
 {
     return false;
 }
 
+/*!
+Executes a command elevated specified by \apath , using paramters \aparameters.
+\n
+Parameter \adescription and \aicon are used for customizing the administrative dialog.
+\n
+Returns the return value of the executed command
+*/
 uint MacCommander::runProcessElevated(const QString &path,
                                const QStringList &parameters,
                                const QString &description,

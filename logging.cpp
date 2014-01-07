@@ -24,7 +24,16 @@
 #include "config.h"
 
 using namespace UpdateNode;
+/*!
+\class UpdateNode::Logging
+\brief Main class used for logging
+*/
 
+/*!
+Constructs a Logging object based on the file specified in Config::setLoggingFile
+\n
+If Config::getLoggingFile is set to "-", the output is written to stdout
+*/
 Logging::Logging()
 {
     m_pFile = NULL;
@@ -53,6 +62,10 @@ Logging::Logging()
     }
 }
 
+
+/*!
+Destructs a Logging object
+*/
 Logging::~Logging()
 {
     if(m_pFile)
@@ -64,6 +77,9 @@ Logging::~Logging()
     }
 }
 
+/*!
+Overloaded operator << to write a string \a t to the log file
+*/
 Logging& Logging::operator <<(const QString & t)
 {
     if(m_pFile && m_pStream)
@@ -73,6 +89,9 @@ Logging& Logging::operator <<(const QString & t)
     return *this;
 }
 
+/*!
+Overloaded operator << to write a integar \a t to the log file
+*/
 Logging& Logging::operator<<(int t)
 {
     if(m_pFile && m_pStream)

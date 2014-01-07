@@ -9,6 +9,11 @@
 
 using namespace UpdateNode;
 
+/*!
+\class TextBrowser
+\brief Special implementation of QTextBrowser to support external images
+*/
+
 TextBrowser::TextBrowser(QWidget *parent) :
     QTextBrowser(parent)
 {

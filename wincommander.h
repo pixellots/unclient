@@ -50,7 +50,7 @@ namespace UpdateNode
                                        bool aWait = true);
 
     #ifdef Q_OS_WIN
-        static bool isVista();
+        static bool isUAC();
         static bool getCurrentUserStrSid(LPTSTR *pStrSid);
     private:
         // "A" prefix, otherwise we need the Vista Platform SDK ..

@@ -37,6 +37,16 @@
 
 using namespace UpdateNode;
 
+/*!
+\class UpdateNode::Service
+\brief Main class for the communication between UpdateNode service and client
+\n\n
+This class connects your update/message definition on UpdateNode.com with your client.
+*/
+
+/*!
+Constructs a Service object
+*/
 Service::Service(QObject* parent)
     : QObject(parent)
 {
@@ -48,12 +58,21 @@ Service::Service(QObject* parent)
     QNetworkProxyFactory::setUseSystemConfiguration(true);
 }
 
+/*!
+Destructs the Service object
+*/
 Service::~Service()
 {
     m_pManager->deleteLater();
     m_pDownloader->deleteLater();
 }
 
+/*!
+Checks for updates with parameters specified via UpdateNode::Config, or as registered \n
+before for multi update usage
+\sa Service::checkForUpdates(UpdateNode::Config* aConfig)
+\sa Service::requestReceived
+*/
 bool Service::checkForUpdates()
 {
     UpdateNode::Config* config = UpdateNode::Config::Instance();
@@ -83,6 +102,10 @@ bool Service::checkForUpdates()
     return true;
 }
 
+/*!
+Checks for updates with parameters specified by \aaConfig
+\sa Service::requestReceived
+*/
 bool Service::checkForUpdates(UpdateNode::Config* aConfig)
 {
     UpdateNode::Config* globalConfig = UpdateNode::Config::Instance();
@@ -124,6 +147,12 @@ bool Service::checkForUpdates(UpdateNode::Config* aConfig)
     return true;
 }
 
+/*!
+Slot called when the request has been returned. Emits done() for single app mode, or doneManager()\n
+for multi app mode.
+\note If the returned product definition contains an icon, the signal is emitted after the icon\n
+has been downloaded
+*/
 void Service::requestReceived(QNetworkReply* reply)
 {
     reply->deleteLater();
@@ -182,6 +211,10 @@ void Service::requestReceived(QNetworkReply* reply)
     }
 }
 
+/*!
+Builds the return code based on the results from all checked products
+\sa Service::returnCode
+*/
 int Service::returnCodeManager()
 {
     QString result;
@@ -198,6 +231,10 @@ int Service::returnCodeManager()
 }
 
 
+/*!
+Builds the return code based on the results from a specified Config \aconfig
+\sa Service::returnCode
+*/
 int Service::returnCode(UpdateNode::Config* config /* = NULL */)
 {
     if(!config)
@@ -209,15 +246,20 @@ int Service::returnCode(UpdateNode::Config* config /* = NULL */)
     return returnCode(update_cnt, message_cnt);
 }
 
-int Service::returnCode(int aUpdateCount, int aMessageCode)
+/*!
+Builds the return code based on update counter \aaUpdateCount and message \n
+counter \aaMessageCount
+\sa Service::returnCode
+*/
+int Service::returnCode(int aUpdateCount, int aMessageCount)
 {
     Service::Status status;
 
-    if(aUpdateCount == 0 && aMessageCode == 0)
+    if(aUpdateCount == 0 && aMessageCount == 0)
         status = Service::NOTHING; // nothing
-    else if(aUpdateCount > 0 && aMessageCode == 0)
+    else if(aUpdateCount > 0 && aMessageCount == 0)
         status = Service::UPDATE; // update
-    else if(aUpdateCount == 0 && aMessageCode >= 1)
+    else if(aUpdateCount == 0 && aMessageCount >= 1)
         status = Service::MESSAGE; // message
     else
         status = Service::UPDATE_MESSAGE; // update & message
@@ -236,6 +278,9 @@ int Service::returnCode(int aUpdateCount, int aMessageCode)
     return status;
 }
 
+/*!
+Returns the notification text based on return code from Service::returnCode
+*/
 QString Service::notificationText(UpdateNode::Config* config /* = NULL */)
 {
     QString text;
@@ -260,6 +305,9 @@ QString Service::notificationText(UpdateNode::Config* config /* = NULL */)
     return text;
 }
 
+/*!
+Returns the notification text based on return code from Service::returnCodeManager
+*/
 QString Service::notificationTextManager()
 {
     QString text;
@@ -284,11 +332,17 @@ QString Service::notificationTextManager()
     return text;
 }
 
+/*!
+Returns the service status error code
+*/
 int Service::status()
 {
     return m_iStatus;
 }
 
+/*!
+Returns the service status error string
+*/
 QString Service::statusText() const
 {
     return m_strStatus;

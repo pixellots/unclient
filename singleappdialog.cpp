@@ -31,6 +31,11 @@
 #include "logging.h"
 #include "version.h"
 
+/*!
+\class SingleAppDialog
+\brief Single application mode dialog, which shows only updates for one product
+*/
+
 SingleAppDialog::SingleAppDialog(QWidget *parent) :
     QDialog(parent, Qt::WindowCloseButtonHint),
     m_pUi(new Ui::SingleAppDialog),

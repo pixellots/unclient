@@ -31,6 +31,11 @@
 
 using namespace UpdateNode;
 
+/*!
+\class SystemTray
+\brief Class responsible for system tray related activities.
+*/
+
 SystemTray::SystemTray(QObject *parent) :
     QObject(parent)
 {

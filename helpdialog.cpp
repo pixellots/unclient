@@ -23,6 +23,12 @@
 #include "helpdialog.h"
 #include "ui_helpdialog.h"
 
+/*!
+\class Helpdialog
+\brief Displays the help page in a text browser. Mainly for Windows, as on other platforms\n
+the help is displayed on stdout
+*/
+
 Helpdialog::Helpdialog(QWidget *parent) :
     QDialog(parent, Qt::WindowTitleHint),
     ui(new Ui::Helpdialog)

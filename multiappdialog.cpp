@@ -39,6 +39,11 @@
 Q_DECLARE_METATYPE ( UpdateNode::Update )
 Q_DECLARE_METATYPE ( UpdateNode::Config* )
 
+/*!
+\class MultiAppDialog
+\brief Multi application mode dialog, which shows multiple registered products
+*/
+
 MultiAppDialog::MultiAppDialog(QWidget *parent) :
     QDialog(parent, Qt::WindowCloseButtonHint),
     m_pUI(new Ui::DialogUpdate)

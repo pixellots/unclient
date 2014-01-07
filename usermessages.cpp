@@ -37,6 +37,11 @@
 #include <QNetworkDiskCache>
 #include <QDesktopServices>
 
+/*!
+\class UserMessages
+\brief Message dialog for showing messages defined on UpdateNode
+*/
+
 UserMessages::UserMessages(QWidget *parent) :
     QDialog(parent, Qt::WindowCloseButtonHint),
 #ifdef QT_WEBKIT_LIB

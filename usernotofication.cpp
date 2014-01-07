@@ -30,6 +30,12 @@
 Q_DECLARE_METATYPE ( UpdateNode::Update )
 Q_DECLARE_METATYPE ( UpdateNode::Message)
 
+/*!
+\class UserNotofication
+\brief Notification dialog for single mode updates, providing details about the update, \n
+a download and a cancel button
+*/
+
 UserNotofication::UserNotofication(QWidget *parent) :
     QDialog(parent, Qt::WindowCloseButtonHint),
     ui(new Ui::UserNotofication)

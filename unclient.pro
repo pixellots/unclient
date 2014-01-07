@@ -136,4 +136,6 @@ win32{
 LIBS+= Shell32.lib Advapi32.lib
 ### rc file for Windows and the above QMAKE settings does not work perfect
 RC_FILE = unclient.rc
+### do not elevate automatically
+QMAKE_LFLAGS_WINDOWS += /MANIFESTUAC:level=\'asInvoker\'
 }

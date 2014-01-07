@@ -33,6 +33,15 @@
 
 using namespace UpdateNode;
 
+/*!
+\class UpdateNode::OSDetection
+\brief OSDetection returns the informationa about the used OS
+*/
+
+/*!
+Returns the used Windows version, like "Windows 6.2", or "Unknown Windows" when the version \n
+information cannot be accessed
+*/
 QString OSDetection::getWindowsVersion()
 {
     QString prefix = "Windows ";
@@ -55,6 +64,10 @@ QString OSDetection::getWindowsVersion()
 
 }
 
+/*!
+Returns the used Mac version, like stored in /System/Library/CoreServices/SystemVersion.plist, \n
+reading the ProductVersion key. If no such key is present, "Unknown Mac" is returned
+*/
 QString OSDetection::getMacVersion()
 {
     QString prefix = "Mac OSX ";
@@ -62,7 +75,7 @@ QString OSDetection::getMacVersion()
 
     QSettings settings("/System/Library/CoreServices/SystemVersion.plist", QSettings::NativeFormat);
 
-    version = settings.value("ProductVersion", "unknown").toString();
+    version = settings.value("ProductVersion", "Unknown Mac").toString();
 
     if(version != "unknown")
         return prefix + version;
@@ -70,6 +83,11 @@ QString OSDetection::getMacVersion()
         return version;
 }
 
+/*!
+Returns the used Linux version, like returned when executing  "uname -r". Additionally, \n
+Env variable DESKTOP_SESSION is taken. If there is no information available about the current version \n
+"Linux (unknown)" is returned.
+*/
 QString OSDetection::getLinuxVersion()
 {
     QStringList fullKernelVersion;
@@ -88,11 +106,22 @@ QString OSDetection::getLinuxVersion()
         return  QString("Linux (" + QString( QProcessEnvironment::systemEnvironment().value("DESKTOP_SESSION", "unknown")) + ")");
 }
 
+
+/*!
+Returns "Unsupported OS"
+*/
 QString OSDetection::getOthersVersion()
 {
-    return "unsupported";
+    return "Unsupported OS";
 }
 
+/*!
+Returns the OS name based on the used system, calling the following methods:
+\sa UpdateNode::OSDetection::getLinuxVersion
+\sa UpdateNode::OSDetection::getWindowsVersion
+\sa UpdateNode::OSDetection::getMacVersion
+\sa UpdateNode::OSDetection::getOthersVersion
+*/
 QString OSDetection::getOS()
 {
 #ifdef Q_OS_LINUX
@@ -110,6 +139,10 @@ QString OSDetection::getOS()
 #endif
 }
 
+/*!
+Returns the processor architecture of the used OS \n
+Default value for Windows is x86, for Mac nad Linux its "unknown"
+*/
 QString OSDetection::getArch()
 {
 #ifdef Q_OS_WIN

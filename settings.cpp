@@ -31,6 +31,17 @@
 
 using namespace UpdateNode;
 
+/*!
+\class UpdateNode::Settings
+\brief Main class for storing and reading setting informations
+\n\n
+Using this class, you can access all your settings data stored while executing the client.
+*/
+
+/*!
+Constructs an Settings object, referening to company "UpdateNode" and "Client" as \n
+application name.
+*/
 Settings::Settings()
     : QSettings(UPDATENODE_COMPANY_STR, UPDATENODE_APPLICATION_STR, 0)
 {
@@ -49,16 +60,28 @@ Settings::Settings()
     m_strRegistrations  = id + QString("Registered/");
 }
 
+/*!
+Sets the download path
+\sa Setttings::getDownloadPath
+*/
 void Settings::setDownloadPath(const QString& aPath)
 {
     this->setValue(m_strDownloadPath, aPath);
 }
 
+/*!
+Returns the download path, or system's temp path if no download path is specified
+\sa Setttings::setDownloadPath
+*/
 QString Settings::getDownloadPath() const
 {
     return this->value(m_strDownloadPath, QDir::tempPath()).toString();
 }
 
+/*!
+Returns the current UUID. When so UUID is set, a new will be generated.
+\n The new generated UUID is stored for any further usage.
+*/
 QString Settings::uuid()
 {
     QString id = this->value(m_strUUID).toString();
@@ -72,6 +95,11 @@ QString Settings::uuid()
     return id;
 }
 
+/*!
+Registering the current used product version, as specified in UpdateNode::Config \n
+Returns false if Config is not set proper
+\sa Settings::unRegisterVersion
+*/
 bool Settings::registerVersion()
 {
     QString id;
@@ -88,6 +116,11 @@ bool Settings::registerVersion()
     return true;
 }
 
+/*!
+Unregistering the current used product version, as specified in UpdateNode::Config \n
+Returns false if Config is not set proper
+\sa Settings::registerVersion
+*/
 bool Settings::unRegisterVersion()
 {
     QString id;
@@ -104,7 +137,13 @@ bool Settings::unRegisterVersion()
     return true;
 }
 
-bool Settings::getRegisteredVersion()
+/*!
+Builds the configuration list based on previous registered versions
+\sa Settings::registerVersion
+\sa Settings::unRegisterVersion
+\sa Config::configurations
+*/
+void Settings::getRegisteredVersion()
 {
     UpdateNode::Config* config = UpdateNode::Config::Instance();
 
@@ -126,9 +165,12 @@ bool Settings::getRegisteredVersion()
             config->addConfiguration(poolConfig);
         }
     }
-    return true;
 }
 
+/*!
+Stores informations about the specified update \aaUpdate, it's local file destination and \n
+the returned exit code
+*/
 void Settings::setUpdate(UpdateNode::Update aUpdate, const QString& aLocalFile, int aResult)
 {
     QString id = m_strUpdate + aUpdate.getCode() + "/";
@@ -138,6 +180,9 @@ void Settings::setUpdate(UpdateNode::Update aUpdate, const QString& aLocalFile, 
     this->setValue( id + "Type" , aUpdate.getType());
 }
 
+/*!
+Stores informations about the specified message \aaMessage and if it has been shown and loaded
+*/
 void  Settings::setMessage(UpdateNode::Message aMessage, bool aShown, bool aLoaded)
 {
     QString id = m_strMessage + aMessage.getCode() + "/";
@@ -146,6 +191,9 @@ void  Settings::setMessage(UpdateNode::Message aMessage, bool aShown, bool aLoad
     this->setValue( id + "Loaded" , aLoaded);
 }
 
+/*!
+Stores informations about the specified message \aaMessage and if it has been shown
+*/
 void  Settings::setMessage(UpdateNode::Message aMessage, bool aShown)
 {
     QString id = m_strMessage + aMessage.getCode() + "/";
@@ -153,6 +201,9 @@ void  Settings::setMessage(UpdateNode::Message aMessage, bool aShown)
     this->setValue( id + "Shown" , aShown);
 }
 
+/*!
+Checked whether a message specified by \aaMessageCode has been loaded and shown
+*/
 bool Settings::messageShownAndLoaded(const QString& aMessageCode)
 {
     QString id = m_strMessage + aMessageCode + "/";
@@ -160,6 +211,10 @@ bool Settings::messageShownAndLoaded(const QString& aMessageCode)
     return this->value( id + "Shown" , false).toBool() && this->value( id + "Loaded" , false).toBool();
 }
 
+/*!
+Maps the current product version specified in \aconfig to information from \n
+parameters \aaProduct and \aaVersion
+*/
 void Settings::setNewVersion(UpdateNode::Config* config, UpdateNode::Product aProduct, UpdateNode::ProductVersion aVersion)
 {
     QString id = m_strCurrentVersion + aProduct.getCode() + "/";
@@ -173,6 +228,9 @@ void Settings::setNewVersion(UpdateNode::Config* config, UpdateNode::Product aPr
     this->setValue( id + "Version/Name", aVersion.getName());
 }
 
+/*!
+Checkes whether a product code and product version is mapped or not
+*/
 bool Settings::isVersionMapped(const QString& aProductCode, const QString& aVersion)
 {
     QString id = m_strCurrentVersion + aProductCode + "/";
@@ -190,6 +248,9 @@ bool Settings::isVersionMapped(const QString& aProductCode, const QString& aVers
         return false;
 }
 
+/*!
+Checkes whether a version code is mapped or not
+*/
 bool Settings::isVersionMapped(const QString& aVersionCode)
 {
     QStringList productCodes;
@@ -213,21 +274,36 @@ bool Settings::isVersionMapped(const QString& aVersionCode)
     return false;
 }
 
+/*!
+Returns the mapped product code
+\note Settings::isVersionMapped needs to be called before
+*/
 QString Settings::getMappedProductCode() const
 {
     return m_strMappedProductCode;
 }
 
+/*!
+Returns the mapped version code
+\note Settings::isVersionMapped needs to be called before
+*/
 QString Settings::getMappedVersionCode() const
 {
     return m_strMappedVersionCode;
 }
 
+/*!
+Returns the mapped product version
+\note Settings::isVersionMapped needs to be called before
+*/
 QString Settings::getMappedVersion() const
 {
     return m_strMappedVersion;
 }
 
+/*!
+Returns the current product code for a specific UpdateNode::Config \aaConfig object
+*/
 QString Settings::getProductCode(UpdateNode::Config* aConfig /* = null */)
 {
     UpdateNode::Config* config;
@@ -243,6 +319,9 @@ QString Settings::getProductCode(UpdateNode::Config* aConfig /* = null */)
         return config->getProductCode();
 }
 
+/*!
+Returns the current product version for a specific UpdateNode::Config \aaConfig object
+*/
 QString Settings::getProductVersion(UpdateNode::Config* aConfig /* = null */)
 {
     UpdateNode::Config* config;
@@ -258,6 +337,9 @@ QString Settings::getProductVersion(UpdateNode::Config* aConfig /* = null */)
         return config->getVersion();
 }
 
+/*!
+Returns the current version code for a specific UpdateNode::Config \aaConfig object
+*/
 QString Settings::getVersionCode(UpdateNode::Config* aConfig /* = null */)
 {
     UpdateNode::Config* config;
@@ -273,6 +355,10 @@ QString Settings::getVersionCode(UpdateNode::Config* aConfig /* = null */)
         return config->getVersionCode();
 }
 
+/*!
+Stores a cached file for a given update code \aaCode and it's \aaFilename
+\sa Settings::getCachedFile
+*/
 void Settings::setCachedFile(const QString& aCode, const QString& aFilename)
 {
     if(aCode.isEmpty())
@@ -283,6 +369,10 @@ void Settings::setCachedFile(const QString& aCode, const QString& aFilename)
     this->setValue( id + "File" , aFilename);
 }
 
+/*!
+Returns the cached file for a given update code \aaCode
+\sa Settings::setCachedFile
+*/
 QString Settings::getCachedFile(const QString& aCode)
 {
     QString id = m_strUpdate + aCode + "/";
@@ -290,11 +380,19 @@ QString Settings::getCachedFile(const QString& aCode)
     return this->value( id + "File").toString();
 }
 
+/*!
+Sets the current client dir, specified by \aaClientDir
+\sa Settings::getCurrentClientDir
+*/
 void Settings::setCurrentClientDir(const QString& aClientDir)
 {
     this->setValue( m_strClientPath + Config::Instance()->getKeyHashed() , aClientDir);
 }
 
+/*!
+Returns the current client dir
+\sa Settings::setCurrentClientDir
+*/
 QString Settings::getCurrentClientDir()
 {
     return this->value( m_strClientPath + Config::Instance()->getKeyHashed()).toString();

@@ -28,11 +28,23 @@
 
 using namespace UpdateNode;
 
+/*!
+\class UpdateNode::LocalFile
+\brief Class container for handeling file locations
+*/
+
+/*!
+Constructs a file location for a gieven \a aFileName based on its name and the result of
+\n LocalFile::getDownloadPath
+*/
 QString LocalFile::getDownloadLocation(const QString& aFileName)
 {
     return QDir::toNativeSeparators(LocalFile::getDownloadPath() + QDir::separator() + QFileInfo(aFileName).fileName());
 }
 
+/*!
+Returns the download path as specified using Settings::setDownloadPath
+*/
 QString LocalFile::getDownloadPath()
 {
     UpdateNode::Settings settings;
@@ -51,6 +63,9 @@ QString LocalFile::getDownloadPath()
 }
 
 
+/*!
+Returns the cache path which is the download path with a subfolder called "cache"
+*/
 QString LocalFile::getCachePath()
 {
     return QDir::toNativeSeparators(getDownloadPath() + QDir::separator() + "cache");

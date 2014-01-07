@@ -30,6 +30,19 @@
 
 using namespace UpdateNode;
 
+/*!
+\class UpdateNode::WinCommander
+\brief Executing admin commands on Windows
+*/
+
+/*!
+Executes a command elevated specified by \apath , using paramters \aparameters.
+\n
+Parameter /aaWait decides if the function should return immediatelly after it's\n
+execution or wait for the exit of the launched process
+\n
+Returns the return value of the executed command
+*/
 uint WinCommander::runProcessElevated(const QString &path,
                                               const QStringList &parameters,
                                               const QString &workingDir, bool aWait)
@@ -90,11 +103,22 @@ uint WinCommander::runProcessElevated(const QString &path,
     return result;
 }
 
+/*!
+Executes a command elevated specified by \apath , using paramters \aparameters.
+\n
+Parameter /aaWait decides if the function should return immediatelly after it's\n
+execution or wait for the exit of the launched process
+\n
+Returns the return value of the executed command
+*/
 uint WinCommander::runProcessElevated(const QString &path, const QString &parameters, const QString &workingDir, bool aWait)
 {
     return runProcessElevated(path, QStringList() << parameters, workingDir, aWait);
 }
 
+/*!
+Checks whether the current process is already running as administrator, or not
+*/
 bool WinCommander::isProcessElevated()
 {
     bool result = false;
@@ -104,7 +128,7 @@ bool WinCommander::isProcessElevated()
     ATOKEN_ELEVATION te;
     DWORD dwReturnLength = 0;
 
-    if (!isVista())
+    if (!isUAC())
     {
         return true;
     }
@@ -145,32 +169,10 @@ bool WinCommander::isProcessElevated()
     return result;
 }
 
-
-#ifdef Q_OS_WIN
-bool WinCommander::getCurrentUserStrSid(LPTSTR* pStrSid)
-{
-    bool result = false;
-
-    // Pseudohandle so don't need to close it
-    HANDLE hProcess = ::GetCurrentProcess();
-    HANDLE hToken = NULL;
-    if(::OpenProcessToken(hProcess, TOKEN_QUERY, &hToken)) {
-        // Get the required size
-        DWORD tusize = 0;
-        GetTokenInformation(hToken, TokenUser, NULL, 0, &tusize);
-        TOKEN_USER* ptu = (TOKEN_USER*)new BYTE[tusize];
-
-        if(GetTokenInformation(hToken, TokenUser, (LPVOID)ptu, tusize, &tusize)) {
-            result = ConvertSidToStringSid((SID *)ptu->User.Sid, pStrSid);
-        }
-
-        CloseHandle(hToken);
-        delete [] ptu;
-    }
-    return result;
-}
-
-bool WinCommander::isVista()
+/*!
+Checks if current Windows version does support UAC, or not
+*/
+bool WinCommander::isUAC()
 {
     if (QSysInfo::windowsVersion() <= QSysInfo::WV_VISTA)
         return false;

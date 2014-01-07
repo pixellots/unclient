@@ -53,7 +53,7 @@ namespace UpdateNode
 
             int returnCodeManager();
             int returnCode(UpdateNode::Config* config = NULL);
-            int returnCode(int aUpdateCount, int aMessageCode);
+            int returnCode(int aUpdateCount, int aMessageCount);
 
             QString notificationText(UpdateNode::Config* config = NULL);
             QString notificationTextManager();
