@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 UpdatNode UG.
+** Copyright (C) 2014 UpdateNode UG (haftungsbeschränkt)
 ** Contact: code@updatenode.com
 **
 ** This file is part of the UpdateNode Client.
@@ -172,6 +172,7 @@ bool WinCommander::isProcessElevated()
 /*!
 Checks if current Windows version does support UAC, or not
 */
+#ifdef Q_OS_WIN
 bool WinCommander::isUAC()
 {
     if (QSysInfo::windowsVersion() <= QSysInfo::WV_VISTA)

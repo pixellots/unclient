@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 UpdatNode UG.
+** Copyright (C) 2014 UpdateNode UG (haftungsbeschränkt)
 ** Contact: code@updatenode.com
 **
 ** This file is part of the UpdateNode Client.
@@ -19,7 +19,6 @@
 ** Full license description file: LICENSE.GPL
 **
 ****************************************************************************/
-
 #ifndef STATUS_H
 #define STATUS_H
 

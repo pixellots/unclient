@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 UpdatNode UG.
+** Copyright (C) 2014 UpdateNode UG (haftungsbeschränkt)
 ** Contact: code@updatenode.com
 **
 ** This file is part of the UpdateNode Client.
@@ -241,8 +241,10 @@ int Service::returnCode(UpdateNode::Config* config /* = NULL */)
         config = UpdateNode::Config::Instance();
 
     int update_cnt = config->updates().size();
-    int message_cnt = config->messages().size();
-
+    int message_cnt = 0;
+    foreach(UpdateNode::Message message, config->messages())
+        if(!UpdateNode::Settings().messageShownAndLoaded(message.getCode()))
+            message_cnt++;
     return returnCode(update_cnt, message_cnt);
 }
 

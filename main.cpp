@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 UpdatNode UG.
+** Copyright (C) 2014 UpdateNode UG (haftungsbeschränkt)
 ** Contact: code@updatenode.com
 **
 ** This file is part of the UpdateNode Client.
@@ -43,7 +43,7 @@
 #include "helpdialog.h"
 
 #ifndef APP_COPYRIGHT
-#define APP_COPYRIGHT "\xA9 2013 UpdateNode UG. All rights reserved."
+#define APP_COPYRIGHT "\xA9 2014 UpdateNode UG (haftungsbeschränkt). All rights reserved."
 #endif
 
 int printHelp()
@@ -109,7 +109,7 @@ int returnANDlaunch(int result)
             }
         }
 
-        // set to - in case the above if statement does not match
+        // set to "-" in case the above if statement does not match
         exec = exec.replace("[UN_VERSION]", "-");
 
         if(!QProcess::startDetached(exec))
@@ -390,7 +390,7 @@ int main(int argc, char *argv[])
             else
                 text = service->notificationTextManager();
 
-            if(config->isSystemTray() && (service->returnCode() != 0 || service->returnCodeManager() != 0))
+            if(config->isSystemTray() && (service->returnCode() != 101 || service->returnCodeManager() != 101))
             {
                 UpdateNode::SystemTray tray;
                 QObject::connect(&tray, SIGNAL(launchClient()), &un_app, SLOT(setVisible()));
