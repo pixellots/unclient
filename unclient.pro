@@ -4,7 +4,9 @@ QT = network \
     core 
 
 ### QT_WEBKIT_LIB
+webkit{
 QT += webkit
+}
 
 TARGET = unclient
 TEMPLATE = app
@@ -22,6 +24,47 @@ updateqm.commands = lrelease unclient.pro
 updateqm.target = updateqm
 QMAKE_EXTRA_TARGETS += updateqm
 
+
+webkit{
+win32{
+qtwebkit_deploy.commands = $(COPY) "%QTDIR%\\bin\\qtwebkit4.dll" package
+qtwebkit_deploy.target = qtwebkit_deploy
+}
+}
+!webkit{
+win32{
+qtwebkit_deploy.commands =
+qtwebkit_deploy.target = qtwebkit_deploy
+}
+}
+
+win32{
+create_package_deploy.commands = $(CHK_DIR_EXISTS) package $(MKDIR) package
+create_package_deploy.target = create _package_deploy
+qtcore_deploy.commands = $(COPY) "%QTDIR%\\bin\\qtcore4.dll" package
+qtcore_deploy.target = qtcore_deploy
+qtgui_deploy.commands = $(COPY) "%QTDIR%\\bin\\qtgui4.dll" package
+qtgui_deploy.target = qtgui_deploy
+qtnetwork_deploy.commands = $(COPY) "%QTDIR%\\bin\\qtnetwork4.dll" package
+qtnetwork_deploy.target = qtnetwork_deploy
+qtxml_deploy.commands = $(COPY) "%QTDIR%\\bin\\qtxml4.dll" package
+qtxml_deploy.target = qtxml_deploy
+ssl_package_deploy.commands = $(COPY) c:\\OpenSSL-Win32\\*.dll package
+ssl_package_deploy.target = ssl_package_deploy
+package_deploy.depends = create_package_deploy qtcore_deploy qtgui_deploy qtnetwork_deploy qtxml_deploy qtwebkit_deploy ssl_package_deploy copy_binary
+package_deploy.target = package_deploy
+build_installer.commands = devenv.com installer\\setup.sln /Rebuild SingleImage
+build_installer.target = build_installer
+copy_binary.commands = $(COPY) release\\unclient.exe package
+copy_binary.target = copy_binary
+QMAKE_EXTRA_TARGETS += copy_binary build_installer package_deploy create_package_deploy qtcore_deploy qtgui_deploy qtnetwork_deploy qtxml_deploy qtwebkit_deploy ssl_package_deploy
+}
+!win32{
+package_deploy.commands = echo *** UNSUPPORTED ***
+package_deploy.target = package_deploy
+QMAKE_EXTRA_TARGETS += package_deploy
+}
+
 ### every first qmake call and each call after deloy target does generate a fresh build number
 !exists( build.no.temp ) {
 win32::system("@set /a $$cat(build.no)+1  > build.no.temp && @copy /Y build.no.temp build.no > NUL")
@@ -31,9 +74,9 @@ message("The build number has been increased to $$cat(build.no)")
 
 #### deploy target
 #### to be used for creating a new release
-win32::deploy.commands = del build.no.temp && @echo DONE!!!
-unix::deploy.commands = rm build.no.temp && echo DONE!!!
-win32::deploy.depends = clean updateqm release
+win32::deploy.commands = del build.no.temp && @echo ***************** SUCCESSFULLY BUILD ****************** && dir package
+unix::deploy.commands = rm build.no.temp && echo ***************** SUCCESSFULLY BUILD ****************** && ls -l package
+win32::deploy.depends = clean updateqm release package_deploy
 unix::deploy.depends = clean updateqm all
 deploy.target = deploy
 QMAKE_EXTRA_TARGETS += deploy
@@ -136,4 +179,7 @@ win32{
 LIBS+= Shell32.lib Advapi32.lib
 ### rc file for Windows and the above QMAKE settings does not work perfect
 RC_FILE = unclient.rc
+### do not elevate automatically
+QMAKE_LFLAGS_WINDOWS += /MANIFESTUAC:level=\'asInvoker\'
+CONFIG += embed_manifest_exe
 }

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 UpdatNode UG.
+** Copyright (C) 2014 UpdateNode UG (haftungsbeschränkt)
 ** Contact: code@updatenode.com
 **
 ** This file is part of the UpdateNode Client.
@@ -257,7 +257,8 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
     }
     else if(m_bCopy && commandParameters.size() != 2)
     {
-        UpdateNode::Logging() << "Copy command needs two parameters for source and destination file";
+        UpdateNode::Logging() << "Copy command needs two parameters for source and destination file. Forgot quotes?";
+        UpdateNode::Logging() << "Parameters are: " << commandParameters.join(" ");
         emit updateExit(-2, QProcess::NormalExit);
         return false;
     }

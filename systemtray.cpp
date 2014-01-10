@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 UpdatNode UG.
+** Copyright (C) 2014 UpdateNode UG (haftungsbeschränkt)
 ** Contact: code@updatenode.com
 **
 ** This file is part of the UpdateNode Client.
@@ -30,6 +30,11 @@
 #include "updatenode_service.h"
 
 using namespace UpdateNode;
+
+/*!
+\class SystemTray
+\brief Class responsible for system tray related activities.
+*/
 
 SystemTray::SystemTray(QObject *parent) :
     QObject(parent)

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 UpdatNode UG.
+** Copyright (C) 2014 UpdateNode UG (haftungsbeschränkt)
 ** Contact: code@updatenode.com
 **
 ** This file is part of the UpdateNode Client.
@@ -32,18 +32,23 @@ using namespace UpdateNode;
 
 /*!
 \class UpdateNode::Downloader
-\brief Downloader class for downloading any content from the web
+\brief Main class for downloading files from the internet
+\n\n
+This class is responsible for downloading all data needed for your update: Update file, product images, etc.
 */
 
 /*!
-Constructs a Downloader object
+Constructs an empty Downloader object.
 */
 Downloader::Downloader()
 {
 }
 
 /*!
-Downloads a file from a given URL and stores the file name for future use
+Starts a download for a specified url with an reference to a file name specified by aFileName
+\n
+\note aFileName is only used as an reference for the done(QByteArray array, const QString& fileName) signal
+\sa Downloader::downloadFileFinished
 */
 void Downloader::doDownload(const QUrl& url, const QString& aFileName)
 {
@@ -57,8 +62,11 @@ void Downloader::doDownload(const QUrl& url, const QString& aFileName)
 }
 
 /*!
-Downloads a file from a given URL based on an Update object for future use\n
-This function returns the QNetworkReply pointer to the request
+Starts a download for a specified url with an reference to Update object specified by aUpdate
+\n
+\note aUpdate is only used as an reference for the
+\note done(const UpdateNode::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString) signal
+\sa Downloader::downloadFinished
 */
 QNetworkReply* Downloader::doDownload(const QUrl& url, const UpdateNode::Update& aUpdate)
 {
@@ -84,7 +92,7 @@ QNetworkReply* Downloader::doDownload(const QUrl& url, const UpdateNode::Update&
 }
 
 /*!
-Cancel all current downloads
+Aborts all current network operations
 */
 void Downloader::cancel()
 {
@@ -97,7 +105,9 @@ void Downloader::cancel()
 }
 
 /*!
-Saves data to a file specified with filename and stores the filename and aCode in the registry
+Saves all data specified by \adata into the given \afilename and stores the cache referenced by \aaCode
+\n
+returns true on success, otherwise false
 */
 bool Downloader::saveToDisk(const QString &filename, QIODevice *data, const QString& aCode)
 {
@@ -121,7 +131,7 @@ bool Downloader::saveToDisk(const QString &filename, QIODevice *data, const QStr
 }
 
 /*!
-This slot is called when the doDownlaod method for single files is finished
+Slot for doDownload on a file, emits done(QByteArray array, const QString& fileName)
 */
 void Downloader::downloadFileFinished(QNetworkReply *reply)
 {
@@ -132,7 +142,10 @@ void Downloader::downloadFileFinished(QNetworkReply *reply)
 }
 
 /*!
-This slot is called when the doDownlaod method for an update file is finished
+Slot for doDownload on a Update object, emits
+\n
+done(const UpdateNode::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString)
+\note This method stored the downloaded file using UpdateNode::LocalFile::getDownloadLocation function
 */
 void Downloader::downloadFinished(QNetworkReply *reply)
 {
@@ -162,8 +175,7 @@ void Downloader::downloadFinished(QNetworkReply *reply)
 }
 
 /*!
-Checkes whether there is still a downlaod in progress.\n
-returns true if no futher download is in progress, otherwise false
+Checking if there are currently any downloads in progess, or not
 */
 bool Downloader::isDownloading()
 {

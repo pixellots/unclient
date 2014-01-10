@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 UpdatNode UG.
+** Copyright (C) 2014 UpdateNode UG (haftungsbeschränkt)
 ** Contact: code@updatenode.com
 **
 ** This file is part of the UpdateNode Client.
@@ -36,6 +36,11 @@
 #include <QMessageBox>
 #include <QNetworkDiskCache>
 #include <QDesktopServices>
+
+/*!
+\class UserMessages
+\brief Message dialog for showing messages defined on UpdateNode
+*/
 
 UserMessages::UserMessages(QWidget *parent) :
     QDialog(parent, Qt::WindowCloseButtonHint),

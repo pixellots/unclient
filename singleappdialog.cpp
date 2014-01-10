@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 UpdatNode UG.
+** Copyright (C) 2014 UpdateNode UG (haftungsbeschränkt)
 ** Contact: code@updatenode.com
 **
 ** This file is part of the UpdateNode Client.
@@ -30,6 +30,11 @@
 #include "status.h"
 #include "logging.h"
 #include "version.h"
+
+/*!
+\class SingleAppDialog
+\brief Single application mode dialog, which shows only updates for one product
+*/
 
 SingleAppDialog::SingleAppDialog(QWidget *parent) :
     QDialog(parent, Qt::WindowCloseButtonHint),

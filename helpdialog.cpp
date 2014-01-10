@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 UpdatNode UG.
+** Copyright (C) 2014 UpdateNode UG (haftungsbeschränkt)
 ** Contact: code@updatenode.com
 **
 ** This file is part of the UpdateNode Client.
@@ -22,6 +22,12 @@
 
 #include "helpdialog.h"
 #include "ui_helpdialog.h"
+
+/*!
+\class Helpdialog
+\brief Displays the help page in a text browser. Mainly for Windows, as on other platforms\n
+the help is displayed on stdout
+*/
 
 Helpdialog::Helpdialog(QWidget *parent) :
     QDialog(parent, Qt::WindowTitleHint),

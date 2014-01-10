@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 UpdatNode UG.
+** Copyright (C) 2014 UpdateNode UG (haftungsbeschränkt)
 ** Contact: code@updatenode.com
 **
 ** This file is part of the UpdateNode Client.
@@ -50,7 +50,7 @@ namespace UpdateNode
                                        bool aWait = true);
 
     #ifdef Q_OS_WIN
-        static bool isVista();
+        static bool isUAC();
         static bool getCurrentUserStrSid(LPTSTR *pStrSid);
     private:
         // "A" prefix, otherwise we need the Vista Platform SDK ..

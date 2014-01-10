@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 UpdatNode UG.
+** Copyright (C) 2014 UpdateNode UG (haftungsbeschränkt)
 ** Contact: code@updatenode.com
 **
 ** This file is part of the UpdateNode Client.
@@ -48,7 +48,7 @@ namespace UpdateNode
 
             bool registerVersion();
             bool unRegisterVersion();
-            bool getRegisteredVersion();
+            void getRegisteredVersion();
 
             void setUpdate(UpdateNode::Update aUpdate, const QString& aLocalFile, int aResult);
             void setMessage(UpdateNode::Message aMessage, bool aShown, bool aLoaded);

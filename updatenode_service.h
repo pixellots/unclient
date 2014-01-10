@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 UpdatNode UG.
+** Copyright (C) 2014 UpdateNode UG (haftungsbeschränkt)
 ** Contact: code@updatenode.com
 **
 ** This file is part of the UpdateNode Client.
@@ -53,7 +53,7 @@ namespace UpdateNode
 
             int returnCodeManager();
             int returnCode(UpdateNode::Config* config = NULL);
-            int returnCode(int aUpdateCount, int aMessageCode);
+            int returnCode(int aUpdateCount, int aMessageCount);
 
             QString notificationText(UpdateNode::Config* config = NULL);
             QString notificationTextManager();

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 UpdatNode UG.
+** Copyright (C) 2014 UpdateNode UG (haftungsbeschränkt)
 ** Contact: code@updatenode.com
 **
 ** This file is part of the UpdateNode Client.
@@ -29,6 +29,12 @@
 
 Q_DECLARE_METATYPE ( UpdateNode::Update )
 Q_DECLARE_METATYPE ( UpdateNode::Message)
+
+/*!
+\class UserNotofication
+\brief Notification dialog for single mode updates, providing details about the update, \n
+a download and a cancel button
+*/
 
 UserNotofication::UserNotofication(QWidget *parent) :
     QDialog(parent, Qt::WindowCloseButtonHint),
