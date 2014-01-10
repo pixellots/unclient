@@ -8,6 +8,7 @@ Global
 		CD_ROM|Default = CD_ROM|Default
 		DVD-5|Default = DVD-5|Default
 		SingleImage|Default = SingleImage|Default
+		SingleImageWebKit|Default = SingleImageWebKit|Default
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5400126A-822C-4E08-9A61-F4887F5FF7F6}.CD_ROM|Default.ActiveCfg = CD_ROM
@@ -16,6 +17,8 @@ Global
 		{5400126A-822C-4E08-9A61-F4887F5FF7F6}.DVD-5|Default.Build.0 = DVD-5
 		{5400126A-822C-4E08-9A61-F4887F5FF7F6}.SingleImage|Default.ActiveCfg = SingleImage
 		{5400126A-822C-4E08-9A61-F4887F5FF7F6}.SingleImage|Default.Build.0 = SingleImage
+		{5400126A-822C-4E08-9A61-F4887F5FF7F6}.SingleImageWebKit|Default.ActiveCfg = SingleImage
+		{5400126A-822C-4E08-9A61-F4887F5FF7F6}.SingleImageWebKit|Default.Build.0 = SingleImage
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -339,11 +339,16 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
+		<row><td>ISX_DEFAULTCOMPONENT1</td><td>{9A7BFA42-973A-4AF1-B452-D1323DC3B7F9}</td><td>INSTALLDIR</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>QtCore4.dll</td><td>{96690CC8-EBB9-4A0D-8DFC-0F44898C3AA7}</td><td>INSTALLDIR</td><td>2</td><td/><td>qtcore4.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>QtGui4.dll</td><td>{7E879934-06B7-4CF7-AF7F-6F333436FCA5}</td><td>INSTALLDIR</td><td>2</td><td/><td>qtgui4.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>QtNetwork4.dll</td><td>{A5119B69-0E88-419C-9B93-416FB06621FE}</td><td>INSTALLDIR</td><td>2</td><td/><td>qtnetwork4.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>QtWebKit4.dll</td><td>{624FAA4C-407C-437F-8CA5-AD5B48F065AA}</td><td>INSTALLDIR</td><td>2</td><td/><td>qtwebkit4.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>QtWebKit4.dll</td><td>{624FAA4C-407C-437F-8CA5-AD5B48F065AA}</td><td>INSTALLDIR</td><td>2</td><td/><td>qtwebkit4.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>QtXml4.dll</td><td>{22537507-34FF-4FA4-9A13-E714DEE05E3E}</td><td>INSTALLDIR</td><td>2</td><td/><td>qtxml4.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>libeay32.dll</td><td>{767CD57B-9096-4D94-BD91-EB3E6607FC83}</td><td>INSTALLDIR</td><td>2</td><td/><td>libeay32.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>libssl32.dll</td><td>{A9403AC6-4707-4041-A789-E0A680E5B79B}</td><td>INSTALLDIR</td><td>2</td><td/><td>libssl32.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ssleay32.dll</td><td>{2AAE6360-36A0-4F33-AA85-8CB54756E4B5}</td><td>INSTALLDIR</td><td>2</td><td/><td>ssleay32.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>unclient.exe</td><td>{836D2DD3-5641-49A9-BE60-65F0F0894BE4}</td><td>INSTALLDIR</td><td>2</td><td/><td>unclient.exe</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -928,7 +933,8 @@
 		<row><td>DestinationFolder</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>1</td></row>
 		<row><td>DestinationFolder</td><td>ChangeFolder</td><td>SpawnDialog</td><td>InstallChangeFolder</td><td>1</td><td>1</td></row>
 		<row><td>DestinationFolder</td><td>ChangeFolder</td><td>[_BrowseProperty]</td><td>INSTALLDIR</td><td>1</td><td>2</td></row>
-		<row><td>DestinationFolder</td><td>Next</td><td>NewDialog</td><td>ReadyToInstall</td><td>1</td><td>1</td></row>
+		<row><td>DestinationFolder</td><td>Next</td><td>EndDialog</td><td>Return</td><td>OutOfDiskSpace &lt;&gt; 1</td><td>1</td></row>
+		<row><td>DestinationFolder</td><td>Next</td><td>NewDialog</td><td>ReadyToInstall</td><td>0</td><td>2</td></row>
 		<row><td>DiskSpaceRequirements</td><td>OK</td><td>EndDialog</td><td>Return</td><td>1</td><td>0</td></row>
 		<row><td>FilesInUse</td><td>Exit</td><td>EndDialog</td><td>Exit</td><td>1</td><td>0</td></row>
 		<row><td>FilesInUse</td><td>Ignore</td><td>EndDialog</td><td>Ignore</td><td>1</td><td>0</td></row>
@@ -1053,6 +1059,7 @@
 	<table name="CreateFolder">
 		<col key="yes" def="s72">Directory_</col>
 		<col key="yes" def="s72">Component_</col>
+		<row><td>INSTALLDIR</td><td>ISX_DEFAULTCOMPONENT1</td></row>
 	</table>
 
 	<table name="CustomAction">
@@ -1863,11 +1870,16 @@
 	<table name="FeatureComponents">
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s72">Component_</col>
+		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT1</td></row>
 		<row><td>AlwaysInstall</td><td>QtCore4.dll</td></row>
 		<row><td>AlwaysInstall</td><td>QtGui4.dll</td></row>
 		<row><td>AlwaysInstall</td><td>QtNetwork4.dll</td></row>
 		<row><td>AlwaysInstall</td><td>QtWebKit4.dll</td></row>
 		<row><td>AlwaysInstall</td><td>QtXml4.dll</td></row>
+		<row><td>AlwaysInstall</td><td>libeay32.dll</td></row>
+		<row><td>AlwaysInstall</td><td>libssl32.dll</td></row>
+		<row><td>AlwaysInstall</td><td>ssleay32.dll</td></row>
+		<row><td>AlwaysInstall</td><td>unclient.exe</td></row>
 	</table>
 
 	<table name="File">
@@ -1882,11 +1894,15 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
+		<row><td>libeay32.dll</td><td>libeay32.dll</td><td>libeay32.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectDir&gt;\..\..\package\libeay32.dll</td><td>1</td><td/></row>
+		<row><td>libssl32.dll</td><td>libssl32.dll</td><td>libssl32.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectDir&gt;\..\..\package\libssl32.dll</td><td>1</td><td/></row>
 		<row><td>qtcore4.dll</td><td>QtCore4.dll</td><td>QtCore4.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectDir&gt;\..\..\package\QtCore4.dll</td><td>1</td><td/></row>
 		<row><td>qtgui4.dll</td><td>QtGui4.dll</td><td>QtGui4.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectDir&gt;\..\..\package\QtGui4.dll</td><td>1</td><td/></row>
 		<row><td>qtnetwork4.dll</td><td>QtNetwork4.dll</td><td>QTNETW~1.DLL|QtNetwork4.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectDir&gt;\..\..\package\QtNetwork4.dll</td><td>1</td><td/></row>
-		<row><td>qtwebkit4.dll</td><td>QtWebKit4.dll</td><td>QTWEBK~1.DLL|QtWebKit4.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectDir&gt;\..\..\package\QtWebKit4.dll</td><td>1</td><td/></row>
+		<row><td>qtwebkit4.dll</td><td>QtWebKit4.dll</td><td>QTWEBK~1.DLL|QtWebKit4.dll</td><td>0</td><td/><td/><td>0</td><td>1</td><td>&lt;ISProjectDir&gt;\..\..\package\QtWebKit4.dll</td><td>1</td><td/></row>
 		<row><td>qtxml4.dll</td><td>QtXml4.dll</td><td>QtXml4.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectDir&gt;\..\..\package\QtXml4.dll</td><td>1</td><td/></row>
+		<row><td>ssleay32.dll</td><td>ssleay32.dll</td><td>ssleay32.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectDir&gt;\..\..\package\ssleay32.dll</td><td>1</td><td/></row>
+		<row><td>unclient.exe</td><td>unclient.exe</td><td>unclient.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectDir&gt;\..\..\package\unclient.exe</td><td>1</td><td/></row>
 	</table>
 
 	<table name="FileSFPCatalog">
@@ -2030,11 +2046,16 @@
 		<col def="S0">FTPLocation</col>
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
+		<row><td>ISX_DEFAULTCOMPONENT1</td><td/><td/><td>_2197304D_14E3_4029_8B84_76868B91CD40_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>QtCore4.dll</td><td/><td/><td>_35292BEA_B929_4B30_A7BE_8E963CD2FA86_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>QtGui4.dll</td><td/><td/><td>_96F5C0E1_2BB3_48D4_9B0E_D8BDC1381E47_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>QtNetwork4.dll</td><td/><td/><td>_C1F4344A_7B27_4BB3_8B7D_F1E632BEB518_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>QtWebKit4.dll</td><td/><td/><td>_5A0F0594_2197_43B9_953E_1466A2A10577_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>QtXml4.dll</td><td/><td/><td>_44D60224_FDB0_43D3_B283_44FA7BE098E6_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>libeay32.dll</td><td/><td/><td>_BF7B1636_1293_469B_A4AB_D86E286428FB_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>libssl32.dll</td><td/><td/><td>_304CB609_0026_49F7_A5CF_227F49984056_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ssleay32.dll</td><td/><td/><td>_5876BE31_D51C_4AD1_827B_45B1A50E1845_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>unclient.exe</td><td/><td/><td>_D89BF236_F686_4782_94E3_2C6799DC089A_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISCustomActionReference">
@@ -4003,7 +4024,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>ISTheme</td><td>InstallShield Blue.theme</td></row>
 		<row><td>ISUSLock</td><td>{7C9492D5-4B24-48CD-9D42-98FEF4663173}</td></row>
 		<row><td>ISUSSignature</td><td>{40994152-3006-4940-9DCB-B7EB03B3F64D}</td></row>
-		<row><td>ISVisitedViews</td><td>viewAssistant,viewProject,viewAppFiles,viewObjects,viewUpdateService,viewUI,viewRealSetupDesign,viewSetupDesign,viewRelease,viewEnvironmentVariables,viewSupportFiles,viewCustomActions,viewInstallScriptStd,viewDependencies,viewFeatureFiles,viewDesignPatches,viewSystemSearch,viewTextMessages,viewBillboards,viewUpgradePaths,viewSetupTypes</td></row>
+		<row><td>ISVisitedViews</td><td>viewAssistant,viewProject,viewAppFiles,viewObjects,viewUpdateService,viewUI,viewRealSetupDesign,viewSetupDesign,viewRelease,viewEnvironmentVariables,viewSupportFiles,viewCustomActions,viewInstallScriptStd,viewDependencies,viewFeatureFiles,viewDesignPatches,viewSystemSearch,viewTextMessages,viewBillboards,viewUpgradePaths,viewSetupTypes,viewIniFiles,viewRegistry,viewShortcuts,viewVRoots,viewServices,viewFileExtensions,viewISToday</td></row>
 		<row><td>Limited</td><td>1</td></row>
 		<row><td>LockPermissionMode</td><td>1</td></row>
 		<row><td>MsiExecCmdLineOptions</td><td/></row>
@@ -4380,7 +4401,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{A67C9375-A003-477A-9449-4BF7F3E915C7}</td><td/></row>
+		<row><td>ProductCode</td><td>{1C52C6E2-E8E5-45B6-B6D3-2144352D94FB}</td><td/></row>
 		<row><td>ProductName</td><td>UpdateNode Client</td><td/></row>
 		<row><td>ProductVersion</td><td>1.0.1.15</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>

@@ -4,7 +4,9 @@ QT = network \
     core 
 
 ### QT_WEBKIT_LIB
+webkit{
 QT += webkit
+}
 
 TARGET = unclient
 TEMPLATE = app
@@ -22,6 +24,20 @@ updateqm.commands = lrelease unclient.pro
 updateqm.target = updateqm
 QMAKE_EXTRA_TARGETS += updateqm
 
+
+webkit{
+win32{
+qtwebkit_deploy.commands = $(COPY) "%QTDIR%\\bin\\qtwebkit4.dll" package
+qtwebkit_deploy.target = qtwebkit_deploy
+}
+}
+!webkit{
+win32{
+qtwebkit_deploy.commands =
+qtwebkit_deploy.target = qtwebkit_deploy
+}
+}
+
 win32{
 create_package_deploy.commands = $(CHK_DIR_EXISTS) package $(MKDIR) package
 create_package_deploy.target = create _package_deploy
@@ -33,8 +49,6 @@ qtnetwork_deploy.commands = $(COPY) "%QTDIR%\\bin\\qtnetwork4.dll" package
 qtnetwork_deploy.target = qtnetwork_deploy
 qtxml_deploy.commands = $(COPY) "%QTDIR%\\bin\\qtxml4.dll" package
 qtxml_deploy.target = qtxml_deploy
-qtwebkit_deploy.commands = $(COPY) "%QTDIR%\\bin\\qtwebkit4.dll" package
-qtwebkit_deploy.target = qtwebkit_deploy
 ssl_package_deploy.commands = $(COPY) c:\\OpenSSL-Win32\\*.dll package
 ssl_package_deploy.target = ssl_package_deploy
 package_deploy.depends = create_package_deploy qtcore_deploy qtgui_deploy qtnetwork_deploy qtxml_deploy qtwebkit_deploy ssl_package_deploy copy_binary
