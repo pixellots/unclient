@@ -30,10 +30,21 @@
 
 using namespace UpdateNode;
 
+/*!
+\class UpdateNode::Downloader
+\brief Downloader class for downloading any content from the web
+*/
+
+/*!
+Constructs a Downloader object
+*/
 Downloader::Downloader()
 {
 }
 
+/*!
+Downloads a file from a given URL and stores the file name for future use
+*/
 void Downloader::doDownload(const QUrl& url, const QString& aFileName)
 {
     QNetworkRequest request(url);
@@ -45,6 +56,10 @@ void Downloader::doDownload(const QUrl& url, const QString& aFileName)
     m_oCurrentFileDownloads[reply] = aFileName;
 }
 
+/*!
+Downloads a file from a given URL based on an Update object for future use\n
+This function returns the QNetworkReply pointer to the request
+*/
 QNetworkReply* Downloader::doDownload(const QUrl& url, const UpdateNode::Update& aUpdate)
 {
     UpdateNode::Settings settings;
@@ -68,6 +83,9 @@ QNetworkReply* Downloader::doDownload(const QUrl& url, const UpdateNode::Update&
     return reply;
 }
 
+/*!
+Cancel all current downloads
+*/
 void Downloader::cancel()
 {
     QMapIterator<QNetworkReply*, UpdateNode::Update> i(m_oCurrentDownloads);
@@ -78,6 +96,9 @@ void Downloader::cancel()
     }
 }
 
+/*!
+Saves data to a file specified with filename and stores the filename and aCode in the registry
+*/
 bool Downloader::saveToDisk(const QString &filename, QIODevice *data, const QString& aCode)
 {
     QFile file(filename);
@@ -99,6 +120,9 @@ bool Downloader::saveToDisk(const QString &filename, QIODevice *data, const QStr
     return true;
 }
 
+/*!
+This slot is called when the doDownlaod method for single files is finished
+*/
 void Downloader::downloadFileFinished(QNetworkReply *reply)
 {
     if(reply->error() == QNetworkReply::NoError)
@@ -107,6 +131,9 @@ void Downloader::downloadFileFinished(QNetworkReply *reply)
     reply->deleteLater();
 }
 
+/*!
+This slot is called when the doDownlaod method for an update file is finished
+*/
 void Downloader::downloadFinished(QNetworkReply *reply)
 {
     QNetworkReply::NetworkError error;
@@ -134,6 +161,10 @@ void Downloader::downloadFinished(QNetworkReply *reply)
     emit done(update, error, errorString);
 }
 
+/*!
+Checkes whether there is still a downlaod in progress.\n
+returns true if no futher download is in progress, otherwise false
+*/
 bool Downloader::isDownloading()
 {
     return m_oCurrentDownloads.size() > 0;

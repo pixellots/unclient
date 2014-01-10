@@ -42,8 +42,6 @@ uint MacCommander::runProcessElevated(const QString &path,
     size_t promptLen = newDescription.length();
     char *newPrompt = (char*)malloc(sizeof(char) * (promptLen + 2));
     strcpy(newPrompt, newDescription.toStdString().c_str());
-    //newPrompt[promptLen] = '\n';
-    //newPrompt[promptLen + 1] = '\n';
     newPrompt[promptLen] = '\0';
     prompt = newPrompt;
 
@@ -89,7 +87,6 @@ uint MacCommander::runProcessElevated(const QString &path,
 
         status = AuthorizationExecuteWithPrivileges(authRef, path.toStdString().c_str(), 0, commandLine, &ioPipe);
 
-        /* Just pipe processes' stdout to our stdout for now; hopefully can add stdin pipe later as well */
         for (;;)
         {
             bytesRead = fread(buffer, sizeof(char), 1024, ioPipe);
@@ -119,7 +116,7 @@ uint MacCommander::runProcessElevated(const QString &path,
         }
     }
 
-    // Delete output
+    // delete output
     int i = 0;
     while (commandLine[i]) {
         delete commandLine[i];
@@ -131,7 +128,6 @@ uint MacCommander::runProcessElevated(const QString &path,
     if (prompt) {
             free(prompt);
         }
-
 
     return retVal;
 }
