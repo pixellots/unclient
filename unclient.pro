@@ -75,7 +75,7 @@ message("The build number has been increased to $$cat(build.no)")
 #### deploy target
 #### to be used for creating a new release
 win32::deploy.commands = del build.no.temp && @echo ***************** SUCCESSFULLY BUILD ****************** && dir package
-unix::deploy.commands = rm build.no.temp && echo ***************** SUCCESSFULLY BUILD ****************** && ls -l package
+unix::deploy.commands = rm build.no.temp && echo ***************** SUCCESSFULLY BUILD ******************
 win32::deploy.depends = clean updateqm release package_deploy
 unix::deploy.depends = clean updateqm all
 deploy.target = deploy
