@@ -46,7 +46,7 @@ class MultiAppDialog : public QDialog
 
     private:
         void install();
-        void updateUpdateView(UpdateNode::Config* aConfig = NULL);
+        void updateView(UpdateNode::Config* aConfig = NULL);
         void updateCounter();
 
     protected:

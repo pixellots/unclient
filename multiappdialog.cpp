@@ -72,9 +72,6 @@ MultiAppDialog::MultiAppDialog(QWidget *parent) :
     connect(m_pUI->pshUpdate, SIGNAL(clicked()), SLOT(startInstall()));
     connect(m_pUI->toolCancel, SIGNAL(clicked()), SLOT(cancelProgress()));
 
-    //m_pUI->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-    //connect(m_pUI->webView, SIGNAL(linkClicked(const QUrl&)), SLOT(openLink(const QUrl&)));
-
     connect(m_pUI->treeUpdate, SIGNAL(itemSelectionChanged()), SLOT(updateSelectedUpdate()));
     connect(m_pUI->treeUpdate, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(checkSelection()));
 
@@ -149,7 +146,7 @@ void MultiAppDialog::serviceDone()
 
     qApp->setWindowIcon(windowIcon());
 
-    updateUpdateView();
+    updateView();
     updateCounter();
 
     m_pUI->pshUpdate->setFocus();
@@ -185,7 +182,7 @@ void MultiAppDialog::serviceDoneManager()
     m_pUI->pshCheck->hide();
 
     for(int i = 0; i < globalConfig->configurations().size();i++)
-        updateUpdateView(globalConfig->configurations().at(i));
+        updateView(globalConfig->configurations().at(i));
 
     updateCounter();
 
@@ -210,7 +207,7 @@ void MultiAppDialog::cancelProgress()
         m_pDownloader->cancel();
 }
 
-void MultiAppDialog::updateUpdateView(UpdateNode::Config* aConfig /* = NULL */)
+void MultiAppDialog::updateView(UpdateNode::Config* aConfig /* = NULL */)
 {
     UpdateNode::Config* config;
 
@@ -234,7 +231,6 @@ void MultiAppDialog::updateUpdateView(UpdateNode::Config* aConfig /* = NULL */)
     QList<UpdateNode::Update> update_list = config->updates();
     for(int i = 0; i < update_list.size(); i++)
     {
-
         QTreeWidgetItem* parent = new QTreeWidgetItem(product);
         parent->setText(0, update_list.at(i).getTitle() + tr(" (Size: %1)").arg(update_list.at(i).getFileSize()));
         parent->setCheckState(0, Qt::Checked);

@@ -131,10 +131,9 @@ SOURCES += main.cpp \
     multiappdialog.cpp \
     logging.cpp \
     helpdialog.cpp \
-    textbrowser.cpp
+    textbrowser.cpp \
+    wincommander.cpp
 
-win32:SOURCES += wincommander.cpp
-win32:HEADERS += wincommander.h
 macx:SOURCES += maccommander.cpp
 macx:HEADERS += maccommander.h
 
@@ -161,7 +160,8 @@ HEADERS += \
     multiappdialog.h \
     logging.h \
     helpdialog.h \
-    textbrowser.h
+    textbrowser.h \
+    wincommander.h
 
 FORMS += \
     singleappdialog.ui \

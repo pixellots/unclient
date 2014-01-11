@@ -1,4 +1,5 @@
 #include "maccommander.h"
+#include "logging.h"
 
 #include <sys/stat.h>
 #include <unistd.h>
@@ -83,7 +84,7 @@ uint MacCommander::runProcessElevated(const QString &path,
 
     if (AuthorizationCreate(NULL, &myAuthorizationEnvironment/*kAuthorizationEmptyEnvironment*/, kAuthorizationFlagDefaults, &authRef) != errAuthorizationSuccess)
     {
-        //NSLog(@"Could not create authorization reference object.");
+        UpdateNode::Logging() << "Could not create authorization reference object.";
         status = errAuthorizationBadAddress;
     }
     else
@@ -125,24 +126,20 @@ uint MacCommander::runProcessElevated(const QString &path,
         AuthorizationFree(authRef, kAuthorizationFlagDestroyRights);
         authRef = NULL;
         if (status != errAuthorizationCanceled)
-        {
-            // pre-auth failed
-            //NSLog(@"Pre-auth failed");
-        }
+            UpdateNode::Logging() << "Pre-auth failed";
     }
 
-    // delete output
+    // clean
     int i = 0;
-    while (commandLine[i]) {
+    while (commandLine[i])
+    {
         delete commandLine[i];
         i++;
     }
     delete commandLine;
 
-    // delete prompt
-    if (prompt) {
-            free(prompt);
-        }
+    if (prompt)
+        free(prompt);
 
     return retVal;
 }

@@ -35,67 +35,67 @@
 <context>
     <name>MultiAppDialog</name>
     <message>
-        <location filename="../multiappdialog.cpp" line="134"/>
+        <location filename="../multiappdialog.cpp" line="139"/>
         <source> - Update Manager</source>
         <translation> - Обновить менеджер</translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="169"/>
+        <location filename="../multiappdialog.cpp" line="174"/>
         <source>Software Update Manager</source>
         <translation>Менеджер обновления программ</translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="234"/>
+        <location filename="../multiappdialog.cpp" line="239"/>
         <source> (Size: %1)</source>
         <translation> (Размер: %1)</translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="259"/>
+        <location filename="../multiappdialog.cpp" line="264"/>
         <source>There is a new software update available</source>
         <translation>Доступно обновление программы</translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="261"/>
+        <location filename="../multiappdialog.cpp" line="266"/>
         <source>There are %1 new software updates available</source>
         <translation>Доступно обновление %1 программного обеспечения</translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="263"/>
+        <location filename="../multiappdialog.cpp" line="268"/>
         <source>Your software is up to date</source>
         <translation>Вы используете последнюю версию программы</translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="309"/>
+        <location filename="../multiappdialog.cpp" line="314"/>
         <source>Downloading update %1 ...</source>
         <translation>Обновление %1 ...</translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="319"/>
+        <location filename="../multiappdialog.cpp" line="324"/>
         <source>All updates have been installed successfully</source>
         <translation>Все обновления успешно установлены</translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="361"/>
+        <location filename="../multiappdialog.cpp" line="366"/>
         <source>Installing update &quot;%1&quot;</source>
         <translation>Установка &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="367"/>
+        <location filename="../multiappdialog.cpp" line="372"/>
         <source>Update failed:&lt;br&gt;%1</source>
         <translation>Ошибка обновления:&lt;br&gt;%1</translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="367"/>
+        <location filename="../multiappdialog.cpp" line="372"/>
         <source>Unable to execute the command!</source>
         <translation>Невозможно выполнить команду!</translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="398"/>
+        <location filename="../multiappdialog.cpp" line="403"/>
         <source>Update &apos;%1&apos; installed successfully</source>
         <translation>Обновление &apos;%1&apos; успешно установлено</translation>
     </message>
     <message>
-        <location filename="../multiappdialog.cpp" line="418"/>
+        <location filename="../multiappdialog.cpp" line="423"/>
         <source>Update &apos;%1&apos; failed with error %2</source>
         <translation>Обновление не завершено &apos;%1&apos; ошибка %2</translation>
     </message>
@@ -108,63 +108,63 @@
         <translation>Невозможно запустить &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="334"/>
+        <location filename="../application.cpp" line="107"/>
         <source>Checking for messages ...</source>
         <translation>Проверка сообщений ...</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="336"/>
+        <location filename="../application.cpp" line="109"/>
         <source>Checking for updates ...</source>
         <translation>Проверка обновлений ...</translation>
     </message>
     <message>
-        <location filename="../systemtray.cpp" line="53"/>
+        <location filename="../systemtray.cpp" line="58"/>
         <source>Launch Update Client</source>
         <translation>Запустить клиент обновления</translation>
     </message>
     <message>
-        <location filename="../systemtray.cpp" line="58"/>
+        <location filename="../systemtray.cpp" line="63"/>
         <source>Read Messages</source>
         <translation>Читать сообщения</translation>
     </message>
     <message>
-        <location filename="../singleappdialog.cpp" line="117"/>
-        <location filename="../systemtray.cpp" line="62"/>
+        <location filename="../singleappdialog.cpp" line="122"/>
+        <location filename="../systemtray.cpp" line="67"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../updatenode_service.cpp" line="245"/>
-        <location filename="../updatenode_service.cpp" line="269"/>
+        <location filename="../updatenode_service.cpp" line="292"/>
+        <location filename="../updatenode_service.cpp" line="319"/>
         <source>There are no new updates &amp; messages available</source>
         <translation>Нет доступных обновлений сообщений</translation>
     </message>
     <message>
-        <location filename="../updatenode_service.cpp" line="248"/>
-        <location filename="../updatenode_service.cpp" line="272"/>
+        <location filename="../updatenode_service.cpp" line="295"/>
+        <location filename="../updatenode_service.cpp" line="322"/>
         <source>There are new updates available</source>
         <translation>Доступны новые обновления</translation>
     </message>
     <message>
-        <location filename="../updatenode_service.cpp" line="251"/>
-        <location filename="../updatenode_service.cpp" line="275"/>
+        <location filename="../updatenode_service.cpp" line="298"/>
+        <location filename="../updatenode_service.cpp" line="325"/>
         <source>There are new messages available</source>
         <translation>Доступны новые сообщения</translation>
     </message>
     <message>
-        <location filename="../updatenode_service.cpp" line="254"/>
-        <location filename="../updatenode_service.cpp" line="278"/>
+        <location filename="../updatenode_service.cpp" line="301"/>
+        <location filename="../updatenode_service.cpp" line="328"/>
         <source>There are updates and messages available</source>
         <translation>Доступны новые обновления и сообщения</translation>
     </message>
     <message>
-        <location filename="../updatenode_service.cpp" line="257"/>
-        <location filename="../updatenode_service.cpp" line="281"/>
+        <location filename="../updatenode_service.cpp" line="304"/>
+        <location filename="../updatenode_service.cpp" line="331"/>
         <source>Undefined state</source>
         <translation>Состояние не определено</translation>
     </message>
     <message>
-        <location filename="../maccommander.cpp" line="20"/>
+        <location filename="../maccommander.cpp" line="35"/>
         <source> wants to make changes.</source>
         <translation>хочет внести изменения.</translation>
     </message>
@@ -187,37 +187,37 @@
         <translation>&amp;Закрыть</translation>
     </message>
     <message>
-        <location filename="../singleappdialog.cpp" line="82"/>
+        <location filename="../singleappdialog.cpp" line="87"/>
         <source>Downloading update ...</source>
         <translation>Загрузка обновления ...</translation>
     </message>
     <message>
-        <location filename="../singleappdialog.cpp" line="84"/>
+        <location filename="../singleappdialog.cpp" line="89"/>
         <source>Downloading updates</source>
         <translation>Загрузка обновлений</translation>
     </message>
     <message>
-        <location filename="../singleappdialog.cpp" line="100"/>
+        <location filename="../singleappdialog.cpp" line="105"/>
         <source>Installing update ...</source>
         <translation>Установка обновления ...</translation>
     </message>
     <message>
-        <location filename="../singleappdialog.cpp" line="128"/>
+        <location filename="../singleappdialog.cpp" line="133"/>
         <source> - Update Client</source>
         <translation> - Обновить клиент</translation>
     </message>
     <message>
-        <location filename="../singleappdialog.cpp" line="230"/>
+        <location filename="../singleappdialog.cpp" line="235"/>
         <source>Update &apos;%1&apos; installed successfully</source>
         <translation>Обновление &apos;%1&apos; успешно установлено</translation>
     </message>
     <message>
-        <location filename="../singleappdialog.cpp" line="240"/>
+        <location filename="../singleappdialog.cpp" line="245"/>
         <source>Update &apos;%1&apos; failed with error %2</source>
         <translation>Обновление не завершено &apos;%1&apos; ошибка %2</translation>
     </message>
     <message>
-        <location filename="../singleappdialog.cpp" line="248"/>
+        <location filename="../singleappdialog.cpp" line="253"/>
         <source>Update &apos;%1&apos; closed unexpected</source>
         <translation>Обновление &apos;%1&apos; экстренно прервано</translation>
     </message>
@@ -225,12 +225,12 @@
 <context>
     <name>UpdateNode::Commander</name>
     <message>
-        <location filename="../commander.cpp" line="246"/>
+        <location filename="../commander.cpp" line="236"/>
         <source>Installing update &apos;%1&apos;</source>
         <translation>Установка обновления &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../commander.cpp" line="328"/>
+        <location filename="../commander.cpp" line="319"/>
         <source>Error: Update &apos;%1&apos; failed to start</source>
         <translation>Ошибка: &apos;%1&apos; запуск обновления не удался</translation>
     </message>
@@ -238,7 +238,7 @@
 <context>
     <name>UpdateNode::SystemTray</name>
     <message>
-        <location filename="../systemtray.cpp" line="72"/>
+        <location filename="../systemtray.cpp" line="77"/>
         <source>Software Update Manager</source>
         <translation>Менеджер обновления программ</translation>
     </message>
@@ -256,33 +256,33 @@
         <translation>Не сейчас</translation>
     </message>
     <message>
-        <location filename="../usermessages.cpp" line="104"/>
-        <location filename="../usermessages.cpp" line="141"/>
+        <location filename="../usermessages.cpp" line="109"/>
+        <location filename="../usermessages.cpp" line="146"/>
         <source> - Message</source>
         <translation> - Сообщение</translation>
     </message>
     <message>
-        <location filename="../usermessages.cpp" line="106"/>
+        <location filename="../usermessages.cpp" line="111"/>
         <source> - Messages</source>
         <translation> - Сообщения</translation>
     </message>
     <message>
-        <location filename="../usermessages.cpp" line="143"/>
+        <location filename="../usermessages.cpp" line="148"/>
         <source>Not now</source>
         <translation>Не сейчас</translation>
     </message>
     <message>
-        <location filename="../usermessages.cpp" line="144"/>
+        <location filename="../usermessages.cpp" line="149"/>
         <source>There is a new message available:&lt;br&gt;&lt;br&gt;&lt;b&gt;%1&lt;/b&gt;&lt;br&gt;&lt;br&gt;Do you want to read this message in your standard browser now?</source>
         <translation>Доступно новое сообщение:&lt;br&gt;&lt;br&gt;&lt;b&gt;%1&lt;/b&gt;&lt;br&gt;&lt;br&gt; Желаете прочесть это сообщение с помощью стандартного браузера?</translation>
     </message>
     <message>
-        <location filename="../usermessages.cpp" line="172"/>
+        <location filename="../usermessages.cpp" line="177"/>
         <source>Loading %p% ...</source>
         <translation>Загрузка %p% ...</translation>
     </message>
     <message>
-        <location filename="../usermessages.cpp" line="188"/>
+        <location filename="../usermessages.cpp" line="193"/>
         <source>Mark as read and close</source>
         <translation>Отметит как прочитанное и закрыть</translation>
     </message>
@@ -334,7 +334,7 @@
     </message>
     <message>
         <location filename="../usernotofication.ui" line="165"/>
-        <location filename="../usernotofication.cpp" line="140"/>
+        <location filename="../usernotofication.cpp" line="146"/>
         <source>Show Details</source>
         <translation>Показать детали</translation>
     </message>
@@ -349,12 +349,12 @@
         <translation>Продолжение</translation>
     </message>
     <message>
-        <location filename="../usernotofication.cpp" line="74"/>
+        <location filename="../usernotofication.cpp" line="80"/>
         <source> - Update Client</source>
         <translation> - Обновить клиент</translation>
     </message>
     <message>
-        <location filename="../usernotofication.cpp" line="147"/>
+        <location filename="../usernotofication.cpp" line="153"/>
         <source>Hide Details</source>
         <translation>Спрятать подробности</translation>
     </message>

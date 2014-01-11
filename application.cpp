@@ -92,6 +92,28 @@ bool Application::installTranslations()
 }
 
 /*!
+Shows splash screen as long as the service is operating
+\sa Config::setSplashScreen
+*/
+void Application::showSplashScreen(UpdateNode::Service* aService, const QString& aMode)
+{
+    UpdateNode::Config* config = UpdateNode::Config::Instance();
+
+    if(!config->getSplashScreen().isEmpty())
+    {
+        m_oSplashScreen_pic.load(config->getSplashScreen());
+        m_oSplashScreen.setPixmap(m_oSplashScreen_pic);
+        if(aMode=="-messages")
+            m_oSplashScreen.showMessage(QObject::tr("Checking for messages ..."), Qt::AlignCenter | Qt::AlignBottom);
+        else
+            m_oSplashScreen.showMessage(QObject::tr("Checking for updates ..."), Qt::AlignCenter | Qt::AlignBottom);
+        m_oSplashScreen.show();
+        QObject::connect(aService, SIGNAL(done()), &m_oSplashScreen, SLOT(close()));
+        QObject::connect(aService, SIGNAL(doneManager()), &m_oSplashScreen, SLOT(close()));
+    }
+}
+
+/*!
 Relaunches the current client in system's temp directory. Before doing that, the launched client is copied to TMP.
 Once copied, it is checking its checksum against the version in TMP. If the client already exists in TMP and the
 checksum is invalid, the client in TMP gets deleted and this function is re-called.
@@ -198,7 +220,7 @@ bool Application::isAlreadyRunning(const QString& aKey)
 }
 
 /*!
-Checks whether the process is running hidden (unvisible to the user), or not.
+Checks whether the process is running hidden (invisible to the user), or not.
 Returns true if hidden
 \sa Application::setVisible
 */

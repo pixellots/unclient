@@ -113,7 +113,7 @@ int returnANDlaunch(int result)
         exec = exec.replace("[UN_VERSION]", "-");
 
         if(!QProcess::startDetached(exec))
-            QMessageBox::critical(0, "TODO", QObject::tr("Unable to launch '%1'").arg(exec));
+            QMessageBox::critical(0, QString("%1 %2").arg(UPDATENODE_COMPANY_STR).arg(UPDATENODE_APPLICATION_STR), QObject::tr("Unable to launch '%1'").arg(exec));
     }
 
     UpdateNode::Logging() << "unclient finished with return code" << QString::number(result);
@@ -321,23 +321,10 @@ int main(int argc, char *argv[])
     UserMessages messageDialog;
     SingleAppDialog singleDialog;
     MultiAppDialog manageDialog;
-    QSplashScreen splashScreen;
-    QPixmap splashScreen_pic;
 
     if(mode != "-check")
     {
-        if(!config->getSplashScreen().isEmpty())
-        {
-            splashScreen_pic.load(config->getSplashScreen());
-            splashScreen.setPixmap(splashScreen_pic);
-            if(mode=="-messages")
-                splashScreen.showMessage(QObject::tr("Checking for messages ..."), Qt::AlignCenter | Qt::AlignBottom);
-            else
-                splashScreen.showMessage(QObject::tr("Checking for updates ..."), Qt::AlignCenter | Qt::AlignBottom);
-            splashScreen.show();
-            QObject::connect(service, SIGNAL(done()), &splashScreen, SLOT(close()));
-            QObject::connect(service, SIGNAL(doneManager()), &splashScreen, SLOT(close()));
-        }
+        un_app.showSplashScreen(service, mode);
 
         if(config->isSingleMode())
         {

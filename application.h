@@ -27,6 +27,8 @@
 #include <QTimer>
 #include <QSharedMemory>
 #include <QTranslator>
+#include <QSplashScreen>
+#include "updatenode_service.h"
 
 namespace UpdateNode
 {
@@ -44,6 +46,7 @@ namespace UpdateNode
             void killOther();
 
             bool installTranslations();
+            void showSplashScreen(UpdateNode::Service* aService, const QString& aMode);
 
         public slots:
             void setVisible(bool aShown = true);
@@ -51,6 +54,8 @@ namespace UpdateNode
 
 
         private:
+            QSplashScreen m_oSplashScreen;
+            QPixmap m_oSplashScreen_pic;
             QTranslator m_oTranslator;
             QSharedMemory m_oSharedMemory;
             QTimer m_oTimer;

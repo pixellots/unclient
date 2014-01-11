@@ -30,12 +30,12 @@
 #include <QDebug>
 
 #include "osdetection.h"
+
 #ifdef Q_OS_MACX
 #include "maccommander.h"
 #endif
-#ifdef Q_OS_WIN
+
 #include "wincommander.h"
-#endif
 #include "commander.h"
 #include "settings.h"
 #include "localfile.h"
@@ -70,33 +70,33 @@ Native settings depends on the selected platform. On Windows, this refer to the 
 \n
 To get values from your native settings, use following syntax:
 \n
-~~~~~~~~~~~~~~~~~~~~~
+\code
 [@<PATH>:<KEY>]
-~~~~~~~~~~~~~~~~~~~~~
+\endcode
 \n
 Examples:
 \n
-~~~~~~~~~~~~~~~~~~~~~
+\code
 [@HKEY_CURRENT_USER\\MySoft\\Star Runner\\Galaxy:General]
-~~~~~~~~~~~~~~~~~~~~~
+\endcode
 or
-~~~~~~~~~~~~~~~~~~~~~
+\code
 [@[HOME]/.config/UpdateNode/Client.conf:uuid]
-~~~~~~~~~~~~~~~~~~~~~
+\endcode
 \n
 INI Settings
 -------------------------
 You can read ini files from on any system using the following syntax:
 \n
-~~~~~~~~~~~~~~~~~~~~~
+\code
 [INI@<PATH>:<KEY>]
-~~~~~~~~~~~~~~~~~~~~~
+\endcode
 \n
 Examples:
 \n
-~~~~~~~~~~~~~~~~~~~~~
+\code
 [INI@[HOME][UN_SEP]settings.ini:Language]
-~~~~~~~~~~~~~~~~~~~~~
+\endcode
 \n
 Internal Variables (Connected to your update definition of www.updatenode.com)
 -------------------------
@@ -155,7 +155,7 @@ QString Commander::setCommandBasedOnOS() const
 {
     QString command;
 #ifdef Q_OS_LINUX // Linux
-    if(m_oUpdate.isAdminRequired())
+    if(m_oUpdate.isAdminRequired() && !isProcessElevated())
     {
         if(QFile::exists("/usr/bin/gksudo"))
             command = "/usr/bin/gksudo";
@@ -171,13 +171,11 @@ QString Commander::setCommandBasedOnOS() const
 // Do nothing on Windows
 #else
 #ifdef Q_OS_MAC // Mac
-    if(m_oUpdate.isAdminRequired())
+    if(m_oUpdate.isAdminRequired() && !isProcessElevated())
     {
         if(QFile::exists("/usr/bin/cocoasudo"))
             command = "/usr/bin/cocoasudo";
-        else if(QFile::exists("cocoasudo"))
-            command = "cocoasudo";
-        else
+       else
             return command;
     }
 #endif
@@ -199,15 +197,7 @@ Checks whether the current process is already elevated, or not
 */
 bool Commander::isProcessElevated()
 {
-#ifdef Q_OS_WIN
     return UpdateNode::WinCommander::isProcessElevated();
-#else
-#ifdef Q_OS_MACX
-    return UpdateNode::MacCommander::isProcessElevated();
-#else // Q_OS_LINUX & others
-    return false;
-#endif
-#endif
 }
 
 
@@ -322,8 +312,8 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
 #endif
         m_pProcess->start(command, commandParameters);
 
-        // wait 3 minutes for process start
-        if(!m_pProcess->waitForStarted(1000 * 60 * 3))
+        // wait 1 minute for process start
+        if(!m_pProcess->waitForStarted(1000 * 60))
         {
             UpdateNode::Logging() << "Error: Update failed to start:" << m_pProcess->errorString();
             emit progressText(tr("Error: Update '%1' failed to start").arg(m_oUpdate.getTitle()));

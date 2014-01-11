@@ -51,7 +51,6 @@ namespace UpdateNode
 
     #ifdef Q_OS_WIN
         static bool isUAC();
-        static bool getCurrentUserStrSid(LPTSTR *pStrSid);
     private:
         // "A" prefix, otherwise we need the Vista Platform SDK ..
         typedef enum _ATOKEN_INFORMATION_CLASS {

@@ -190,6 +190,11 @@ p, li { white-space: pre-wrap; }
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>treeUpdate</tabstop>
+  <tabstop>textBrowser</tabstop>
+  <tabstop>pshCheck</tabstop>
+  <tabstop>pshUpdate</tabstop>
+  <tabstop>toolCancel</tabstop>
   <tabstop>pshClose</tabstop>
  </tabstops>
  <resources/>

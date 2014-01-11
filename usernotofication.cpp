@@ -42,9 +42,6 @@ UserNotofication::UserNotofication(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //ui->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-    //connect(ui->webView, SIGNAL(linkClicked(const QUrl&)), SLOT(openLink(const QUrl&)));
-
     connect(ui->treeWidget, SIGNAL(itemSelectionChanged()), SLOT(updateSelectedUpdate()));
     connect(ui->pshDetails, SIGNAL(clicked()), SLOT(detailsClicked()));
 

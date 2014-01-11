@@ -129,41 +129,30 @@ bool WinCommander::isProcessElevated()
     DWORD dwReturnLength = 0;
 
     if (!isUAC())
-    {
         return true;
-    }
 
     if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken))
-    {
         return false;
-    }
 
-    //GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS::ATokenElevationType, &elevationType, sizeof(elevationType), &dwReturnLength);
     if (!GetTokenInformation(hToken, (TOKEN_INFORMATION_CLASS)ATokenElevation, &te, sizeof(te), &dwReturnLength))
     {
         CloseHandle(hToken);
         return false;
     }
     else
-    {
         result = te.TokenIsElevated;
-    }
 
     CloseHandle(hToken);
 #else
     QProcess suDetector(0);
-    // if this commands returns root id (0), we are admins
+
     suDetector.start("id -u");
     suDetector.waitForFinished();
     QString commandResult(suDetector.readAll());
     if (commandResult.toInt() != 0 || suDetector.exitStatus() == QProcess::CrashExit)
-    {
         result = false;
-    }
     else
-    {
         result = true;
-    }
 #endif
 
     return result;

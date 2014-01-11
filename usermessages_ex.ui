@@ -139,6 +139,13 @@
    <header>QtWebKit/QWebView</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>toolLeft</tabstop>
+  <tabstop>toolRight</tabstop>
+  <tabstop>webView</tabstop>
+  <tabstop>pshRead</tabstop>
+  <tabstop>pshClose</tabstop>
+ </tabstops>
  <resources>
   <include location="res.qrc"/>
  </resources>

@@ -70,9 +70,11 @@ Logging::~Logging()
 {
     if(m_pFile)
     {
-        *m_pStream << "\n";
+        if(m_pStream)
+            *m_pStream << "\n";
         m_pFile->close();
-        delete m_pStream;
+        if(m_pStream)
+            delete m_pStream;
         delete m_pFile;
     }
 }
