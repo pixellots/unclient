@@ -33,7 +33,6 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 [Files]
 Source: "..\package\unclient.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\package\libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\package\libssl32.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\package\QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\package\QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\package\QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
