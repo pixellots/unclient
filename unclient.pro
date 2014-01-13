@@ -8,6 +8,14 @@ webkit{
 QT += webkit
 }
 
+### version needs to be checked here
+VERSION_HIGH=1
+VERSION_LOW=0
+VERSION_REV=1
+VERSION_BUILD=$$cat(build.no)
+VERSION=1.0
+
+SETUP_NAME=setup_$${VERSION}
 TARGET = unclient
 TEMPLATE = app
 #CONFIG += release
@@ -30,6 +38,7 @@ win32{
 qtwebkit_deploy.commands = $(COPY) "%QTDIR%\\bin\\qtwebkit4.dll" package
 qtwebkit_deploy.target = qtwebkit_deploy
 }
+SETUP_NAME=$${SETUP_NAME}_webkit
 }
 !webkit{
 win32{
@@ -38,9 +47,23 @@ qtwebkit_deploy.target = qtwebkit_deploy
 }
 }
 
+vcredist{
 win32{
-create_package_deploy.commands = $(CHK_DIR_EXISTS) package $(MKDIR) package
-create_package_deploy.target = create _package_deploy
+vc_deploy.commands = $(COPY) "3rdparty\\vcredist_x86.exe" package
+vc_deploy.target = vc_deploy
+}
+SETUP_NAME=$${SETUP_NAME}_vcredist
+}
+!vcredist{
+vc_deploy.commands = 
+vc_deploy.target = vc_deploy
+}
+
+win32{
+clean_package_deploy.commands = -cmd.exe /C $(DEL_DIR) /S/Q package
+clean_package_deploy.target = clean_package_deploy
+create_package_deploy.commands = $(MKDIR) package
+create_package_deploy.target = create_package_deploy
 qtcore_deploy.commands = $(COPY) "%QTDIR%\\bin\\qtcore4.dll" package
 qtcore_deploy.target = qtcore_deploy
 qtgui_deploy.commands = $(COPY) "%QTDIR%\\bin\\qtgui4.dll" package
@@ -51,13 +74,13 @@ qtxml_deploy.commands = $(COPY) "%QTDIR%\\bin\\qtxml4.dll" package
 qtxml_deploy.target = qtxml_deploy
 ssl_package_deploy.commands = $(COPY) c:\\OpenSSL-Win32\\*.dll package
 ssl_package_deploy.target = ssl_package_deploy
-package_deploy.depends = create_package_deploy qtcore_deploy qtgui_deploy qtnetwork_deploy qtxml_deploy qtwebkit_deploy ssl_package_deploy copy_binary
+package_deploy.depends = clean_package_deploy create_package_deploy qtcore_deploy qtgui_deploy qtnetwork_deploy qtxml_deploy qtwebkit_deploy ssl_package_deploy copy_binary vc_deploy
 package_deploy.target = package_deploy
-build_installer.commands = devenv.com installer\\setup.sln /Rebuild SingleImage
+build_installer.commands = iscc installer\\setup.iss /f$${SETUP_NAME}
 build_installer.target = build_installer
 copy_binary.commands = $(COPY) release\\unclient.exe package
 copy_binary.target = copy_binary
-QMAKE_EXTRA_TARGETS += copy_binary build_installer package_deploy create_package_deploy qtcore_deploy qtgui_deploy qtnetwork_deploy qtxml_deploy qtwebkit_deploy ssl_package_deploy
+QMAKE_EXTRA_TARGETS += copy_binary build_installer package_deploy clean_package_deploy create_package_deploy qtcore_deploy qtgui_deploy qtnetwork_deploy qtxml_deploy qtwebkit_deploy ssl_package_deploy vc_deploy
 }
 !win32{
 package_deploy.commands = echo *** UNSUPPORTED ***
@@ -88,13 +111,6 @@ QMAKE_EXTRA_TARGETS += deploy
 macx:CONFIG-=app_bundle
 macx:LIBS += -framework CoreFoundation
 macx:LIBS += -framework Security
-
-### version needs to be checked here
-VERSION_HIGH=1
-VERSION_LOW=0
-VERSION_REV=1
-VERSION_BUILD=$$cat(build.no)
-VERSION=1.0
 
 ### qmake settings - sometimes this is not the reality
 QMAKE_TARGET_COMPANY = UpdateNode
