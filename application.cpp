@@ -212,7 +212,7 @@ bool Application::isAlreadyRunning(const QString& aKey)
     char* data = (char*)m_oSharedMemory.data();
 
     if(data)
-        qMemCopy(data, "0", 1);
+        memcpy(data, "0", 1);
 
     connect(&m_oTimer, SIGNAL(timeout()), this, SLOT(killMeOrNot()));
     m_oTimer.start(500);
@@ -261,7 +261,7 @@ void Application::killOther()
     char* data = (char*)m_oSharedMemory.data();
 
     if(data)
-        qMemCopy(data, "-", 1);
+        memcpy(data, "-", 1);
 
     m_oSharedMemory.unlock();
 }
@@ -281,17 +281,17 @@ void Application::killMeOrNot()
         if(data[0] == '-')
         {
             if(!m_visible)
-                qMemCopy(data, "H", 1);
+                memcpy(data, "H", 1);
             else
-                qMemCopy(data, "S", 1);
+                memcpy(data, "S", 1);
             qApp->quit();
         }
         else
         {
             if(!m_visible)
-                qMemCopy(data, "H", 1);
+                memcpy(data, "H", 1);
             else
-                qMemCopy(data, "S", 1);
+                memcpy(data, "S", 1);
         }
     }
     m_oSharedMemory.unlock();

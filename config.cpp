@@ -88,7 +88,7 @@ Returns a MD5 hashed representation of the API key previously set by Config::set
 */
 QString Config::getKeyHashed() const
 {
-    return QString(QCryptographicHash::hash(getKey().toAscii(), QCryptographicHash::Md5).toHex());
+    return QString(QCryptographicHash::hash(getKey().toLatin1(), QCryptographicHash::Md5).toHex());
 }
 
 /*!

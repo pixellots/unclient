@@ -8,6 +8,8 @@ webkit{
 QT += webkit
 }
 
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
 ### version needs to be checked here
 VERSION_HIGH=1
 VERSION_LOW=0

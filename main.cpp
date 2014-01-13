@@ -20,8 +20,8 @@
 **
 ****************************************************************************/
 
-#include <QtGui/QApplication>
-#include <QtGui/QMessageBox>
+#include <QApplication>
+#include <QMessageBox>
 #include <QSplashScreen>
 #include <QSharedMemory>
 #include <QSystemTrayIcon>
@@ -229,7 +229,7 @@ int main(int argc, char *argv[])
         else if(argument == "-host" && hasNext)
             config->setHost(arguments.at(i+1));
         else if(argument == "-s")
-            config->setSilent(TRUE);
+            config->setSilent(true);
         else if(argument == "-r")
             config->setRelaunch(true);
         else if(argument == "-st")

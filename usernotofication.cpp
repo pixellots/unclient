@@ -25,6 +25,7 @@
 #include "config.h"
 #include "settings.h"
 
+#include "qglobal.h"
 #include <QDesktopServices>
 
 Q_DECLARE_METATYPE ( UpdateNode::Update )
@@ -105,7 +106,11 @@ void UserNotofication::updateView()
         parent->setSelected(true);
     }
 
+#if QT_VERSION >= 0x050000
+    ui->treeWidget->header()->setSectionResizeMode(0, QHeaderView::Stretch);
+#else
     ui->treeWidget->header()->setResizeMode(0, QHeaderView::Stretch);
+#endif
     ui->treeWidget->resizeColumnToContents(2);
     ui->treeWidget->resizeColumnToContents(1);
 

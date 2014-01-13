@@ -26,6 +26,11 @@
 #include <QNetworkReply>
 #include <QNetworkProxyFactory>
 
+#include "qglobal.h"
+#if QT_VERSION >= 0x050000
+#include <QUrlQuery>
+#endif
+
 #include "updatenode_service.h"
 #include "config.h"
 #include "settings.h"
@@ -117,6 +122,28 @@ bool Service::checkForUpdates(UpdateNode::Config* aConfig)
     if(!globalConfig->getHost().isEmpty())
         url = url.fromUserInput(globalConfig->getHost());
 
+#if QT_VERSION >= 0x050000
+    QUrlQuery url_query;
+    url_query.addQueryItem("key", globalConfig->getKey());
+
+    if(!globalConfig->getTestKey().isEmpty())
+        url_query.addQueryItem("test", globalConfig->getTestKey());
+
+    url_query.addQueryItem("id", settings.uuid());
+    url_query.addQueryItem("os", UpdateNode::OSDetection::getOS());
+    url_query.addQueryItem("arch", UpdateNode::OSDetection::getArch());
+    url_query.addQueryItem("lang", globalConfig->getLanguage());
+
+    if(aConfig->getVersionCode().isEmpty())
+    {
+        url_query.addQueryItem("productCode", settings.getProductCode(aConfig));
+        url_query.addQueryItem("productVersion", settings.getProductVersion(aConfig));
+    }
+    else
+        url_query.addQueryItem("versionCode", settings.getVersionCode(aConfig));
+
+    url.setQuery(url_query);
+#else
     url.addQueryItem("key", globalConfig->getKey());
 
     if(!globalConfig->getTestKey().isEmpty())
@@ -135,10 +162,13 @@ bool Service::checkForUpdates(UpdateNode::Config* aConfig)
     else
         url.addQueryItem("versionCode", settings.getVersionCode(aConfig));
 
-    UpdateNode::Logging() << "REQUEST: " << url.toString();
+#endif
     request.setUrl(url);
+
+    UpdateNode::Logging() << "REQUEST: " << url.toString();
+
     request.setRawHeader("charset", "utf-8" );
-    request.setRawHeader("User-Agent", QString("UpdateNodeClient %1 (%2)").arg(UPDATENODE_CLIENT_VERSION).arg(globalConfig->getOS()).toAscii());
+    request.setRawHeader("User-Agent", QString("UpdateNodeClient %1 (%2)").arg(UPDATENODE_CLIENT_VERSION).arg(globalConfig->getOS()).toLatin1());
 
     QNetworkReply* reply = m_pManager->get(request);
 
