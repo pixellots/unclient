@@ -47,3 +47,4 @@ debug/
 release/
 gen/
 unclient.pro.user*
+.qmake.stash
