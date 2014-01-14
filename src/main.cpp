@@ -76,6 +76,7 @@ int printHelp()
             + "  -l <lang-code> \tLanguage Code\n"
             + "  -sp <png_file> \tSplash screen (PNG)\n"
             + "  -exec <command>\tLaunches command before terminating\n"
+            + "  -v             \tShows current UpdateNode client version\n"
             + "\n";
 
 #ifdef Q_OS_UNIX
@@ -249,6 +250,11 @@ int main(int argc, char *argv[])
             config->setExec(arguments.at(i+1));
         else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help" || arguments.at(i) == "-help")
             return printHelp();
+        else if(arguments.at(i) == "-v")
+        {
+            printf("%d.%d.%d.%d\n", APP_VERSION_HIGH, APP_VERSION_LOW, APP_VERSION_REV, APP_VERSION_BUILD);
+            return 0;
+        }
         else if(argument == "-update" || argument == "-messages"
                 || argument == "-register" || argument == "-unregister" || argument == "-manager"
                 || argument == "-check" || argument == "-download" || argument == "-execute")
