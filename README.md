@@ -1,6 +1,6 @@
 # Welcome to UpdateNode's unclient
 
-In order to recieve updates and messages with the unclient, you will need to **register** on [updatenode.com](http://updatenode.com).
+In order to receive updates and messages with the unclient, you will need to **register** on [updatenode.com](http://updatenode.com).
 
 ## General
 
