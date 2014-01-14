@@ -257,7 +257,7 @@ void MultiAppDialog::updateCounter()
     QString strMessage;
 
     if(m_iNewUpdates==1)
-        strMessage = tr("There is a new software update available").arg(m_iNewUpdates);
+        strMessage = tr("There is a new software update available");
     else if(m_iNewUpdates>1)
         strMessage = tr("There are %1 new software updates available").arg(m_iNewUpdates);
     else
