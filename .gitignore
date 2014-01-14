@@ -45,4 +45,5 @@ qrc_*.cpp
 *.pdb
 debug/
 release/
+gen/
 unclient.pro.user*

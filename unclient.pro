@@ -22,7 +22,6 @@ VERSION=1.0
 SETUP_NAME=setup_$${VERSION}
 TARGET = unclient
 TEMPLATE = app
-#CONFIG += release
 
 TRANSLATIONS = \
     translations/$${TARGET}_de.ts \
@@ -30,6 +29,102 @@ TRANSLATIONS = \
     translations/$${TARGET}_zh.ts \
     translations/$${TARGET}_es.ts \
     translations/$${TARGET}_ru.ts
+
+### qmake settings - sometimes this is not the reality
+QMAKE_TARGET_COMPANY = UpdateNode
+QMAKE_TARGET_PRODUCT = "UpdateNode Client"
+QMAKE_TARGET_DESCRIPTION = Client for software updates and messages
+QMAKE_TARGET_COPYRIGHT = Copyright by (C) UpdateNode UG. All rights reserved.
+
+DEFINES += \
+    APP_VERSION=$${VERSION} \
+    APP_VERSION_HIGH=$${VERSION_HIGH} \
+    APP_VERSION_LOW=$${VERSION_LOW}   \
+    APP_VERSION_REV=$${VERSION_REV}   \
+    APP_VERSION_BUILD=$${VERSION_BUILD}
+
+INCLUDEPATH += inc gen/ui_inc
+OBJECTS_DIR = gen/obj
+MOC_DIR = gen/moc
+RCC_DIR = gen/rcc
+UI_DIR = gen/ui
+UI_HEADERS_DIR = gen/ui_inc
+UI_SOURCES_DIR = gen/ui_src
+
+SOURCES += src/main.cpp \
+    src/config.cpp \
+    src/settings.cpp \
+    src/xmlparser.cpp \
+    src/product.cpp \
+    src/productversion.cpp \
+    src/update.cpp \
+    src/message.cpp \
+    src/downloader.cpp \
+    src/osdetection.cpp \
+    src/commander.cpp \
+    src/localfile.cpp \
+    src/singleappdialog.cpp \
+    src/usernotofication.cpp \
+    src/usermessages.cpp \
+    src/updatenode_service.cpp \
+    src/version.cpp \
+    src/application.cpp \
+    src/systemtray.cpp \
+    src/multiappdialog.cpp \
+    src/logging.cpp \
+    src/helpdialog.cpp \
+    src/textbrowser.cpp \
+    src/wincommander.cpp
+
+macx:SOURCES += src/maccommander.cpp
+macx:HEADERS += inc/maccommander.h
+
+HEADERS += \
+    inc/config.h \
+    inc/settings.h \
+    inc/version.h \
+    inc/xmlparser.h \
+    inc/product.h \
+    inc/productversion.h \
+    inc/update.h \
+    inc/message.h \
+    inc/downloader.h \
+    inc/osdetection.h \
+    inc/commander.h \
+    inc/localfile.h \
+    inc/singleappdialog.h \
+    inc/status.h \
+    inc/usernotofication.h \
+    inc/usermessages.h \
+    inc/updatenode_service.h \
+    inc/application.h \
+    inc/systemtray.h \
+    inc/multiappdialog.h \
+    inc/logging.h \
+    inc/helpdialog.h \
+    inc/textbrowser.h \
+    inc/wincommander.h
+
+FORMS += \
+    forms/singleappdialog.ui \
+    forms/usernotofication.ui \
+    forms/usermessages.ui \
+    forms/multiappdialog.ui \
+    forms/helpdialog.ui \
+    forms/usermessages_ex.ui
+
+RESOURCES += res.qrc \
+    translations.qrc
+
+win32{
+### on Windows we need some additional libs for the UAC
+LIBS+= Shell32.lib Advapi32.lib
+### rc file for Windows and the above QMAKE settings does not work perfect
+RC_FILE = unclient.rc
+### do not elevate automatically
+QMAKE_LFLAGS_WINDOWS += /MANIFESTUAC:level=\'asInvoker\'
+CONFIG += embed_manifest_exe
+}
 
 ### when deploying, always generate new qm files
 updateqm.commands = lrelease unclient.pro
@@ -116,90 +211,3 @@ macx:CONFIG-=app_bundle
 macx:LIBS += -framework CoreFoundation
 macx:LIBS += -framework Security
 
-### qmake settings - sometimes this is not the reality
-QMAKE_TARGET_COMPANY = UpdateNode
-QMAKE_TARGET_PRODUCT = "UpdateNode Client"
-QMAKE_TARGET_DESCRIPTION = Client for software updates and messages
-QMAKE_TARGET_COPYRIGHT = Copyright by (C) UpdateNode UG. All rights reserved.
-
-DEFINES += \
-    APP_VERSION=$${VERSION} \
-    APP_VERSION_HIGH=$${VERSION_HIGH} \
-    APP_VERSION_LOW=$${VERSION_LOW}   \
-    APP_VERSION_REV=$${VERSION_REV}   \
-    APP_VERSION_BUILD=$${VERSION_BUILD}
-
-SOURCES += main.cpp \
-    config.cpp \
-    settings.cpp \
-    xmlparser.cpp \
-    product.cpp \
-    productversion.cpp \
-    update.cpp \
-    message.cpp \
-    downloader.cpp \
-    osdetection.cpp \
-    commander.cpp \
-    localfile.cpp \
-    singleappdialog.cpp \
-    usernotofication.cpp \
-    usermessages.cpp \
-    updatenode_service.cpp \
-    version.cpp \
-    application.cpp \
-    systemtray.cpp \
-    multiappdialog.cpp \
-    logging.cpp \
-    helpdialog.cpp \
-    textbrowser.cpp \
-    wincommander.cpp
-
-macx:SOURCES += maccommander.cpp
-macx:HEADERS += maccommander.h
-
-HEADERS += \
-    config.h \
-    settings.h \
-    version.h \
-    xmlparser.h \
-    product.h \
-    productversion.h \
-    update.h \
-    message.h \
-    downloader.h \
-    osdetection.h \
-    commander.h \
-    localfile.h \
-    singleappdialog.h \
-    status.h \
-    usernotofication.h \
-    usermessages.h \
-    updatenode_service.h \
-    application.h \
-    systemtray.h \
-    multiappdialog.h \
-    logging.h \
-    helpdialog.h \
-    textbrowser.h \
-    wincommander.h
-
-FORMS += \
-    singleappdialog.ui \
-    usernotofication.ui \
-    usermessages.ui \
-    multiappdialog.ui \
-    helpdialog.ui \
-    usermessages_ex.ui
-
-RESOURCES += res.qrc \
-    translations.qrc
-
-win32{
-### on Windows we need some additional libs for the UAC
-LIBS+= Shell32.lib Advapi32.lib
-### rc file for Windows and the above QMAKE settings does not work perfect
-RC_FILE = unclient.rc
-### do not elevate automatically
-QMAKE_LFLAGS_WINDOWS += /MANIFESTUAC:level=\'asInvoker\'
-CONFIG += embed_manifest_exe
-}
