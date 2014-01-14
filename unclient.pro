@@ -6,16 +6,10 @@ QT = network \
 ### QT_WEBKIT_LIB
 webkit{
 lessThan(QT_MAJOR_VERSION, 5): QT += webkit
-}
-
-greaterThan(QT_MAJOR_VERSION, 4)
-{
-webkit{
-QT += webkitwidgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += webkitwidgets
 }
 !webkit{
-QT += widgets
-}
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 }
 
 ### version needs to be checked here
