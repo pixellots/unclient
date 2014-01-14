@@ -5,10 +5,18 @@ QT = network \
 
 ### QT_WEBKIT_LIB
 webkit{
-QT += webkit
+lessThan(QT_MAJOR_VERSION, 5): QT += webkit
 }
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4)
+{
+webkit{
+QT += webkitwidgets
+}
+!webkit{
+QT += widgets
+}
+}
 
 ### version needs to be checked here
 VERSION_HIGH=1
@@ -109,7 +117,7 @@ QMAKE_EXTRA_TARGETS += deploy
 #### MAC: uncomment 'ICON += images/unclient.icns' 
 ####      and comment 'CONFIG-=app_bundle'
 ####      if you need a bundle instead of a single binary
-#ICON += images/unclient.icns
+# ICON += images/unclient.icns
 macx:CONFIG-=app_bundle
 macx:LIBS += -framework CoreFoundation
 macx:LIBS += -framework Security

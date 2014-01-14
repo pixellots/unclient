@@ -26,7 +26,12 @@
 #include "localfile.h"
 
 #ifdef QT_WEBKIT_LIB
+#include "qglobal.h"
+#if QT_VERSION >= 0x050000
+#include <QtWebKitWidgets>
+#else
 #include <QtWebKit>
+#endif
 #include "ui_usermessages_ex.h"
 #else
 #include <QTextBrowser>
