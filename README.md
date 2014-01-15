@@ -1,8 +1,15 @@
 # Welcome to UpdateNode's unclient
 
+UpdateNode is a Update and Messaging System for your software.
+
 In order to receive updates and messages with the unclient, you will need to **register** on [updatenode.com](http://updatenode.com).
 
 ## General
+
+unclient is a Qt based cross platform client to execute updates and show messages based on your definition made on UpdateNode. The client communicates with the service, downloads all required data and executes the provided command based on your definition. Messages can be displayed to customers in 3 different ways: as simple HTML, HTML using webkit (JS, HTML5, etc.), or in an external browser. 
+Read more about how to use and various ways to customize unclient in our [Wiki](https://bitbucket.org/updatenode/unclient/wiki)
+
+You are allowed to use unclient with UpdateNode service only. We do not guarantee the correct execution of your update defined on UpdateNode. You are responsible to test your update scenarios and to verify its integration into your own software. unclient does not have any automatic build-in mechanism to do self-updates - if you want to update unclient, you need to send an update for your software and include the new unclient there, or you might launch unclient with all needed settings to replace itself. 
 
 ## License
 
@@ -47,3 +54,6 @@ Full license description file: LICENSE.GPL
 ## Browse the Wiki
 
 Read more about features and all the different ways to call and communicate with unclient in our [Wiki](https://bitbucket.org/updatenode/unclient/wiki)
+
+*Copyright (C) 2014 UpdateNode UG (haftungsbeschränkt)*
+
