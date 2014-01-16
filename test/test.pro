@@ -52,6 +52,9 @@ HEADERS += \
     ../inc/logging.h \
     ../inc/updatenode_service.h
 
+macx:SOURCES += ../src/maccommander.cpp
+macx:HEADERS += ../inc/maccommander.h
+
 win32{
 LIBS+= Shell32.lib Advapi32.lib
 }

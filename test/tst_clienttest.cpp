@@ -182,6 +182,7 @@ void ClientTest::test_commander_run()
     UpdateNode::Commander commander;
 
     UpdateNode::Update exec_update;
+#ifndef Q_OS_MAC
     exec_update.setRequiresAdmin(false);
     exec_update.setCommand("dir");
     exec_update.setCommandLine("..");
@@ -189,8 +190,8 @@ void ClientTest::test_commander_run()
     QVERIFY2(commander.run(exec_update), qPrintable(exec_update.getCommand() + " " + exec_update.getCommandLine()));
     QVERIFY(commander.waitForFinished());
     QVERIFY2(commander.getReturnCode()==0, qPrintable(QString::number(commander.getReturnCode())));
-
-#ifdef Q_OS_LINUX
+#endif
+#ifndef Q_OS_WIN
     exec_update.setCommand("/bin/sh");
     exec_update.setCommandLine("-c\"echo this is a unit test only > test.log\"");
     QVERIFY2(commander.run(exec_update), qPrintable(exec_update.getCommand() + " " + exec_update.getCommandLine()));
@@ -199,7 +200,7 @@ void ClientTest::test_commander_run()
     QVERIFY2(QFile::remove("test.log"), qPrintable(commander.readStdOut()));
 
     exec_update.setCommand("/bin/sh");
-    exec_update.setCommandLine("-c \"dir .. | grep cpp > test.log\"");
+    exec_update.setCommandLine("-c \"ls -l .. | grep cpp > test.log\"");
     QVERIFY2(commander.run(exec_update), qPrintable(exec_update.getCommand() + " " + exec_update.getCommandLine()));
     commander.waitForFinished();
     QVERIFY2(commander.getReturnCode()==0, qPrintable(QString::number(commander.getReturnCode())));
@@ -379,7 +380,7 @@ void ClientTest::test_service_check()
     QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getTargetVersion().getName() == "unittest_2_name");
     QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getType() == 2);
     QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getCommand() == "[UN_COPY_COMMAND]");
-    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getCommandLine() == "[UN_FILE] [TMP][UN_SEP]test.unit");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getCommandLine() == "[UN_FILE] test.unit");
     QVERIFY(UpdateNode::Config::Instance()->updates().at(0).isAdminRequired() == false);
     QVERIFY(UpdateNode::Config::Instance()->messages().at(0).getTitle() == "unittest_message1");
     QVERIFY(UpdateNode::Config::Instance()->messages().at(0).getMessage().toUtf8() == "<p>unittest_message1</p>");
@@ -402,7 +403,7 @@ void ClientTest::test_service_check()
     commander.waitForFinished();
 
     commander.setUpdate(UpdateNode::Config::Instance()->updates().at(0));
-    QVERIFY(QFile::exists(commander.resolve("[TMP][UN_SEP]test.unit")));
+    QVERIFY(QFile::exists(commander.resolve("test.unit")));
 
     QVERIFY(commander.getReturnCode()==0);
 
@@ -426,7 +427,7 @@ void ClientTest::test_service_check()
     QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getTargetVersion().getName() == "unittest_3_name");
     QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getType() == 1);
     QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getCommand() == "[UN_COPY_COMMAND]");
-    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getCommandLine() == "[UN_FILE] [TMP][UN_SEP][UN_FILENAME].tmp");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getCommandLine() == "[UN_FILE] [UN_FILENAME].tmp");
     QVERIFY(UpdateNode::Config::Instance()->updates().at(0).isAdminRequired() == false);
 
     // execute command
@@ -434,7 +435,7 @@ void ClientTest::test_service_check()
     commander.waitForFinished();
 
     commander.setUpdate(UpdateNode::Config::Instance()->updates().at(0));
-    QVERIFY(QFile::exists(commander.resolve("[TMP][UN_SEP][UN_FILENAME].tmp")));
+    QVERIFY(QFile::exists(commander.resolve("[UN_FILENAME].tmp")));
 
     QVERIFY(commander.getReturnCode()==0);
 }
