@@ -5,7 +5,6 @@
 #-------------------------------------------------
 
 QT       += network xml testlib
-
 QT       -= gui
 
 TARGET = test
@@ -14,42 +13,44 @@ CONFIG   -= app_bundle
 DESTDIR = ./
 TEMPLATE = app
 
+INCLUDEPATH += ../inc
 
 SOURCES += \
-    ../commander.cpp \
-    ../config.cpp \
-    ../localfile.cpp \
-    ../downloader.cpp \
-    ../productversion.cpp \
-    ../product.cpp \
-    ../osdetection.cpp \
-    ../message.cpp \
-    ../settings.cpp \
-    ../update.cpp \
-    ../xmlparser.cpp \
-    ../wincommander.cpp \
-    ../version.cpp \
+    ../src/commander.cpp \
+    ../src/config.cpp \
+    ../src/localfile.cpp \
+    ../src/downloader.cpp \
+    ../src/productversion.cpp \
+    ../src/product.cpp \
+    ../src/osdetection.cpp \
+    ../src/message.cpp \
+    ../src/settings.cpp \
+    ../src/update.cpp \
+    ../src/xmlparser.cpp \
+    ../src/wincommander.cpp \
+    ../src/version.cpp \
     tst_clienttest.cpp \
-    ../logging.cpp \
-    ../updatenode_service.cpp
-DEFINES += SRCDIR=..
+    ../src/logging.cpp \
+    ../src/updatenode_service.cpp
+
+DEFINES += SRCDIR=../src
 
 HEADERS += \
-    ../commander.h \
-    ../config.h \
-    ../localfile.h \
-    ../downloader.h \
-    ../productversion.h \
-    ../product.h \
-    ../osdetection.h \
-    ../message.h \
-    ../settings.h \
-    ../update.h \
-    ../xmlparser.h \
-    ../wincommander.h \
-    ../version.h \
-    ../logging.h \
-    ../updatenode_service.h
+    ../inc/commander.h \
+    ../inc/config.h \
+    ../inc/localfile.h \
+    ../inc/downloader.h \
+    ../inc/productversion.h \
+    ../inc/product.h \
+    ../inc/osdetection.h \
+    ../inc/message.h \
+    ../inc/settings.h \
+    ../inc/update.h \
+    ../inc/xmlparser.h \
+    ../inc/wincommander.h \
+    ../inc/version.h \
+    ../inc/logging.h \
+    ../inc/updatenode_service.h
 
 win32{
 LIBS+= Shell32.lib Advapi32.lib

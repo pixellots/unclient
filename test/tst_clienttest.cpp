@@ -24,15 +24,15 @@
 #include <QtTest/QtTest>
 #include <QDateTime>
 
-#include "../commander.h"
-#include "../update.h"
-#include "../productversion.h"
-#include "../version.h"
-#include "../config.h"
-#include "../downloader.h"
-#include "../localfile.h"
-#include "../settings.h"
-#include "../updatenode_service.h"
+#include "commander.h"
+#include "update.h"
+#include "productversion.h"
+#include "version.h"
+#include "config.h"
+#include "downloader.h"
+#include "localfile.h"
+#include "settings.h"
+#include "updatenode_service.h"
 
 class ClientTest : public QObject
 {
@@ -340,7 +340,7 @@ void ClientTest::test_service_check()
     UpdateNode::Service service;
 
     UpdateNode::Config::Instance()->setKey("73ddf26f0d79fdb70b5dcfe738fbe685");
-    UpdateNode::Config::Instance()->setTestKey("ef5dc6f7019738a18ee6b1573bcfbf5c");
+    //UpdateNode::Config::Instance()->setTestKey("ef5dc6f7019738a18ee6b1573bcfbf5c");
     UpdateNode::Config::Instance()->setProductCode("unittest");
     UpdateNode::Config::Instance()->setVersion("3.0");
 
@@ -450,7 +450,7 @@ void ClientTest::test_settings_register()
     QVERIFY(settings.registerVersion());
     UpdateNode::Config::Instance()->setProductCode("");
     UpdateNode::Config::Instance()->setVersion("");
-    QVERIFY(settings.getRegisteredVersion());
+    settings.getRegisteredVersion();
     QVERIFY(UpdateNode::Config::Instance()->configurations().size() == 1);
     for(int i = 0; i < UpdateNode::Config::Instance()->configurations().size(); i++)
     {
@@ -462,7 +462,7 @@ void ClientTest::test_settings_register()
     UpdateNode::Config::Instance()->setProductCode("unittest_register_test");
     UpdateNode::Config::Instance()->setVersion("1.0");
     QVERIFY(settings.unRegisterVersion());
-    QVERIFY(settings.getRegisteredVersion());
+    settings.getRegisteredVersion();
     QVERIFY(UpdateNode::Config::Instance()->configurations().size() == 0);
 }
 
