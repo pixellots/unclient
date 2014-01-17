@@ -161,6 +161,9 @@ void Downloader::downloadFinished(QNetworkReply *reply)
         UpdateNode::Logging() << "Download of " << url.toEncoded().constData() << " failed: " << reply->errorString();
     else
     {
+        if(!reply->canReadLine())
+            return;
+
         QString filename;
         filename = UpdateNode::LocalFile::getDownloadLocation(url.toString());
 
@@ -168,10 +171,11 @@ void Downloader::downloadFinished(QNetworkReply *reply)
             UpdateNode::Logging() << "Download of " << url.toEncoded().constData() << " succeeded (saved to " << filename << ")";
     }
 
-    m_oCurrentDownloads.remove(reply);
-    reply->deleteLater();
-
-    emit done(update, error, errorString);
+    if(m_oCurrentDownloads.remove(reply)!=0)
+    {
+        emit done(update, error, errorString);
+        reply->deleteLater();
+    }
 }
 
 /*!

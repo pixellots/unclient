@@ -35,6 +35,7 @@
 #include "downloader.h"
 #include "settings.h"
 #include "logging.h"
+#include "version.h"
 
 Q_DECLARE_METATYPE ( UpdateNode::Update )
 Q_DECLARE_METATYPE ( UpdateNode::Config* )
@@ -229,6 +230,9 @@ void MultiAppDialog::updateView(UpdateNode::Config* aConfig /* = NULL */)
     product->setFlags(Qt::ItemIsEnabled);
 
     QList<UpdateNode::Update> update_list = config->updates();
+
+    qSort(update_list.begin(), update_list.end(), UpdateNode::Version::toDescending);
+
     for(int i = 0; i < update_list.size(); i++)
     {
         QTreeWidgetItem* parent = new QTreeWidgetItem(product);
@@ -418,7 +422,7 @@ void MultiAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
             m_pUI->pshCheck->show();
             m_pUI->labelProgress->setText(tr("Update '%1' failed with error %2").arg(m_oCurrentUpdate.getTitle()).arg(aExitCode));
 
-            UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << " updated failed!";
+            UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << "updated failed - ErrorCode " << aExitCode;
             m_currentItem->setTextColor(0, QColor("red"));
         }
     }

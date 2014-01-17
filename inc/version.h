@@ -24,6 +24,7 @@
 #define VERSION_H
 
 #include <QString>
+#include "update.h"
 
 #define UPDATENODE_CLIENT_VERSION "1.0"
 
@@ -33,6 +34,9 @@ namespace UpdateNode
     {
         public:
             static int compare(const QString& aVersionA, const QString& aVersionB);
+            static bool toAscending(const UpdateNode::Update& a, const UpdateNode::Update& b);
+            static bool toDescending(const UpdateNode::Update& a, const UpdateNode::Update& b);
+
     };
 }
 

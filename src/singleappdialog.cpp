@@ -122,11 +122,6 @@ void SingleAppDialog::install()
     m_pUi->pushButton->setText(QObject::tr("Close"));
 }
 
-bool SingleAppDialog::toAssending(const UpdateNode::Update& a, const UpdateNode::Update& b)
-{
-    return UpdateNode::Version::compare(a.getTargetVersion().getVersion(), b.getTargetVersion().getVersion()) == -1;
-}
-
 void SingleAppDialog::serviceDone()
 {
     UpdateNode::Config* config = UpdateNode::Config::Instance();
@@ -148,7 +143,7 @@ void SingleAppDialog::serviceDone()
     if(!m_bExecuteOnly)
     {
         QList<UpdateNode::Update> update_list = config->updates();
-        qSort(update_list.begin(), update_list.end(), SingleAppDialog::toAssending);
+        qSort(update_list.begin(), update_list.end(), UpdateNode::Version::toAscending);
         config->clear();
         config->addUpdate(update_list.at(0));
 

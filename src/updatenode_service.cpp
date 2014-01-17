@@ -101,6 +101,7 @@ bool Service::checkForUpdates()
         bool result = true;
         for(int i = 0; i < config->configurations().size(); i++)
             result = result && checkForUpdates(config->configurations().at(i));
+
         return result;
     }
 
@@ -204,13 +205,8 @@ void Service::requestReceived(QNetworkReply* reply)
         }
         else if (v >= 300 && v < 400) // Redirection
         {
-            QUrl newUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
-            newUrl = reply->url().resolved(newUrl);
-
-            QNetworkAccessManager *manager = reply->manager();
-            QNetworkRequest redirection(newUrl);
-            manager->get(redirection);
-
+            // Error
+            UpdateNode::Logging() << "ERROR: Redirection not supported";
             return;
         }
     }
@@ -220,7 +216,7 @@ void Service::requestReceived(QNetworkReply* reply)
         UpdateNode::Logging() << "ERROR: " << reply->errorString();
     }
 
-    if(!config->product().getIconUrl().isEmpty())
+    if(reply->error() == QNetworkReply::NoError && !config->product().getIconUrl().isEmpty())
     {
         if(!m_pDownloader)
             m_pDownloader = new UpdateNode::Downloader();

@@ -72,3 +72,22 @@ int Version::compare(const QString &aVersionA, const QString &aVersionB)
     }
     return 0;
 }
+
+/*!
+Compares two UpdateNode::Update objects, based on their target version
+\sa Version::compare
+*/
+bool Version::toAscending(const UpdateNode::Update& a, const UpdateNode::Update& b)
+{
+    return UpdateNode::Version::compare(a.getTargetVersion().getVersion(), b.getTargetVersion().getVersion()) == -1;
+}
+
+/*!
+Compares two UpdateNode::Update objects, based on their target version
+\sa Version::compare
+*/
+bool Version::toDescending(const UpdateNode::Update& a, const UpdateNode::Update& b)
+{
+    return UpdateNode::Version::compare(a.getTargetVersion().getVersion(), b.getTargetVersion().getVersion()) == 1;
+}
+
