@@ -75,8 +75,9 @@ MultiAppDialog::MultiAppDialog(QWidget *parent) :
 
     connect(m_pUI->treeUpdate, SIGNAL(itemSelectionChanged()), SLOT(updateSelectedUpdate()));
     connect(m_pUI->treeUpdate, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(checkSelection()));
+    connect(m_pUI->treeUpdate, SIGNAL(customContextMenuRequested(QPoint)), SLOT(contextMenu(QPoint)));
 
-
+    m_pUI->treeUpdate->setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
 MultiAppDialog::~MultiAppDialog()
@@ -90,6 +91,24 @@ void MultiAppDialog::init(UpdateNode::Service* aService)
 
     connect(m_pService, SIGNAL(done()), SLOT(serviceDone()));
     connect(m_pService, SIGNAL(doneManager()), SLOT(serviceDoneManager()));
+}
+
+void MultiAppDialog::initView()
+{
+    m_iNewUpdates = 0;
+    m_pUI->treeUpdate->clear();
+    m_pUI->textBrowser->setHtml("");
+
+    QFont font;
+    font.setPointSize(qApp->font().pointSize()+1);
+
+    m_pIgnoredItem = new QTreeWidgetItem();
+    font.setItalic(true);
+    m_pIgnoredItem->setFont(0, font);
+    m_pIgnoredItem->setTextColor(0, QColor::fromRgb(175,175,175));
+    m_pIgnoredItem->setText(0, tr("Ignored"));
+    m_pIgnoredItem->setFlags(Qt::ItemIsEnabled);
+    m_pIgnoredItem->setHidden(true);
 }
 
 void MultiAppDialog::changeEvent(QEvent *e)
@@ -130,15 +149,41 @@ void MultiAppDialog::checkSelection()
         m_pUI->pshUpdate->setEnabled(false);
 }
 
+#include <QMenu>
+void MultiAppDialog::contextMenu(const QPoint& pos)
+{
+    QPoint globalPos = m_pUI->treeUpdate->mapToGlobal(pos);
+
+    QMenu myMenu;
+
+    if(!m_pUI->treeUpdate->currentItem()->parent())
+        return;
+    else if(m_pUI->treeUpdate->currentItem()->parent()->text(0) == tr("Ignored"))
+        myMenu.addAction(tr("Don't ignore update"));
+    else
+        myMenu.addAction(tr("Ignore update"));
+
+    QAction* selectedItem = myMenu.exec(globalPos);
+    if(selectedItem)
+    {
+        UpdateNode::Settings settings;
+        UpdateNode::Update update = m_pUI->treeUpdate->currentItem()->data(0, Qt::UserRole).value<UpdateNode::Update>();
+        settings.setIgnoreUpdate(update.getCode(), selectedItem->text() == tr("Ignore update"));
+
+        if(UpdateNode::Config::Instance()->isSingleMode())
+            QTimer::singleShot(0, this, SLOT(serviceDone()));
+        else
+            QTimer::singleShot(0, this, SLOT(serviceDoneManager()));
+    }
+}
+
 void MultiAppDialog::serviceDone()
 {
     UpdateNode::Config* config = UpdateNode::Config::Instance();
     
     setWindowTitle(config->product().getName() + tr(" - Update Manager"));
 
-    m_iNewUpdates = 0;
-    m_pUI->treeUpdate->clear();
-    m_pUI->textBrowser->setHtml("");
+    initView();
 
     if(!config->mainIcon().isEmpty())
         setWindowIcon(QPixmap(config->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
@@ -171,9 +216,7 @@ void MultiAppDialog::serviceDoneManager()
 
     setWindowTitle(tr("Software Update Manager"));
 
-    m_iNewUpdates = 0;
-    m_pUI->treeUpdate->clear();
-    m_pUI->textBrowser->setHtml("");
+    initView();
 
     if(!globalConfig->mainIcon().isEmpty())
         setWindowIcon(QPixmap(globalConfig->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
@@ -211,6 +254,7 @@ void MultiAppDialog::cancelProgress()
 void MultiAppDialog::updateView(UpdateNode::Config* aConfig /* = NULL */)
 {
     UpdateNode::Config* config;
+    UpdateNode::Settings settings;
 
     if(aConfig)
         config = aConfig;
@@ -235,18 +279,32 @@ void MultiAppDialog::updateView(UpdateNode::Config* aConfig /* = NULL */)
 
     for(int i = 0; i < update_list.size(); i++)
     {
-        QTreeWidgetItem* parent = new QTreeWidgetItem(product);
-        parent->setText(0, update_list.at(i).getTitle() + tr(" (Size: %1)").arg(update_list.at(i).getFileSize()));
-        parent->setCheckState(0, Qt::Checked);
-        parent->setData(0, Qt::UserRole, QVariant::fromValue(update_list.at(i)));
-        parent->setData(0, Qt::UserRole+1, QVariant::fromValue(config));
-        if(m_pUI->treeUpdate->topLevelItemCount() == 1 && product->childCount() == 1)
-            parent->setSelected(true);
+        QTreeWidgetItem* updateItem;
 
-        m_iNewUpdates++;
+        if(settings.isUpdateIgnored(update_list.at(i).getCode()))
+        {
+            updateItem = new QTreeWidgetItem(m_pIgnoredItem);
+            updateItem->setText(0, product->text(0) + ": " + update_list.at(i).getTitle() + tr(" (Size: %1)").arg(update_list.at(i).getFileSize()));
+        }
+        else
+        {
+            m_iNewUpdates++;
+            updateItem = new QTreeWidgetItem(product);
+            updateItem->setCheckState(0, Qt::Checked);
+            updateItem->setText(0, update_list.at(i).getTitle() + tr(" (Size: %1)").arg(update_list.at(i).getFileSize()));
+        }
+
+        updateItem->setData(0, Qt::UserRole, QVariant::fromValue(update_list.at(i)));
+        updateItem->setData(0, Qt::UserRole+1, QVariant::fromValue(config));
+
+        if(m_pUI->treeUpdate->topLevelItemCount() == 1 && updateItem->parent()!=m_pIgnoredItem && product->childCount() == 1)
+            updateItem->setSelected(true);
     }
 
-    product->setExpanded(true);
+    if(product->childCount()==0)
+        delete product;
+    else
+        product->setExpanded(true);
 
     m_pUI->pshUpdate->show();
     if(m_iNewUpdates==0)
@@ -268,6 +326,9 @@ void MultiAppDialog::updateCounter()
         strMessage = tr("Your software is up to date");
 
     m_pUI->labelTitle->setText(strMessage);
+
+    m_pUI->treeUpdate->addTopLevelItem(m_pIgnoredItem);
+    m_pIgnoredItem->setHidden(m_pIgnoredItem->childCount()==0);
 }
 
 void MultiAppDialog::refresh()
@@ -308,9 +369,9 @@ void MultiAppDialog::startInstall()
     if(*it)
     {
         UpdateNode::Logging() << (*it)->text(0);
-        m_currentItem = (*it);
-        m_currentItem->setSelected(true);
-        UpdateNode::Update update = m_currentItem->data(0, Qt::UserRole).value<UpdateNode::Update>();
+        m_pCurrentItem = (*it);
+        m_pCurrentItem->setSelected(true);
+        UpdateNode::Update update = m_pCurrentItem->data(0, Qt::UserRole).value<UpdateNode::Update>();
         m_pUI->labelProgress->setText(tr("Downloading update %1 ...").arg(update.getTitle()));
         m_pDownloader->doDownload(update.getDownloadLink(), update);
         return;
@@ -367,12 +428,12 @@ void MultiAppDialog::install()
 
     if(!m_oCommander.run(m_oCurrentUpdate))
     {
-        m_currentItem->setTextColor(0, QColor("red"));
+        m_pCurrentItem->setTextColor(0, QColor("red"));
 
         QMessageBox::critical(this, m_oCurrentUpdate.getTitle(), tr("Update failed:<br>%1").arg(tr("Unable to execute the command!")));
 
-        m_currentItem->setCheckState(0, Qt::Unchecked);
-        m_currentItem->setFlags(Qt::NoItemFlags);
+        m_pCurrentItem->setCheckState(0, Qt::Unchecked);
+        m_pCurrentItem->setFlags(Qt::NoItemFlags);
         m_bIsInstalling = false;
         startInstall();
     }
@@ -409,12 +470,12 @@ void MultiAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
                     settings.setNewVersion(UpdateNode::Config::Instance(), UpdateNode::Config::Instance()->product(), m_oCurrentUpdate.getTargetVersion());
                 else
                 {
-                    UpdateNode::Config* config = m_currentItem->data(0, Qt::UserRole+1).value<UpdateNode::Config*>();
+                    UpdateNode::Config* config = m_pCurrentItem->data(0, Qt::UserRole+1).value<UpdateNode::Config*>();
                     settings.setNewVersion(config, config->product(), m_oCurrentUpdate.getTargetVersion());
                 }
             }
 
-            m_currentItem->setTextColor(0, QColor("green"));
+            m_pCurrentItem->setTextColor(0, QColor("green"));
         }
         else
         {
@@ -423,19 +484,19 @@ void MultiAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
             m_pUI->labelProgress->setText(tr("Update '%1' failed with error %2").arg(m_oCurrentUpdate.getTitle()).arg(aExitCode));
 
             UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << "updated failed - ErrorCode " << aExitCode;
-            m_currentItem->setTextColor(0, QColor("red"));
+            m_pCurrentItem->setTextColor(0, QColor("red"));
         }
     }
     else
     {
         UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << " crashed!";
-        m_currentItem->setTextColor(0, QColor("red"));
+        m_pCurrentItem->setTextColor(0, QColor("red"));
     }
 
     settings.setUpdate(m_oCurrentUpdate, UpdateNode::LocalFile::getDownloadLocation(m_oCurrentUpdate.getDownloadLink()), aExitCode);
 
-    m_currentItem->setCheckState(0, Qt::Unchecked);
-    m_currentItem->setFlags(Qt::NoItemFlags);
+    m_pCurrentItem->setCheckState(0, Qt::Unchecked);
+    m_pCurrentItem->setFlags(Qt::NoItemFlags);
     m_bIsInstalling = false;
     startInstall();
 }

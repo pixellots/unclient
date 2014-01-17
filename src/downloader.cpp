@@ -115,9 +115,7 @@ bool Downloader::saveToDisk(const QString &filename, QIODevice *data, const QStr
 
     if (!file.open(QIODevice::WriteOnly))
     {
-        fprintf(stderr, "Could not open %s for writing: %s\n",
-             qPrintable(filename),
-             qPrintable(file.errorString()));
+        UpdateNode::Logging() << "Could not open " << filename <<  " for writing: " << file.errorString();
         return false;
     }
 
@@ -171,11 +169,12 @@ void Downloader::downloadFinished(QNetworkReply *reply)
             UpdateNode::Logging() << "Download of " << url.toEncoded().constData() << " succeeded (saved to " << filename << ")";
     }
 
-    if(m_oCurrentDownloads.remove(reply)!=0)
-    {
+    m_oCurrentDownloads.remove(reply);
+
+    if(!isDownloading())
         emit done(update, error, errorString);
-        reply->deleteLater();
-    }
+
+    reply->deleteLater();
 }
 
 /*!

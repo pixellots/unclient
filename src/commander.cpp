@@ -270,7 +270,7 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
                     description = m_oUpdate.getTitle() ;
 
                 if(command.indexOf("gksudo")>-1)
-                    commandParameters = splitCommandLine("--description \"" + description + "\"\"" + resolve(qApp->applicationFilePath() + " -copy " + m_oUpdate.getCommandLine()) + "\"");
+                    commandParameters = splitCommandLine("--description \"" + description + "\"\"" + resolve(qApp->applicationFilePath() + " -copy\" " + m_oUpdate.getCommandLine()));
                 else if(command.indexOf("pkexec")>-1)
                     commandParameters = splitCommandLine(resolve(qApp->applicationFilePath() + " -copy " + m_oUpdate.getCommandLine()));
                 else

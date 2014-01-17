@@ -43,6 +43,7 @@ class MultiAppDialog : public QDialog
         ~MultiAppDialog();
 
         void init(UpdateNode::Service* aService);
+        void initView();
 
     private:
         void install();
@@ -57,6 +58,7 @@ class MultiAppDialog : public QDialog
         void serviceDoneManager();
         void refresh();
         void cancelProgress();
+        void contextMenu(const QPoint& pos);
         void openLink(const QUrl& aUrl);
         void updateSelectedUpdate();
         void startInstall();
@@ -76,7 +78,8 @@ class MultiAppDialog : public QDialog
         QList<UpdateNode::Update> m_oReadyUpdates;
         UpdateNode::Update m_oCurrentUpdate;
         UpdateNode::Commander m_oCommander;
-        QTreeWidgetItem* m_currentItem;
+        QTreeWidgetItem* m_pCurrentItem;
+        QTreeWidgetItem* m_pIgnoredItem;
 
         QTextEdit m_oTextEdit;
 

@@ -43,7 +43,7 @@ namespace UpdateNode
             Service(QObject* parent = 0);
             ~Service();
 
-            enum Status { NOTHING = UPDATENODE_PROCERROR_NO_UPDATES, UPDATE, MESSAGE, UPDATE_MESSAGE };
+            enum Status { NOTHING = 0, UPDATE, MESSAGE, UPDATE_MESSAGE };
 
             bool checkForUpdates();
             bool checkForUpdates(UpdateNode::Config* aConfig);
@@ -68,6 +68,7 @@ namespace UpdateNode
             QNetworkAccessManager* m_pManager;
             UpdateNode::Downloader* m_pDownloader;
             QMap<QNetworkReply*, Config*> m_mapConfig;
+            QList<UpdateNode::Config*> m_listConfigs;
 
             int m_iStatus;
             QString m_strStatus;

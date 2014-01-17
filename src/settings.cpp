@@ -397,3 +397,17 @@ QString Settings::getCurrentClientDir()
 {
     return this->value( m_strClientPath + Config::Instance()->getKeyHashed()).toString();
 }
+
+void Settings::setIgnoreUpdate(const QString& aUpdateCode, bool aIgnore)
+{
+    QString id = m_strUpdate + aUpdateCode + "/";
+
+    this->setValue( id + "Ignore" , aIgnore);
+}
+
+bool Settings::isUpdateIgnored(const QString& aUpdateCode)
+{
+    QString id = m_strUpdate + aUpdateCode + "/";
+
+    return this->value( id + "Ignore" , false).toBool();
+}

@@ -99,8 +99,9 @@ bool Service::checkForUpdates()
     else
     {
         bool result = true;
-        for(int i = 0; i < config->configurations().size(); i++)
-            result = result && checkForUpdates(config->configurations().at(i));
+        m_listConfigs =  config->configurations();
+        while(!m_listConfigs.isEmpty())
+            result = result && checkForUpdates(m_listConfigs.takeFirst());
 
         return result;
     }
@@ -188,7 +189,7 @@ void Service::requestReceived(QNetworkReply* reply)
 {
     reply->deleteLater();
 
-    UpdateNode::Config* config = m_mapConfig.take(reply);
+    UpdateNode::Config* config = m_mapConfig[reply];
 
     if(reply->error() == QNetworkReply::NoError)
     {
@@ -215,6 +216,8 @@ void Service::requestReceived(QNetworkReply* reply)
         // Error
         UpdateNode::Logging() << "ERROR: " << reply->errorString();
     }
+
+    m_mapConfig.remove(reply);
 
     if(reply->error() == QNetworkReply::NoError && !config->product().getIconUrl().isEmpty())
     {
@@ -250,8 +253,13 @@ int Service::returnCodeManager()
     int message_cnt = 0;
     for(int i = 0; i < config->configurations().size(); i++)
     {
-        update_cnt += config->configurations().at(i)->updates().size();
-        message_cnt += config->configurations().at(i)->messages().size();
+        foreach(UpdateNode::Update update, config->configurations().at(i)->updates())
+            if(!UpdateNode::Settings().isUpdateIgnored(update.getCode()))
+                update_cnt++;
+
+        foreach(UpdateNode::Message message, config->configurations().at(i)->messages())
+            if(!UpdateNode::Settings().messageShownAndLoaded(message.getCode()))
+                message_cnt++;
     }
     return returnCode(update_cnt, message_cnt);
 }
@@ -266,7 +274,11 @@ int Service::returnCode(UpdateNode::Config* config /* = NULL */)
     if(!config)
         config = UpdateNode::Config::Instance();
 
-    int update_cnt = config->updates().size();
+    int update_cnt = 0;
+    foreach(UpdateNode::Update update, config->updates())
+        if(!UpdateNode::Settings().isUpdateIgnored(update.getCode()))
+            update_cnt++;
+
     int message_cnt = 0;
     foreach(UpdateNode::Message message, config->messages())
         if(!UpdateNode::Settings().messageShownAndLoaded(message.getCode()))

@@ -59,6 +59,8 @@ namespace UpdateNode
             QString getProductVersion(UpdateNode::Config* aConfig = NULL);
             QString getVersionCode(UpdateNode::Config* aConfig = NULL);
 
+            void setIgnoreUpdate(const QString& aUpdateCode, bool aIgnore);
+            bool isUpdateIgnored(const QString& aUpdateCode);
 
             bool messageShownAndLoaded(const QString& aMessageCode);
 
