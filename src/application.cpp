@@ -23,6 +23,7 @@
 #include "application.h"
 #include "logging.h"
 #include "config.h"
+#include "settings.h"
 #include <QApplication>
 #include <QThread>
 #include <QDir>
@@ -30,6 +31,7 @@
 #include <QFile>
 #include <QTemporaryFile>
 #include <QProcess>
+#include <QMessageBox>
 
 using namespace UpdateNode;
 
@@ -56,6 +58,8 @@ Application::Application(QObject *parent) :
              style.close();
          }
     }
+
+    m_pService = new UpdateNode::Service(0);
 }
 
 /*!
@@ -295,4 +299,149 @@ void Application::killMeOrNot()
         }
     }
     m_oSharedMemory.unlock();
+}
+
+int Application::returnANDlaunch(int aResult)
+{
+    QString exec = UpdateNode::Config::Instance()->getExec();
+
+    if(!exec.isEmpty())
+    {
+        UpdateNode::Logging() << "Lauching: " << exec;
+        exec = exec.replace("[UN_ERRORCODE]", QString::number(aResult));
+        if(UpdateNode::Config::Instance()->isSingleMode())
+        {
+            if(UpdateNode::Config::Instance()->updates().size()==1)
+            {
+                UpdateNode::Update update = UpdateNode::Config::Instance()->updates().at(0);
+                if(update.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION)
+                {
+                    UpdateNode::Settings settings;
+                    exec = exec.replace("[UN_VERSION]", settings.getProductVersion());
+                }
+            }
+        }
+
+        // set to "-" in case the above if statement does not match
+        exec = exec.replace("[UN_VERSION]", "-");
+
+        if(!QProcess::startDetached(exec))
+            QMessageBox::critical(0, QString("%1 %2").arg(UPDATENODE_COMPANY_STR).arg(UPDATENODE_APPLICATION_STR), QObject::tr("Unable to launch '%1'").arg(exec));
+    }
+
+    UpdateNode::Logging() << "unclient finished with return code" << QString::number(aResult);
+
+    qApp->exit(aResult);
+
+    return aResult;
+}
+
+void Application::setService(Service *aService)
+{
+    m_pService = aService;
+}
+
+void Application::setMode(const QString& aMode)
+{
+    m_strMode = aMode;
+}
+
+void Application::checkForUpdates()
+{
+    UpdateNode::Config* config = UpdateNode::Config::Instance();
+
+    if(m_strMode != "-check")
+    {
+        showSplashScreen(m_pService, m_strMode);
+
+        if(config->isSingleMode())
+        {
+            if(m_strMode == "-update" || m_strMode == "-download" || m_strMode == "-execute")
+            {
+                m_oSingleDialog.init(m_pService, m_strMode == "-download", m_strMode == "-execute");
+                m_oSingleDialog.hide();
+            }
+            else if(m_strMode == "-messages")
+            {
+                m_oMessageDialog.init(m_pService);
+                m_oMessageDialog.hide();
+            }
+            else
+            {
+                m_oManageDialog.init(m_pService);
+                m_oManageDialog.hide();
+            }
+        }
+        else
+        {
+            m_oManageDialog.init(m_pService);
+            m_oManageDialog.hide();
+        }
+    }
+    else
+    {
+        if(config->isSingleMode())
+            QObject::connect(m_pService, SIGNAL(done()), this, SLOT(afterCheck()));
+        else
+            QObject::connect(m_pService, SIGNAL(doneManager()), this, SLOT(afterCheck()));
+    }
+
+    m_pService->checkForUpdates();
+}
+
+int Application::afterCheck()
+{
+    UpdateNode::Config* config = UpdateNode::Config::Instance();
+
+    if(config->isSilent())
+    {
+        if(config->isSingleMode())
+            return returnANDlaunch(m_pService->returnCode());
+        else
+            return returnANDlaunch(m_pService->returnCodeManager());
+    }
+    else
+    {
+        QString text;
+
+        if(config->isSingleMode())
+            text = m_pService->notificationText();
+        else
+            text = m_pService->notificationTextManager();
+
+        if(config->isSystemTray() && (m_pService->returnCode() != 101 || m_pService->returnCodeManager() != 101))
+        {
+            UpdateNode::SystemTray tray;
+            QObject::connect(&tray, SIGNAL(launchClient()), this, SLOT(setVisible()));
+            QObject::connect(&tray, SIGNAL(launchMessages()), this, SLOT(setVisible()));
+
+            if(config->isSingleMode())
+                QObject::connect(&tray, SIGNAL(launchClient()), &m_oSingleDialog, SLOT(serviceDone()));
+            else
+                QObject::connect(&tray, SIGNAL(launchClient()), &m_oManageDialog, SLOT(serviceDoneManager()));
+            QObject::connect(&tray, SIGNAL(launchMessages()), &m_oMessageDialog, SLOT(serviceDone()));
+
+            if(config->isSingleMode())
+                tray.actionsBasedOnReturn(m_pService->returnCode());
+            else
+                tray.actionsBasedOnReturn(m_pService->returnCodeManager());
+
+            tray.showMessage(text);
+            return 0;
+        }
+        else if(!config->isSystemTray())
+        {
+            if(config->mainIcon().isEmpty())
+                qApp->setWindowIcon(QIcon(config->product().getLocalIcon()));
+            else
+                qApp->setWindowIcon(QIcon(config->mainIcon()));
+
+            QMessageBox::information(NULL, config->product().getName(), text);
+        }
+
+        if(config->isSingleMode())
+            return returnANDlaunch(m_pService->returnCode());
+        else
+            return returnANDlaunch(m_pService->returnCodeManager());
+    }
 }

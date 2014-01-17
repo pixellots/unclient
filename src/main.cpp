@@ -21,25 +21,13 @@
 ****************************************************************************/
 
 #include <QApplication>
-#include <QMessageBox>
-#include <QSplashScreen>
-#include <QSharedMemory>
-#include <QSystemTrayIcon>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QMenu>
 #include <QTranslator>
 #include "logging.h"
 #include "application.h"
-#include "multiappdialog.h"
-#include "singleappdialog.h"
 #include "config.h"
 #include "settings.h"
-#include "updatenode_service.h"
 #include "version.h"
 #include "status.h"
-#include "usermessages.h"
-#include "systemtray.h"
 #include "helpdialog.h"
 
 #ifndef APP_COPYRIGHT
@@ -87,39 +75,6 @@ int printHelp()
     help.setText(appName, QString(APP_COPYRIGHT) + "\n\n" + message);
     help.exec();
     return 0;
-}
-
-int returnANDlaunch(int result)
-{
-    QString exec = UpdateNode::Config::Instance()->getExec();
-
-    if(!exec.isEmpty())
-    {
-        UpdateNode::Logging() << "Lauching: " << exec;
-        exec = exec.replace("[UN_ERRORCODE]", QString::number(result));
-        if(UpdateNode::Config::Instance()->isSingleMode())
-        {
-            if(UpdateNode::Config::Instance()->updates().size()==1)
-            {
-                UpdateNode::Update update = UpdateNode::Config::Instance()->updates().at(0);
-                if(update.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION)
-                {
-                    UpdateNode::Settings settings;
-                    exec = exec.replace("[UN_VERSION]", settings.getProductVersion());
-                }
-            }
-        }
-
-        // set to "-" in case the above if statement does not match
-        exec = exec.replace("[UN_VERSION]", "-");
-
-        if(!QProcess::startDetached(exec))
-            QMessageBox::critical(0, QString("%1 %2").arg(UPDATENODE_COMPANY_STR).arg(UPDATENODE_APPLICATION_STR), QObject::tr("Unable to launch '%1'").arg(exec));
-    }
-
-    UpdateNode::Logging() << "unclient finished with return code" << QString::number(result);
-
-    return result;
 }
 
 void getParametersFromFile(const QString& file)
@@ -180,6 +135,7 @@ int main(int argc, char *argv[])
             else
                 return -1;
         }
+        UpdateNode::Logging() << "Error -copy called with: " << app.arguments().join(" ");
         return UPDATENODE_PROCERROR_WRONG_PARAMETER;
     }
 
@@ -187,7 +143,6 @@ int main(int argc, char *argv[])
     UpdateNode::Application un_app;
 
     UpdateNode::Config* config = UpdateNode::Config::Instance();
-    UpdateNode::Service* service = new UpdateNode::Service(0);
 
     QString mode;
     QString argument;
@@ -262,16 +217,18 @@ int main(int argc, char *argv[])
     }
 
     if(config->getKey().isEmpty())
-        return returnANDlaunch(UPDATENODE_PROCERROR_WRONG_PARAMETER);
+        return un_app.returnANDlaunch(UPDATENODE_PROCERROR_WRONG_PARAMETER);
     else if(!config->getVersion().isEmpty() && config->getProductCode().isEmpty())
-        return returnANDlaunch(UPDATENODE_PROCERROR_WRONG_PARAMETER);
+        return un_app.returnANDlaunch(UPDATENODE_PROCERROR_WRONG_PARAMETER);
     else if(config->getVersion().isEmpty() && !config->getProductCode().isEmpty())
-        return returnANDlaunch(UPDATENODE_PROCERROR_WRONG_PARAMETER);
+        return un_app.returnANDlaunch(UPDATENODE_PROCERROR_WRONG_PARAMETER);
 
     if(mode.isEmpty() && config->isSingleMode())
         mode = "-update";
     else if(mode.isEmpty())
         mode = "-manager";
+
+    un_app.setMode(mode);
 
     UpdateNode::Settings settings;
     if(mode == "-register" || mode == "-unregister")
@@ -282,26 +239,25 @@ int main(int argc, char *argv[])
            return settings.unRegisterVersion() ? 0 : 1;
     }
 
+    settings.setCurrentClientDir(qApp->applicationDirPath());
+
     if(config->isRelaunch() && (mode == "-manager" || mode == "-update" || mode == "-execute") && un_app.relaunchUpdateSave(config->getKeyHashed()))
     {
-        settings.setCurrentClientDir(qApp->applicationDirPath());
         un_app.relaunch(config->getKeyHashed());
         return 0;
     }
-    else if (mode != "-manager")
-        settings.setCurrentClientDir(qApp->applicationDirPath());
 
     if(mode != "-manager" && mode != "-check")
     {
         if(config->getVersion().isEmpty() && config->getProductCode().isEmpty()
                 && config->getVersionCode().isEmpty())
-            return returnANDlaunch(UPDATENODE_PROCERROR_WRONG_PARAMETER);
+            return un_app.returnANDlaunch(UPDATENODE_PROCERROR_WRONG_PARAMETER);
     }
 
     if(un_app.isAlreadyRunning(config->getKeyHashed()))
     {
         if(!un_app.isHidden())
-            return returnANDlaunch(0);
+            return un_app.returnANDlaunch(0);
         else
             un_app.killOther();
     }
@@ -321,104 +277,11 @@ int main(int argc, char *argv[])
         if(config->getVersion().isEmpty() && config->getVersionCode().isEmpty() && config->getProductCode().isEmpty() && config->configurations().size()==0)
         {
             UpdateNode::Logging() << "ERROR: There are no versions registered";
-            return returnANDlaunch(UPDATENODE_PROCERROR_REGISTER_FIRST);
+            return un_app.returnANDlaunch(UPDATENODE_PROCERROR_REGISTER_FIRST);
         }
     }
-    UserMessages messageDialog;
-    SingleAppDialog singleDialog;
-    MultiAppDialog manageDialog;
 
-    if(mode != "-check")
-    {
-        un_app.showSplashScreen(service, mode);
+    un_app.checkForUpdates();
 
-        if(config->isSingleMode())
-        {
-            if(mode == "-update" || mode == "-download" || mode == "-execute")
-            {
-                singleDialog.init(service, mode == "-download", mode == "-execute");
-                singleDialog.hide();
-            }
-            else if(mode == "-messages")
-            {
-                messageDialog.init(service);
-                messageDialog.hide();
-            }
-            else
-            {
-                manageDialog.init(service);
-                manageDialog.hide();
-            }
-        }
-        else
-        {
-            manageDialog.init(service);
-            manageDialog.hide();
-        }
-    }
-    else
-    {
-        if(config->isSingleMode())
-            QObject::connect(service, SIGNAL(done()), &a, SLOT(quit()));
-        else
-            QObject::connect(service, SIGNAL(doneManager()), &a, SLOT(quit()));
-    }
-
-    service->checkForUpdates();
-
-    int result = a.exec();
-
-    if(mode != "-check")
-        return returnANDlaunch(result);
-    else
-    {
-        if(config->isSilent())
-            return returnANDlaunch(service->returnCode());
-        else
-        {
-            QString text;
-
-            if(config->isSingleMode())
-                text = service->notificationText();
-            else
-                text = service->notificationTextManager();
-
-            if(config->isSystemTray() && (service->returnCode() != 101 || service->returnCodeManager() != 101))
-            {
-                UpdateNode::SystemTray tray;
-                QObject::connect(&tray, SIGNAL(launchClient()), &un_app, SLOT(setVisible()));
-                QObject::connect(&tray, SIGNAL(launchMessages()), &un_app, SLOT(setVisible()));
-
-                if(config->isSingleMode())
-                    QObject::connect(&tray, SIGNAL(launchClient()), &singleDialog, SLOT(serviceDone()));
-                else
-                    QObject::connect(&tray, SIGNAL(launchClient()), &manageDialog, SLOT(serviceDoneManager()));
-                QObject::connect(&tray, SIGNAL(launchMessages()), &messageDialog, SLOT(serviceDone()));
-
-                if(config->isSingleMode())
-                    tray.actionsBasedOnReturn(service->returnCode());
-                else
-                    tray.actionsBasedOnReturn(service->returnCodeManager());
-
-                tray.showMessage(text);
-                int tray_res = a.exec();
-                tray.hide();
-                return returnANDlaunch(tray_res);
-            }
-            else if(!config->isSystemTray())
-            {
-                if(config->mainIcon().isEmpty())
-                    qApp->setWindowIcon(QIcon(config->product().getLocalIcon()));
-                else
-                    qApp->setWindowIcon(QIcon(config->mainIcon()));
-
-                QMessageBox::information(NULL, config->product().getName(), text);
-            }
-
-            if(config->isSingleMode())
-                return returnANDlaunch(service->returnCode());
-            else
-                return returnANDlaunch(service->returnCodeManager());
-        }
-    }
+    return a.exec();
 }

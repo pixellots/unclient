@@ -27,8 +27,15 @@
 #include <QTimer>
 #include <QSharedMemory>
 #include <QTranslator>
+#include <QMessageBox>
 #include <QSplashScreen>
+#include <QSystemTrayIcon>
 #include "updatenode_service.h"
+#include "multiappdialog.h"
+#include "singleappdialog.h"
+#include "usermessages.h"
+#include "systemtray.h"
+
 
 namespace UpdateNode
 {
@@ -39,27 +46,39 @@ namespace UpdateNode
         public:
             explicit Application(QObject *parent = 0);
 
+            void setMode(const QString& aMode);
+            void setService(UpdateNode::Service* aService);
             bool relaunchUpdateSave(const QString& aKey);
             bool relaunch(const QString& aKey);
             bool isAlreadyRunning(const QString& aKey);
             bool isHidden();
             void killOther();
+            void checkForUpdates();
 
             bool installTranslations();
             void showSplashScreen(UpdateNode::Service* aService, const QString& aMode);
 
+        public:
+            static int returnANDlaunch(int aResult);
+
         public slots:
             void setVisible(bool aShown = true);
             void killMeOrNot();
-
+            int afterCheck();
 
         private:
+            UserMessages m_oMessageDialog;
+            SingleAppDialog m_oSingleDialog;
+            MultiAppDialog m_oManageDialog;
+
             QSplashScreen m_oSplashScreen;
             QPixmap m_oSplashScreen_pic;
             QTranslator m_oTranslator;
             QSharedMemory m_oSharedMemory;
             QTimer m_oTimer;
             bool m_visible;
+            QString m_strMode;
+            UpdateNode::Service* m_pService;
 
     };
 }
