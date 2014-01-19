@@ -133,10 +133,16 @@ Slot for doDownload on a file, emits done(QByteArray array, const QString& fileN
 */
 void Downloader::downloadFileFinished(QNetworkReply *reply)
 {
-    if(reply->error() == QNetworkReply::NoError)
-        emit done(reply->readAll(), m_oCurrentFileDownloads.take(reply));
+    if(reply->canReadLine())
+    {
+        if(reply->error() == QNetworkReply::NoError)
+            emit done(reply->readAll(), m_oCurrentFileDownloads.take(reply));
+        else
+            UpdateNode::Logging() << m_oCurrentFileDownloads.take(reply) << " failed: " << reply->errorString();
 
-    reply->deleteLater();
+        reply->deleteLater();
+    }
+
 }
 
 /*!

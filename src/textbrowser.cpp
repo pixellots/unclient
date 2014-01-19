@@ -1,5 +1,6 @@
 #include "textbrowser.h"
 #include "localfile.h"
+#include "logging.h"
 
 #include <QDebug>
 #include <QStringList>
@@ -28,7 +29,7 @@ TextBrowser::~TextBrowser()
 
 void TextBrowser::loadHtml(const QUrl& address)
 {
-    QString fileName = UpdateNode::LocalFile::getDownloadPath() + "/cache/" + QFileInfo(address.toString()).fileName();
+    QString fileName = UpdateNode::LocalFile::getCachePath() + QFileInfo(address.toString()).fileName();
     if(QFile::exists(fileName))
     {
         QString html;
@@ -53,7 +54,7 @@ QVariant TextBrowser::loadResource( int type, const QUrl & name )
     {
         case QTextDocument::ImageResource:
         {
-            QString fileName = UpdateNode::LocalFile::getDownloadPath() + "/cache/" + QFileInfo(name.toString()).fileName();
+            QString fileName = UpdateNode::LocalFile::getCachePath() + QFileInfo(name.toString()).fileName();
             if(QFile::exists(fileName))
                 return QPixmap(fileName);
             else if(!m_oDownloadList.contains(fileName))
@@ -82,6 +83,8 @@ void TextBrowser::done(QByteArray array, const QString& fileName)
 
             if(image.save(fileName))
                 setHtml(toHtml());
+            else
+                UpdateNode::Logging() << "Unable to save file: " << fileName;
             return;
         }
         else
