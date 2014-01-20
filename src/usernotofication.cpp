@@ -50,8 +50,6 @@ UserNotofication::UserNotofication(QWidget *parent) :
     ui->textBrowser->hide();
 
     ui->labelLogo->hide();
-
-    adjustSize();
 }
 
 UserNotofication::~UserNotofication()
@@ -146,7 +144,7 @@ void UserNotofication::detailsClicked()
         ui->treeWidget->hide();
         ui->textBrowser->setHidden(true);
         ui->pshDetails->setText(tr("Show Details"));
-        adjustSize();
+        //adjustSize();
     }
     else
     {
@@ -154,6 +152,7 @@ void UserNotofication::detailsClicked()
         ui->textBrowser->show();
         ui->pshDetails->setText(tr("Hide Details"));
     }
-    layout()->setSizeConstraint(QLayout::SetMinimumSize);
+    adjustSize();
+    //layout()->setSizeConstraint(QLayout::SetMinimumSize);
 
 }
