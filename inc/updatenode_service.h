@@ -31,7 +31,7 @@
 #include "downloader.h"
 #include "status.h"
 
-#define UPDATENODE_SERVICE_URL            "https://updatenode.com/sara/service"
+#define UPDATENODE_SERVICE_URL            "https://updatenode.com/api"
 
 namespace UpdateNode
 {
