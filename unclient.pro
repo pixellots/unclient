@@ -135,6 +135,7 @@ QMAKE_EXTRA_TARGETS += updateqm
 
 
 webkit{
+message("INFO: Webkit support enabled")
 win32{
 qtwebkit_deploy.commands = $(COPY) "%QTDIR%\\bin\\qtwebkit4.dll" package
 qtwebkit_deploy.target = qtwebkit_deploy
@@ -150,6 +151,7 @@ qtwebkit_deploy.target = qtwebkit_deploy
 
 vcredist{
 win32{
+message("WARNING: Make sure you have vcredist_x86.exe in 3rdparty folder before running build_installer")
 vc_deploy.commands = $(COPY) "3rdparty\\vcredist_x86.exe" package
 vc_deploy.target = vc_deploy
 }
@@ -193,7 +195,7 @@ QMAKE_EXTRA_TARGETS += package_deploy
 !exists( build.no.temp ) {
 win32::system("@set /a $$cat(build.no)+1  > build.no.temp && @copy /Y build.no.temp build.no > NUL")
 unix::system("/bin/bash -c \"echo $[$$cat(build.no)+1] > build.no.temp && cp build.no.temp build.no\"")
-message("The build number has been increased to $$cat(build.no)")
+message("INFO: The build number has been increased to $$cat(build.no)")
 }
 
 #### deploy target
@@ -205,11 +207,15 @@ unix::deploy.depends = clean updateqm all
 deploy.target = deploy
 QMAKE_EXTRA_TARGETS += deploy
 
-#### MAC: uncomment 'ICON += images/unclient.icns' 
-####      and comment 'CONFIG-=app_bundle'
-####      if you need a bundle instead of a single binary
-# ICON += images/unclient.icns
-macx:CONFIG-=app_bundle
-macx:LIBS += -framework CoreFoundation
-macx:LIBS += -framework Security
-
+macx{
+bundle{
+message("INFO: Building unclient as a bundle")
+ICON += images/unclient.icns
+}
+!bundle{
+message("INFO: Building unclient as a single binary")
+CONFIG-=app_bundle
+}
+LIBS += -framework CoreFoundation
+LIBS += -framework Security
+}
