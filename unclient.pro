@@ -15,7 +15,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 ### version needs to be checked here
 VERSION_HIGH=1
 VERSION_LOW=0
-VERSION_REV=1
+VERSION_REV=2
 VERSION_BUILD=$$cat(build.no)
 
 VERSION=$${VERSION_HIGH}.$${VERSION_LOW}
