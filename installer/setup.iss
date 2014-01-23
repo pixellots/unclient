@@ -2,9 +2,18 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "UpdateNode Client"
+
+#ifndef MyAppVersion
 #define MyAppVersion "1.0"
+#endif
+
+#ifndef MyAppVersionFull
+#define public MyAppVersionFull "1.0.0.0"
+#endif
+
 #define MyAppPublisher "UpdateNode UG (haftungsbeschränkt)"
 #define MyAppURL "http://www.updatenode.com"
+#define MyAppCopyright "Copyright by (C) UpdateNode UG (haftungsbeschränkt). All rights reserved."
 #define MyAppExeName "unclient.exe"
 
 [Setup]
@@ -14,6 +23,8 @@
 AppId={{48EF0B65-2CD4-4372-BFCB-187C54D18BFC}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
+VersionInfoVersion={#MyAppVersionFull}
+AppCopyright={#MyAppCopyright}
 ;AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
