@@ -179,7 +179,7 @@ ssl_package_deploy.commands = $(COPY) c:\\OpenSSL-Win32\\libeay32.dll package &&
 ssl_package_deploy.target = ssl_package_deploy
 package_deploy.depends = clean_package_deploy create_package_deploy qtcore_deploy qtgui_deploy qtnetwork_deploy qtxml_deploy qtwebkit_deploy ssl_package_deploy copy_binary vc_deploy
 package_deploy.target = package_deploy
-build_installer.commands = iscc installer\\setup.iss /f$${SETUP_NAME} /dMyAppVersionFull=$${VERSION_FULL} /dMyAppVersion=$${VERSION}
+build_installer.commands = iscc installer\\setup.iss /f$${SETUP_NAME} /dUNclientVersionFull=$${VERSION_FULL} /dUNclientVersion=$${VERSION}
 build_installer.target = build_installer
 copy_binary.commands = $(COPY) release\\unclient.exe package
 copy_binary.target = copy_binary
