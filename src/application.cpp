@@ -60,6 +60,16 @@ Application::Application(QObject *parent) :
     }
 
     m_pService = new UpdateNode::Service(0);
+    m_pSystemTray = 0;
+}
+
+/*!
+Destructs the Application object.
+*/
+Application::~Application()
+{
+    if(m_pSystemTray)
+        delete m_pSystemTray;
 }
 
 /*!
@@ -301,6 +311,15 @@ void Application::killMeOrNot()
     m_oSharedMemory.unlock();
 }
 
+/*!
+Returns the error code and optionaly lauches an external program\n
+as specified with -exec parameter.
+\note There are two optional parameters which can be passed to your
+\note lauching program.[UN_ERRORCODE] which is the returned error code
+\note and [UN_VERSION] which identifies the new set version.
+\note [UN_VERSION] is - when version has not changed, otherwise
+\note it contains the changed version (only for client-based updates)
+*/
 int Application::returnANDlaunch(int aResult)
 {
     QString exec = UpdateNode::Config::Instance()->getExec();
@@ -336,16 +355,26 @@ int Application::returnANDlaunch(int aResult)
     return aResult;
 }
 
+/*!
+Sets the pointer to the current used UpdateNode::Service
+*/
 void Application::setService(Service *aService)
 {
     m_pService = aService;
 }
 
+/*!
+Sets the mode in which unclient is running
+*/
 void Application::setMode(const QString& aMode)
 {
     m_strMode = aMode;
 }
 
+/*!
+Main method which checks for updates and shown the
+right dialog based on the running mode
+*/
 void Application::checkForUpdates()
 {
     UpdateNode::Config* config = UpdateNode::Config::Instance();
@@ -389,6 +418,13 @@ void Application::checkForUpdates()
     m_pService->checkForUpdates();
 }
 
+/*!
+Slot which is called in case of -check mode. \n
+Depends on the config, just returns using silent mode\n
+or show a message box with the result.\n
+\note When unclient is lauched with -st (Stytem Tray)
+\note a system tray icon is shown from this slot
+*/
 int Application::afterCheck()
 {
     UpdateNode::Config* config = UpdateNode::Config::Instance();
@@ -411,22 +447,22 @@ int Application::afterCheck()
 
         if(config->isSystemTray() && (m_pService->returnCode() != 101 || m_pService->returnCodeManager() != 101))
         {
-            UpdateNode::SystemTray tray;
-            QObject::connect(&tray, SIGNAL(launchClient()), this, SLOT(setVisible()));
-            QObject::connect(&tray, SIGNAL(launchMessages()), this, SLOT(setVisible()));
+            m_pSystemTray = new UpdateNode::SystemTray();
+            QObject::connect(m_pSystemTray, SIGNAL(launchClient()), this, SLOT(setVisible()));
+            QObject::connect(m_pSystemTray, SIGNAL(launchMessages()), this, SLOT(setVisible()));
 
             if(config->isSingleMode())
-                QObject::connect(&tray, SIGNAL(launchClient()), &m_oSingleDialog, SLOT(serviceDone()));
+                QObject::connect(m_pSystemTray, SIGNAL(launchClient()), &m_oSingleDialog, SLOT(serviceDone()));
             else
-                QObject::connect(&tray, SIGNAL(launchClient()), &m_oManageDialog, SLOT(serviceDoneManager()));
-            QObject::connect(&tray, SIGNAL(launchMessages()), &m_oMessageDialog, SLOT(serviceDone()));
+                QObject::connect(m_pSystemTray, SIGNAL(launchClient()), &m_oManageDialog, SLOT(serviceDoneManager()));
+            QObject::connect(m_pSystemTray, SIGNAL(launchMessages()), &m_oMessageDialog, SLOT(serviceDone()));
 
             if(config->isSingleMode())
-                tray.actionsBasedOnReturn(m_pService->returnCode());
+                m_pSystemTray->actionsBasedOnReturn(m_pService->returnCode());
             else
-                tray.actionsBasedOnReturn(m_pService->returnCodeManager());
+                m_pSystemTray->actionsBasedOnReturn(m_pService->returnCodeManager());
 
-            tray.showMessage(text);
+            m_pSystemTray->showMessage(text);
             return 0;
         }
         else if(!config->isSystemTray())

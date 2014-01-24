@@ -36,7 +36,6 @@
 #include "usermessages.h"
 #include "systemtray.h"
 
-
 namespace UpdateNode
 {
     class Application : public QObject
@@ -45,6 +44,7 @@ namespace UpdateNode
 
         public:
             explicit Application(QObject *parent = 0);
+            ~Application();
 
             void setMode(const QString& aMode);
             void setService(UpdateNode::Service* aService);
@@ -71,6 +71,7 @@ namespace UpdateNode
             SingleAppDialog m_oSingleDialog;
             MultiAppDialog m_oManageDialog;
 
+            UpdateNode::SystemTray* m_pSystemTray;
             QSplashScreen m_oSplashScreen;
             QPixmap m_oSplashScreen_pic;
             QTranslator m_oTranslator;
