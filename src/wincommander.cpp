@@ -53,9 +53,10 @@ uint WinCommander::runProcessElevated(const QString &path,
     QString params;
     HWND hwnd = NULL;
     LPCTSTR pszPath = path.utf16();
-    params = parameters.join(" ");
-    LPCTSTR pszParameters = params.utf16();
+    foreach(QString item, parameters)
+        params += "\"" + item + "\" ";
 
+    LPCTSTR pszParameters = params.utf16();
     QString dir;
     if (workingDir.isEmpty())
         dir = QDir::toNativeSeparators(QDir::currentPath());
