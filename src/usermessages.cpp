@@ -173,7 +173,7 @@ void UserMessages::showMessage()
             ui->webView->load(m_listMessages.at(m_iCurrentIndex).getLink());
 #else
         if(!m_listMessages.at(m_iCurrentIndex).getMessage().isEmpty())
-            ui->textBrowser->setHtml(m_listMessages.at(m_iCurrentIndex).getMessage());
+            ui->textBrowser->setHtml(m_listMessages.at(m_iCurrentIndex).getMessage().toUtf8());
         else
             ui->textBrowser->loadHtml(m_listMessages.at(m_iCurrentIndex).getLink());
         ui->pshRead->setEnabled(true);

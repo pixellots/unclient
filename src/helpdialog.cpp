@@ -47,5 +47,5 @@ void Helpdialog::setText(const QString& aAppName, const QString &aText)
 {
     setWindowTitle(aAppName);
 
-    ui->textEdit->setText(aAppName + "\n\n" + aText);
+    ui->textEdit->setText(aAppName + "\n\n" + aText.toLatin1());
 }

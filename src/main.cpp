@@ -72,7 +72,7 @@ int printHelp()
     return 0;
 #endif
     Helpdialog help;
-    help.setText(appName, QString(APP_COPYRIGHT) + "\n\n" + message);
+    help.setText(appName, QString::fromUtf8(APP_COPYRIGHT) + "\n\n" + message);
     help.exec();
     return 0;
 }
