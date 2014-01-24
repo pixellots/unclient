@@ -15,7 +15,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 ### version needs to be checked here
 VERSION_HIGH=1
 VERSION_LOW=0
-VERSION_REV=2
+VERSION_REV=3
 VERSION_BUILD=$$cat(build.no)
 
 VERSION=$${VERSION_HIGH}.$${VERSION_LOW}
@@ -35,7 +35,7 @@ TRANSLATIONS = \
 ### qmake settings - sometimes this is not the reality
 QMAKE_TARGET_COMPANY = UpdateNode
 QMAKE_TARGET_PRODUCT = "UpdateNode Client"
-QMAKE_TARGET_DESCRIPTION = Client for software updates and messages
+QMAKE_TARGET_DESCRIPTION = UpdateNode Client for software updates and messages
 QMAKE_TARGET_COPYRIGHT = Copyright by (C) UpdateNode UG. All rights reserved.
 
 DEFINES += \
