@@ -93,6 +93,7 @@ void UserMessages::serviceDone()
 
     m_iCurrentIndex = -1;
     m_listMessages.clear();
+    ui->retranslateUi(this);
 
     if(!config->product().getIconUrl().isEmpty())
         setWindowIcon(QPixmap(config->product().getLocalIcon()).scaledToHeight(64, Qt::SmoothTransformation));

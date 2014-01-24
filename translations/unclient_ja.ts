@@ -167,17 +167,17 @@
         <translation>未定義状態</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="329"/>
+        <location filename="../src/application.cpp" line="348"/>
         <source>Unable to launch &apos;%1&apos;</source>
         <translation>&apos;%1&apos;を始めることができません</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="111"/>
+        <location filename="../src/application.cpp" line="121"/>
         <source>Checking for messages ...</source>
         <translation>メッセージを確認しています...</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="113"/>
+        <location filename="../src/application.cpp" line="123"/>
         <source>Checking for updates ...</source>
         <translation>アップデートを確認しています...</translation>
     </message>
@@ -326,53 +326,53 @@
 <context>
     <name>UserNotofication</name>
     <message>
-        <location filename="../forms/usernotofication.ui" line="60"/>
+        <location filename="../forms/usernotofication.ui" line="63"/>
         <source>A new software update is available</source>
         <translation>新しいソフトウェア・アップデートが利用可能です</translation>
     </message>
     <message>
-        <location filename="../forms/usernotofication.ui" line="73"/>
+        <location filename="../forms/usernotofication.ui" line="76"/>
         <source>Do you want to download and install the update now?</source>
         <translation>今すぐにアップデートをダウンロードしてインストールしますか？</translation>
     </message>
     <message>
-        <location filename="../forms/usernotofication.ui" line="122"/>
+        <location filename="../forms/usernotofication.ui" line="125"/>
         <source>Name</source>
         <translation>名前</translation>
     </message>
     <message>
-        <location filename="../forms/usernotofication.ui" line="127"/>
+        <location filename="../forms/usernotofication.ui" line="130"/>
         <source>Version</source>
         <translation>バージョン</translation>
     </message>
     <message>
-        <location filename="../forms/usernotofication.ui" line="132"/>
+        <location filename="../forms/usernotofication.ui" line="135"/>
         <source>Size</source>
         <translation>サイズ</translation>
     </message>
     <message>
-        <location filename="../forms/usernotofication.ui" line="168"/>
-        <location filename="../src/usernotofication.cpp" line="148"/>
+        <location filename="../forms/usernotofication.ui" line="171"/>
+        <location filename="../src/usernotofication.cpp" line="146"/>
         <source>Show Details</source>
         <translation>詳細を表示する</translation>
     </message>
     <message>
-        <location filename="../forms/usernotofication.ui" line="191"/>
+        <location filename="../forms/usernotofication.ui" line="194"/>
         <source>Not Now</source>
         <translation>今ではない</translation>
     </message>
     <message>
-        <location filename="../forms/usernotofication.ui" line="201"/>
+        <location filename="../forms/usernotofication.ui" line="204"/>
         <source>Continue</source>
         <translation>続ける</translation>
     </message>
     <message>
-        <location filename="../src/usernotofication.cpp" line="78"/>
+        <location filename="../src/usernotofication.cpp" line="76"/>
         <source> - Update Client</source>
         <translation> - アップデート・クライアント</translation>
     </message>
     <message>
-        <location filename="../src/usernotofication.cpp" line="155"/>
+        <location filename="../src/usernotofication.cpp" line="153"/>
         <source>Hide Details</source>
         <translation>詳細を隠す</translation>
     </message>

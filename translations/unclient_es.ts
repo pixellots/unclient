@@ -121,17 +121,17 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/application.cpp" line="329"/>
+        <location filename="../src/application.cpp" line="348"/>
         <source>Unable to launch &apos;%1&apos;</source>
         <translation>Incapaz de iniciar &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="111"/>
+        <location filename="../src/application.cpp" line="121"/>
         <source>Checking for messages ...</source>
         <translation>Buscando mensajes ...</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="113"/>
+        <location filename="../src/application.cpp" line="123"/>
         <source>Checking for updates ...</source>
         <translation>Buscando actualizaciones ...</translation>
     </message>
@@ -326,53 +326,53 @@
 <context>
     <name>UserNotofication</name>
     <message>
-        <location filename="../forms/usernotofication.ui" line="60"/>
+        <location filename="../forms/usernotofication.ui" line="63"/>
         <source>A new software update is available</source>
         <translation>Hay una nueva actualizacion de software</translation>
     </message>
     <message>
-        <location filename="../forms/usernotofication.ui" line="73"/>
+        <location filename="../forms/usernotofication.ui" line="76"/>
         <source>Do you want to download and install the update now?</source>
         <translation>¿Quiere bajar e instalar la actualización ahora?</translation>
     </message>
     <message>
-        <location filename="../forms/usernotofication.ui" line="122"/>
+        <location filename="../forms/usernotofication.ui" line="125"/>
         <source>Name</source>
         <translation>Nombre</translation>
     </message>
     <message>
-        <location filename="../forms/usernotofication.ui" line="127"/>
+        <location filename="../forms/usernotofication.ui" line="130"/>
         <source>Version</source>
         <translation>Versión</translation>
     </message>
     <message>
-        <location filename="../forms/usernotofication.ui" line="132"/>
+        <location filename="../forms/usernotofication.ui" line="135"/>
         <source>Size</source>
         <translation>Tamaño</translation>
     </message>
     <message>
-        <location filename="../forms/usernotofication.ui" line="168"/>
-        <location filename="../src/usernotofication.cpp" line="148"/>
+        <location filename="../forms/usernotofication.ui" line="171"/>
+        <location filename="../src/usernotofication.cpp" line="146"/>
         <source>Show Details</source>
         <translation>Mostrar Detalles</translation>
     </message>
     <message>
-        <location filename="../forms/usernotofication.ui" line="191"/>
+        <location filename="../forms/usernotofication.ui" line="194"/>
         <source>Not Now</source>
         <translation>Ahora no</translation>
     </message>
     <message>
-        <location filename="../forms/usernotofication.ui" line="201"/>
+        <location filename="../forms/usernotofication.ui" line="204"/>
         <source>Continue</source>
         <translation>Continuar</translation>
     </message>
     <message>
-        <location filename="../src/usernotofication.cpp" line="78"/>
+        <location filename="../src/usernotofication.cpp" line="76"/>
         <source> - Update Client</source>
         <translation> - Actualizar Cliente</translation>
     </message>
     <message>
-        <location filename="../src/usernotofication.cpp" line="155"/>
+        <location filename="../src/usernotofication.cpp" line="153"/>
         <source>Hide Details</source>
         <translation>Ocultar detalles</translation>
     </message>
