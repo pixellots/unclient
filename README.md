@@ -1,3 +1,4 @@
+[![logo](http://updatenode.com/images/logo/updatenode_96.png)](http://www.updatenode.com)
 # Welcome to UpdateNode's unclient
 
 UpdateNode is a Update and Messaging System for your software.
