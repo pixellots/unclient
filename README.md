@@ -3,7 +3,7 @@
 
 UpdateNode is a Update and Messaging System for your software.
 
-In order to receive updates and messages with the unclient, you will need to **register** on [updatenode.com](http://updatenode.com).
+In order to receive updates and messages with the unclient, you will need to **register** on [www.updatenode.com](http://www.updatenode.com).
 
 ## General
 
