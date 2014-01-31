@@ -169,12 +169,12 @@ void UserMessages::showMessage()
     {
 #ifdef QT_WEBKIT_LIB
         if(!m_listMessages.at(m_iCurrentIndex).getMessage().isEmpty())
-            ui->webView->setContent(m_listMessages.at(m_iCurrentIndex).getMessage().toUtf8());
+            ui->webView->setHtml(m_listMessages.at(m_iCurrentIndex).getMessage());
         else
             ui->webView->load(m_listMessages.at(m_iCurrentIndex).getLink());
 #else
         if(!m_listMessages.at(m_iCurrentIndex).getMessage().isEmpty())
-            ui->textBrowser->setHtml(m_listMessages.at(m_iCurrentIndex).getMessage().toUtf8());
+            ui->textBrowser->setHtml(m_listMessages.at(m_iCurrentIndex).getMessage());
         else
             ui->textBrowser->loadHtml(m_listMessages.at(m_iCurrentIndex).getLink());
         ui->pshRead->setEnabled(true);
