@@ -167,10 +167,12 @@ bool Service::checkForUpdates(UpdateNode::Config* aConfig)
 #endif
     request.setUrl(url);
 
+#ifdef DEBUG
     UpdateNode::Logging() << "REQUEST: " << url.toString();
+#endif
 
     request.setRawHeader("charset", "utf-8" );
-    request.setRawHeader("User-Agent", QString("UpdateNodeClient %1 (%2)").arg(UPDATENODE_CLIENT_VERSION).arg(globalConfig->getOS()).toLatin1());
+    request.setRawHeader("User-Agent", QString("UpdateNodeClient %1.%2 (%3)").arg(APP_VERSION_HIGH).arg(APP_VERSION_LOW).arg(globalConfig->getOS()).toLatin1());
 
     QNetworkReply* reply = m_pManager->get(request);
 
@@ -202,7 +204,14 @@ void Service::requestReceived(QNetworkReply* reply)
             parser->parse(replyText);
             m_strStatus = parser->getStatusString();
             m_iStatus = parser->getStatus();
-            UpdateNode::Logging() << "RESULT: " << parser->getStatusString() << "(" << parser->getStatus() << ")";
+            UpdateNode::Logging() << "UpdateNode RESULT: " << parser->getStatusString() << "(" << parser->getStatus() << ")";
+#ifndef UNITTEST
+            if(parser->getStatus()!=0)
+            {
+                qApp->exit(UPDATENODE_PROCERROR_SERVICE_ERROR);
+                return;
+            }
+#endif
         }
         else if (v >= 300 && v < 400) // Redirection
         {
