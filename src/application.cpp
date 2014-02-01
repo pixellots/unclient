@@ -204,6 +204,8 @@ bool Application::relaunch(const QString& aKey)
 
     QStringList args = qApp->arguments();
     args.takeFirst();
+    args.takeAt(args.indexOf("-r"));
+    args.append("-re");
     return QProcess::startDetached(newClient, args);
 }
 
@@ -521,7 +523,6 @@ void Application::afterCheck()
                 m_pSystemTray->actionsBasedOnReturn(m_pService->returnCodeManager());
 
             m_pSystemTray->showMessage(text);
-            qApp->exit(0);
             return;
         }
         else if(!config->isSystemTray())
