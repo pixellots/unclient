@@ -26,8 +26,6 @@
 #include <QString>
 #include "update.h"
 
-#define UPDATENODE_CLIENT_VERSION "1.0"
-
 namespace UpdateNode
 {
     class Version
