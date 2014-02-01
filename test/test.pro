@@ -15,6 +15,15 @@ TEMPLATE = app
 
 INCLUDEPATH += ../inc
 
+DEFINES += \
+    APP_VERSION=0.0 \
+    APP_VERSION_HIGH=0 \
+    APP_VERSION_LOW=0   \
+    APP_VERSION_REV=0   \
+    APP_VERSION_BUILD=0
+
+DEFINES += UNITTEST
+
 SOURCES += \
     ../src/commander.cpp \
     ../src/config.cpp \
@@ -57,6 +66,12 @@ macx:HEADERS += ../inc/maccommander.h
 
 win32{
 LIBS+= Shell32.lib Advapi32.lib
+}
+
+macx{
+CONFIG-=app_bundle
+LIBS += -framework CoreFoundation
+LIBS += -framework Security
 }
 
 unix:QMAKE_POST_LINK += ./$$TARGET
