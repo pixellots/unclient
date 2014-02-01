@@ -12,6 +12,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += webkitwidgets
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 }
 
+SUBDIRS=test
+
 ### version needs to be checked here
 VERSION_HIGH=1
 VERSION_LOW=0
@@ -34,12 +36,12 @@ TRANSLATIONS = \
 
 ### qmake settings - sometimes this is not the reality
 QMAKE_TARGET_COMPANY = UpdateNode
-QMAKE_TARGET_PRODUCT = "UpdateNode Client"
-QMAKE_TARGET_DESCRIPTION = UpdateNode Client for software updates and messages
+QMAKE_TARGET_PRODUCT = UpdateNode Client
+QMAKE_TARGET_DESCRIPTION = UpdateNode Client
 QMAKE_TARGET_COPYRIGHT = Copyright by (C) UpdateNode UG. All rights reserved.
 
 DEFINES += \
-    APP_VERSION=$${VERSION} \
+    APP_VERSION=\\\"$${VERSION}\\\" \
     APP_VERSION_HIGH=$${VERSION_HIGH} \
     APP_VERSION_LOW=$${VERSION_LOW}   \
     APP_VERSION_REV=$${VERSION_REV}   \
