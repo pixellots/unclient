@@ -229,7 +229,7 @@ void SingleAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus
         {
             m_pUi->labelProgress->setText(tr("Update '%1' installed successfully").arg(m_oCurrentUpdate.getTitle()));
 
-            UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << " updated successfully!";
+            UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << "updated successfully!";
 
             if(m_oCurrentUpdate.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION)
                 settings.setNewVersion(UpdateNode::Config::Instance(), UpdateNode::Config::Instance()->product(), m_oCurrentUpdate.getTargetVersion());
@@ -239,18 +239,18 @@ void SingleAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus
         {
             m_pUi->labelProgress->setText(tr("Update '%1' failed with error %2").arg(m_oCurrentUpdate.getTitle()).arg(aExitCode));
 
-            UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << "updated failed - ErrorCode " << aExitCode;
+            UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << "update failed - ErrorCode " << aExitCode;
             m_iErrorCode = UPDATENODE_PROCERROR_UPDATE_EXEC_FAILED;
         }
     }
     else
     {
         m_pUi->labelProgress->setText(tr("Update '%1' closed unexpected"));
-        UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << " crashed!";
+        UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << "crashed!";
         m_iErrorCode = UPDATENODE_PROCERROR_UPDATE_EXEC_CRASHED;
     }
 
-    if(UpdateNode::Config::Instance()->isSilent())
+    if(UpdateNode::Config::Instance()->isSilent() || m_oCurrentUpdate.getTypeEnum() == UpdateNode::Update::INSTALLER_SETS_VERSION)
         qApp->exit(m_iErrorCode);
 }
 
