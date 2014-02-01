@@ -171,8 +171,7 @@ void Downloader::downloadFinished(QNetworkReply *reply)
         QString filename;
         filename = UpdateNode::LocalFile::getDownloadLocation(url.toString());
 
-        if (saveToDisk(filename, reply, update.getCode()))
-            UpdateNode::Logging() << "Download of " << url.toEncoded().constData() << " succeeded (saved to " << filename << ")";
+        saveToDisk(filename, reply, update.getCode());
     }
 
     m_oCurrentDownloads.remove(reply);
