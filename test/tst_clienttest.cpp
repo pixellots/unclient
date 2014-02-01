@@ -67,7 +67,7 @@ ClientTest::ClientTest()
     update.setCommand("test");
     update.setCommandLine("");
     update.setDescription("description");
-    update.setDownloadLink("http://updatenode.com/test/test.tst");
+    update.setDownloadLink("http://updatenode.com/api/test.tst");
     update.setFileSize("1 MB");
     update.setRequiresAdmin(false);
 
@@ -107,8 +107,8 @@ void ClientTest::test_commander_resolve()
     QVERIFY2(commander.resolve("[UN_FILENAME]") == "test.tst", "UN_FILENAME");
     QVERIFY2(commander.resolve("[UN_UP_LINK]") == update.getDownloadLink(), "UN_UP_LINK");
 
-    update.setDownloadLink("updatenode.com/test/test.tst?lang=[UN_LANG]&[UN_VERSION]");
-    QVERIFY2(update.getDownloadLink() == QString("http://updatenode.com/test/test.tst?lang=%1&%2").arg(QLocale::system().name()).arg(UPDATENODE_CLIENT_VERSION), qPrintable(update.getDownloadLink()));
+    update.setDownloadLink("updatenode.com/api/test.tst?lang=[UN_LANG]&[UN_VERSION]");
+    QVERIFY2(update.getDownloadLink() == QString("http://updatenode.com/api/test.tst?lang=%1&%2").arg(QLocale::system().name()).arg("0.0"), qPrintable(update.getDownloadLink()));
 
 }
 
@@ -291,7 +291,7 @@ void ClientTest::test_version_compare()
 void ClientTest::test_downloader_download()
 {
     UpdateNode::Downloader downloader;
-    QUrl url("http://updatenode.com/updatenode_96.png");
+    QUrl url("http://updatenode.com/images/logo/updatenode_96.png");
 
     QNetworkReply* reply = downloader.doDownload(url, update);
 
@@ -340,7 +340,7 @@ void ClientTest::test_service_check()
 {
     UpdateNode::Service service;
 
-    UpdateNode::Config::Instance()->setKey("73ddf26f0d79fdb70b5dcfe738fbe685");
+    UpdateNode::Config::Instance()->setKey("demo");
     //UpdateNode::Config::Instance()->setTestKey("ef5dc6f7019738a18ee6b1573bcfbf5c");
     UpdateNode::Config::Instance()->setProductCode("unittest");
     UpdateNode::Config::Instance()->setVersion("3.0");
@@ -373,7 +373,7 @@ void ClientTest::test_service_check()
     QVERIFY(service.status() == 0);
     QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getTitle() == "unittest_update1");
     QVERIFY2(UpdateNode::Config::Instance()->updates().at(0).getDescription().toUtf8() == "<p>äüößÄÖÜ?!\"§$%&amp;/()=*'_:&lt;&gt;|^°`´+#-.@\\\\</p>", UpdateNode::Config::Instance()->updates().at(0).getDescription().toUtf8());
-    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getDownloadLink() == "http://updatenode.com/test/initial.data");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getDownloadLink() == "http://updatenode.com/initial.data");
     QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getFileSize() == "1 Test");
     QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getTargetVersion().getVersion() == "2.0");
     QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getTargetVersion().getCode() == "unittest_2");
@@ -420,7 +420,7 @@ void ClientTest::test_service_check()
     QVERIFY(service.status() == 0);
     QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getTitle() == "unittest_update2");
     QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getDescription().toUtf8() == "<p>This is the second update</p>");
-    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getDownloadLink() == "http://updatenode.com/test/initial.data");
+    QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getDownloadLink() == "http://updatenode.com/initial.data");
     QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getFileSize() == "2 Test");
     QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getTargetVersion().getVersion() == "3.0");
     QVERIFY(UpdateNode::Config::Instance()->updates().at(0).getTargetVersion().getCode() == "unittest_3");
