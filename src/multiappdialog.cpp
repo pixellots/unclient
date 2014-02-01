@@ -483,13 +483,13 @@ void MultiAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
             m_pUI->pshCheck->show();
             m_pUI->labelProgress->setText(tr("Update '%1' failed with error %2").arg(m_oCurrentUpdate.getTitle()).arg(aExitCode));
 
-            UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << "updated failed - ErrorCode " << aExitCode;
+            UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << "update failed - ErrorCode " << aExitCode;
             m_pCurrentItem->setTextColor(0, QColor("red"));
         }
     }
     else
     {
-        UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << " crashed!";
+        UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << "crashed!";
         m_pCurrentItem->setTextColor(0, QColor("red"));
     }
 
