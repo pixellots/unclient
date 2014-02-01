@@ -36,7 +36,8 @@
 
 int printHelp()
 {
-    QString appName =   QString("%1 %2 %3").arg(UPDATENODE_COMPANY_STR).arg(UPDATENODE_APPLICATION_STR).arg(UPDATENODE_CLIENT_VERSION);
+    QString version = QString("%1.%2.%3.%4").arg(APP_VERSION_HIGH).arg(APP_VERSION_LOW).arg(APP_VERSION_REV).arg(APP_VERSION_BUILD);
+    QString appName =   QString("%1 %2 %3").arg(UPDATENODE_COMPANY_STR).arg(UPDATENODE_APPLICATION_STR).arg(version);
     QString message =   QString("Command Line Parameters: \n\n%1 <options> mode").arg(QFileInfo(qApp->arguments().at(0)).fileName())
             + "\n\n"
             + "Mode:\n\n"
@@ -64,7 +65,6 @@ int printHelp()
             + "  -l <lang-code> \tlanguage code\n"
             + "  -sp <png_file> \tsplash screen (PNG)\n"
             + "  -exec <command>\tlaunches command before terminating\n"
-            + "  -v             \tshows current UpdateNode client version\n"
             + "\n";
 
 #ifdef Q_OS_UNIX
@@ -205,11 +205,6 @@ int main(int argc, char *argv[])
             config->setExec(arguments.at(i+1));
         else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help" || arguments.at(i) == "-help")
             return printHelp();
-        else if(arguments.at(i) == "-v")
-        {
-            printf("%d.%d.%d.%d\n", APP_VERSION_HIGH, APP_VERSION_LOW, APP_VERSION_REV, APP_VERSION_BUILD);
-            return 0;
-        }
         else if(argument == "-update" || argument == "-messages"
                 || argument == "-register" || argument == "-unregister" || argument == "-manager"
                 || argument == "-check" || argument == "-download" || argument == "-execute")
@@ -283,5 +278,5 @@ int main(int argc, char *argv[])
 
     un_app.checkForUpdates();
 
-    return a.exec();
+    return un_app.returnANDlaunch(a.exec());
 }
