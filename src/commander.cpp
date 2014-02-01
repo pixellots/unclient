@@ -426,7 +426,7 @@ QString Commander::resolveGeneral(const QString& aString)
     theString = theString.replace("[UN_SEP]", QDir::separator());
     theString = theString.replace("[UN_DOWNLOAD_PATH]", UpdateNode::LocalFile::getDownloadPath());
     theString = theString.replace("[UN_CLIENT_PATH]", settings.getCurrentClientDir());
-    theString = theString.replace("[UN_VERSION]", UPDATENODE_CLIENT_VERSION);
+    theString = theString.replace("[UN_VERSION]", QString("%1.%2").arg(APP_VERSION_HIGH).arg(APP_VERSION_LOW));
     theString = theString.replace("[UN_LANG]", UpdateNode::Config::Instance()->getLanguage());
     theString = theString.replace("[UN_OS]", UpdateNode::OSDetection::getOS());
     theString = theString.replace("[UN_ARCH]", UpdateNode::OSDetection::getArch());
