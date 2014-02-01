@@ -58,13 +58,15 @@ namespace UpdateNode
             bool installTranslations();
             void showSplashScreen(UpdateNode::Service* aService, const QString& aMode);
 
-        public:
-            static int returnANDlaunch(int aResult);
+            int returnANDlaunch(int aResult);
 
         public slots:
             void setVisible(bool aShown = true);
             void killMeOrNot();
-            int afterCheck();
+            void afterCheck();
+
+        private:
+            QString errorCodeToString(int aCode) const;
 
         private:
             UserMessages m_oMessageDialog;
