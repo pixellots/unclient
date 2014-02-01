@@ -147,6 +147,7 @@ int main(int argc, char *argv[])
     QString mode;
     QString argument;
     QStringList arguments = a.arguments();
+    bool relaunched = false;
 
     // get config data
     int index = arguments.indexOf("-config");
@@ -188,6 +189,8 @@ int main(int argc, char *argv[])
             config->setSilent(true);
         else if(argument == "-r")
             config->setRelaunch(true);
+        else if(argument == "-re")
+            relaunched = true;
         else if(argument == "-st")
             config->setSystemTray(true);
         else if(argument == "-i" && hasNext)
@@ -234,7 +237,8 @@ int main(int argc, char *argv[])
            return settings.unRegisterVersion() ? 0 : 1;
     }
 
-    settings.setCurrentClientDir(qApp->applicationDirPath());
+    if(!relaunched)
+        settings.setCurrentClientDir(qApp->applicationDirPath());
 
     if(config->isRelaunch() && (mode == "-manager" || mode == "-update" || mode == "-execute") && un_app.relaunchUpdateSave(config->getKeyHashed()))
     {
