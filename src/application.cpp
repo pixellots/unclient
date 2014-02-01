@@ -316,9 +316,8 @@ Returns the error code and optionaly lauches an external program\n
 as specified with -exec parameter.
 \note There are two optional parameters which can be passed to your
 \note lauching program.[UN_ERRORCODE] which is the returned error code
-\note and [UN_VERSION] which identifies the new set version.
-\note [UN_VERSION] is - when version has not changed, otherwise
-\note it contains the changed version (only for client-based updates)
+\note and [UN_VERSION] which identifies the current version.
+\note (only for single mode updates)
 */
 int Application::returnANDlaunch(int aResult)
 {
@@ -326,34 +325,92 @@ int Application::returnANDlaunch(int aResult)
 
     if(!exec.isEmpty())
     {
-        UpdateNode::Logging() << "Lauching: " << exec;
         exec = exec.replace("[UN_ERRORCODE]", QString::number(aResult));
         if(UpdateNode::Config::Instance()->isSingleMode())
         {
-            if(UpdateNode::Config::Instance()->updates().size()==1)
-            {
-                UpdateNode::Update update = UpdateNode::Config::Instance()->updates().at(0);
-                if(update.getTypeEnum() == UpdateNode::Update::CLIENT_SETS_VERSION)
-                {
-                    UpdateNode::Settings settings;
-                    exec = exec.replace("[UN_VERSION]", settings.getProductVersion());
-                }
-            }
+            UpdateNode::Settings settings;
+            exec = exec.replace("[UN_VERSION]", settings.getProductVersion());
         }
 
         // set to "-" in case the above if statement does not match
         exec = exec.replace("[UN_VERSION]", "-");
 
+        UpdateNode::Logging() << "Lauching: " << exec;
+
         if(!QProcess::startDetached(exec))
             QMessageBox::critical(0, QString("%1 %2").arg(UPDATENODE_COMPANY_STR).arg(UPDATENODE_APPLICATION_STR), QObject::tr("Unable to launch '%1'").arg(exec));
     }
 
-    UpdateNode::Logging() << "unclient finished with return code" << QString::number(aResult);
+    UpdateNode::Logging() << "unclient finished with: " << errorCodeToString(aResult);
 
     qApp->exit(aResult);
 
     return aResult;
 }
+
+/*!
+Coverts the error code into a human readyble string
+*/
+QString Application::errorCodeToString(int aCode) const
+{
+    QString result;
+    switch(aCode)
+    {
+        case 0:
+            result = "Success";
+            break;
+
+        case UPDATENODE_PROCERROR_NO_UPDATES:
+            result = "No Updates/Messages available";
+            break;
+
+        case UPDATENODE_PROCERROR_WRONG_PARAMETER:
+            result = "Wrong parameter passed";
+            break;
+
+        case UPDATENODE_PROCERROR_CANCELED:
+            result = "Process canceled by user";
+            break;
+
+        case UPDATENODE_PROCERROR_UPDATE_EXEC_FAILED:
+            result = "Failed to execute the update";
+            break;
+
+        case UPDATENODE_PROCERROR_UPDATE_EXEC_CRASHED:
+            result = "The update process crashed";
+            break;
+
+        case UPDATENODE_PROCERROR_COMMAND_LAUNCH_FAILED:
+            result = "Failed to launch the update command";
+            break;
+
+        case UPDATENODE_PROCERROR_DOWNLOAD_FAILED:
+            result = "Download error";
+            break;
+
+        case UPDATENODE_PROCERROR_WINDOWS_UAC_FAILED:
+            result = "Couldn't get administrative rights";
+            break;
+
+        case UPDATENODE_PROCERROR_RUN_DOWNLOAD_FIRST:
+            result = "Download mode (-download) needs to be finshed before execution is started";
+            break;
+
+        case UPDATENODE_PROCERROR_REGISTER_FIRST:
+            result = "Register a product first";
+            break;
+
+        case UPDATENODE_PROCERROR_SERVICE_ERROR:
+            result = "UpdateNode API returned error";
+            break;
+
+        default:
+            result = "Unknown error";
+            break;
+    }
+    return result + " (" + QString::number(aCode) + ")";
+}
+
 
 /*!
 Sets the pointer to the current used UpdateNode::Service
@@ -422,19 +479,20 @@ void Application::checkForUpdates()
 Slot which is called in case of -check mode. \n
 Depends on the config, just returns using silent mode\n
 or show a message box with the result.\n
+This slot is ending the main event loop\n
 \note When unclient is lauched with -st (Stytem Tray)
 \note a system tray icon is shown from this slot
 */
-int Application::afterCheck()
+void Application::afterCheck()
 {
     UpdateNode::Config* config = UpdateNode::Config::Instance();
 
     if(config->isSilent())
     {
         if(config->isSingleMode())
-            return returnANDlaunch(m_pService->returnCode());
+            qApp->exit(m_pService->returnCode());
         else
-            return returnANDlaunch(m_pService->returnCodeManager());
+            qApp->exit(m_pService->returnCodeManager());
     }
     else
     {
@@ -463,7 +521,8 @@ int Application::afterCheck()
                 m_pSystemTray->actionsBasedOnReturn(m_pService->returnCodeManager());
 
             m_pSystemTray->showMessage(text);
-            return 0;
+            qApp->exit(0);
+            return;
         }
         else if(!config->isSystemTray())
         {
@@ -476,8 +535,8 @@ int Application::afterCheck()
         }
 
         if(config->isSingleMode())
-            return returnANDlaunch(m_pService->returnCode());
+            qApp->exit(m_pService->returnCode());
         else
-            return returnANDlaunch(m_pService->returnCodeManager());
+            qApp->exit(m_pService->returnCodeManager());
     }
 }
