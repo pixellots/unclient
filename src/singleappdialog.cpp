@@ -173,6 +173,12 @@ void SingleAppDialog::serviceDone()
         UpdateNode::Settings settings;
         QString cachedFile = settings.getCachedFile(update.getCode());
 
+        if(!config->isSilent())
+        {
+            adjustSize();
+            show();
+        }
+
         if(update.getCode().isEmpty() || !QFile::exists(cachedFile))
         {
             qApp->exit(UPDATENODE_PROCERROR_RUN_DOWNLOAD_FIRST);
