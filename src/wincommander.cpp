@@ -89,10 +89,7 @@ uint WinCommander::runProcessElevated(const QString &path,
         CloseHandle (shex.hProcess) ;
     }
     else
-    {
-        qApp->exit(UPDATENODE_PROCERROR_WINDOWS_UAC_FAILED);
-        return 0;
-    }
+        return UPDATENODE_PROCERROR_WINDOWS_UAC_FAILED;
 
     result = (uint)dwCode;
 #else
