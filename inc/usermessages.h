@@ -64,6 +64,7 @@ private:
 #else
     Ui::UserMessages *ui;
 #endif
+	bool m_bFromRight;
     UpdateNode::Service* m_pService;
     QList<UpdateNode::Message> m_listMessages;
 

@@ -57,6 +57,8 @@ UserMessages::UserMessages(QWidget *parent) :
 {
     ui->setupUi(this);
 
+	m_bFromRight = false;
+
     QNetworkDiskCache* cache = new QNetworkDiskCache(this);
     cache->setCacheDirectory(UpdateNode::LocalFile::getCachePath());
 #ifdef QT_WEBKIT_LIB
@@ -100,15 +102,29 @@ void UserMessages::serviceDone()
     else if(!config->mainIcon().isEmpty())
         setWindowIcon(QPixmap(config->mainIcon()).scaledToHeight(64, Qt::SmoothTransformation));
 
+	QList<int> externalMessages;
     QList<UpdateNode::Message> message_list= config->messages();
     for(int i = 0; i < message_list.size(); i++)
     {
         if(!settings.messageShownAndLoaded(message_list.at(i).getCode()))
-            m_listMessages << message_list.at(i);
+		{
+			m_listMessages << message_list.at(i);
+			if(message_list.at(i).isOpenExternal())
+				externalMessages << m_listMessages.size()-1;
+		}
     }
 
+	if(m_listMessages.size() != externalMessages.size())
+	{
+		foreach(int ext, externalMessages)
+			m_listMessages.takeAt(ext);
+	}
+
     if(m_listMessages.isEmpty())
-        qApp->quit();
+	{
+		qApp->exit(UPDATENODE_PROCERROR_NO_UPDATES);
+		return;
+	}
     else
     {
         if(m_listMessages.size()==1)
@@ -116,11 +132,12 @@ void UserMessages::serviceDone()
         else
             setWindowTitle(config->product().getName() + tr(" - Messages"));
     }
-    layout()->setSizeConstraint(QLayout::SetMinimumSize);
-
+    
     showMessage();
 
-    setWindowState( (windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+	adjustSize();	
+
+	setWindowState( (windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
     raise();
     activateWindow();
 }
@@ -130,7 +147,7 @@ void UserMessages::showMessage()
 {
     if(m_listMessages.isEmpty())
     {
-        qApp->quit();
+        qApp->exit(0);
         return;
     }
 
@@ -140,30 +157,35 @@ void UserMessages::showMessage()
     ui->pshRead->setDisabled(true);
 
     if(m_listMessages.size()>1)
-        ui->label->setText(m_listMessages.at(m_iCurrentIndex).getTitle() +  QString(" (%1/%2)").arg(m_iCurrentIndex+1).arg(m_listMessages.size()));
-    else
-        ui->label->setText(m_listMessages.at(m_iCurrentIndex).getTitle());
-
-    if(m_listMessages.at(m_iCurrentIndex).isOpenExternal() &&
-            !m_listMessages.at(m_iCurrentIndex).getLink().isEmpty())
+		ui->label->setText(m_listMessages.at(m_iCurrentIndex).getTitle() +  QString(" (%1/%2)").arg(m_iCurrentIndex+1).arg(m_listMessages.size()));
+	else
+		ui->label->setText(m_listMessages.at(m_iCurrentIndex).getTitle());
+	
+    if(m_listMessages.at(m_iCurrentIndex).isOpenExternal() 
+		&& !m_listMessages.at(m_iCurrentIndex).getLink().isEmpty())
     {
+		hide();
+
         QMessageBox box(this);
 
         box.setWindowTitle(UpdateNode::Config::Instance()->product().getName() + tr(" - Message"));
-        box.addButton(QMessageBox::Yes);
+		QPushButton* yesButton = box.addButton(tr("Yes"), QMessageBox::ActionRole);
         box.addButton(tr("Not now"), QMessageBox::RejectRole);
         box.setText(tr("There is a new message available:<br><br>"
                        "<b>%1</b><br><br>"
                        "Do you want to read this message in your standard browser now?").arg(m_listMessages.at(m_iCurrentIndex).getTitle()));
 
-        if(box.exec() == QMessageBox::Yes)
+		box.exec();
+
+		if(box.clickedButton() == yesButton)
         {
-            QDesktopServices::openUrl(QUrl::fromUserInput(m_listMessages.at(m_iCurrentIndex).getLink()));
-            UpdateNode::Settings settings;
-            settings.setMessage(m_listMessages.at(m_iCurrentIndex), true, true);
+            openLink(QUrl::fromUserInput(m_listMessages.at(m_iCurrentIndex).getLink()));
+			UpdateNode::Settings settings;
+			UpdateNode::Message message = m_listMessages.takeAt(m_iCurrentIndex);
+			settings.setMessage(message, true, true);
         }
-        qApp->quit();
-        return;
+		qApp->exit(0);
+		return;
     }
     else
     {
@@ -203,12 +225,14 @@ void UserMessages::showMessage()
 
 void UserMessages::onLeft()
 {
+	m_bFromRight = true;
     m_iCurrentIndex--;
     showMessage();
 }
 
 void UserMessages::onRight()
 {
+	m_bFromRight = false;
     m_iCurrentIndex++;
     showMessage();
 }
