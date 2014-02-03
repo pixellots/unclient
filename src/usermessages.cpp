@@ -132,10 +132,9 @@ void UserMessages::serviceDone()
         else
             setWindowTitle(config->product().getName() + tr(" - Messages"));
     }
+    layout()->setSizeConstraint(QLayout::SetMinimumSize);
     
     showMessage();
-
-	adjustSize();	
 
 	setWindowState( (windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
     raise();
