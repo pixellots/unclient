@@ -207,11 +207,18 @@ message("INFO: The build number has been increased to $$cat(build.no)")
 
 #### deploy target
 #### to be used for creating a new release
-win32::deploy.commands = del build.no.temp && @echo ***************** SUCCESSFULLY BUILD ****************** && dir package
 unix::deploy.commands = rm build.no.temp && echo ***************** SUCCESSFULLY BUILD ******************
-!static::win32::deploy.depends = clean updateqm release package_deploy
-static::win32::deploy.depends = clean updateqm release
 unix::deploy.depends = clean updateqm all
+
+!static{
+win32::deploy.commands = del build.no.temp && @echo ***************** SUCCESSFULLY BUILD ****************** && dir package
+win32::deploy.depends = clean updateqm release package_deploy
+}
+static{
+win32::deploy.commands = del build.no.temp && @echo ***************** SUCCESSFULLY BUILD ******************
+win32::deploy.depends = clean updateqm release
+}
+
 deploy.target = deploy
 QMAKE_EXTRA_TARGETS += deploy
 
