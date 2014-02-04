@@ -11,6 +11,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += webkitwidgets
 !webkit{
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 }
+static{
+CONFIG+= static
+}
 
 SUBDIRS=test
 
@@ -165,6 +168,7 @@ vc_deploy.target = vc_deploy
 }
 
 win32{
+!static{
 clean_package_deploy.commands = -cmd.exe /C $(DEL_DIR) /S/Q package
 clean_package_deploy.target = clean_package_deploy
 create_package_deploy.commands = $(MKDIR) package
@@ -187,6 +191,7 @@ copy_binary.commands = $(COPY) release\\unclient.exe package
 copy_binary.target = copy_binary
 QMAKE_EXTRA_TARGETS += copy_binary build_installer package_deploy clean_package_deploy create_package_deploy qtcore_deploy qtgui_deploy qtnetwork_deploy qtxml_deploy qtwebkit_deploy ssl_package_deploy vc_deploy
 }
+}
 !win32{
 package_deploy.commands = echo *** UNSUPPORTED ***
 package_deploy.target = package_deploy
@@ -204,7 +209,8 @@ message("INFO: The build number has been increased to $$cat(build.no)")
 #### to be used for creating a new release
 win32::deploy.commands = del build.no.temp && @echo ***************** SUCCESSFULLY BUILD ****************** && dir package
 unix::deploy.commands = rm build.no.temp && echo ***************** SUCCESSFULLY BUILD ******************
-win32::deploy.depends = clean updateqm release package_deploy
+!static::win32::deploy.depends = clean updateqm release package_deploy
+static::win32::deploy.depends = clean updateqm release
 unix::deploy.depends = clean updateqm all
 deploy.target = deploy
 QMAKE_EXTRA_TARGETS += deploy
