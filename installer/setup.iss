@@ -37,6 +37,10 @@ OutputBaseFilename=setup
 Compression=lzma
 SolidCompression=yes
 CreateUninstallRegKey=no
+#ifdef SIGNED
+SignTool=SIGN $f
+SignedUninstaller=true
+#endif
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
