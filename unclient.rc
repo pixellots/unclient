@@ -17,12 +17,12 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "CompanyName", "UpdateNode UG (haftungsbeschränkt)\0"
+            VALUE "CompanyName", "UpdateNode UG (haftungsbeschraenkt)\0"
             VALUE "FileDescription", "UpdateNode Client\0"
             VALUE "OriginalFilename", "unclient.exe\0"
             VALUE "ProductName", "UpdateNode Client\0"
             VALUE "ProductVersion", APP_VERSION
-            VALUE "LegalCopyright", "\xA9 UpdateNode UG (haftungsbeschränkt). All rights reserved.\0"
+            VALUE "LegalCopyright", "\xA9 UpdateNode UG (haftungsbeschraenkt). All rights reserved.\0"
         END
     END
     BLOCK "VarFileInfo"
