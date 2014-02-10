@@ -65,6 +65,7 @@ int printHelp()
             + "  -l <lang-code> \tlanguage code\n"
             + "  -sp <png_file> \tsplash screen (PNG)\n"
             + "  -exec <command>\tlaunches command before terminating\n"
+            + "  -http          \tdo not use a secure SSL connection (not recommended)\n"
             + "\n";
 
 #ifdef Q_OS_UNIX
@@ -106,6 +107,8 @@ void getParametersFromFile(const QString& file)
         config->setLanguage(settings->value("language").toString());
     if(settings->contains("silent"))
         config->setSilent(settings->value("silent").toString().toLower()=="true");
+    if(settings->contains("http") && settings->value("http").toString().toLower()=="true")
+        config->setHost(QString(UPDATENODE_SERVICE_URL).replace("https", "http"));
     if(settings->contains("systemtray"))
         config->setSystemTray(settings->value("systemtray").toString().toLower()=="true");
     if(settings->contains("relaunch"))
@@ -206,7 +209,7 @@ int main(int argc, char *argv[])
             config->setSplashScreen(arguments.at(i+1));
         else if(arguments.at(i) == "-exec" && hasNext)
             config->setExec(arguments.at(i+1));
-        else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help" || arguments.at(i) == "-help")
+        else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help" || arguments.at(i) == "-help" || arguments.at(i) == "/?")
             return printHelp();
         else if(argument == "-update" || argument == "-messages"
                 || argument == "-register" || argument == "-unregister" || argument == "-manager"
