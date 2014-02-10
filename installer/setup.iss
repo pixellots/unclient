@@ -41,6 +41,7 @@ CreateUninstallRegKey=no
 SignTool=SIGN $f
 SignedUninstaller=true
 #endif
+LicenseFile=..\LICENSE.GPL
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
