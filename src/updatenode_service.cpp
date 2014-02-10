@@ -125,7 +125,10 @@ bool Service::checkForUpdates(UpdateNode::Config* aConfig)
     QUrl url(UPDATENODE_SERVICE_URL);
 
     if(!globalConfig->getHost().isEmpty())
+    {
+        UpdateNode::Logging() << "WARNING: Running in HTTP mode";
         url = url.fromUserInput(globalConfig->getHost());
+    }
 
 #if QT_VERSION >= 0x050000
     QUrlQuery url_query;
