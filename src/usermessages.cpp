@@ -86,6 +86,11 @@ void UserMessages::init(UpdateNode::Service* aService)
 {
     m_pService = aService;
     connect(m_pService, SIGNAL(done()), SLOT(serviceDone()));
+
+#ifdef QT_WEBKIT_LIB
+    connect(ui->webView->page()->networkAccessManager(), SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)),
+            m_pService, SLOT(onSslError(QNetworkReply*,QList<QSslError>)));
+#endif
 }
 
 void UserMessages::serviceDone()
