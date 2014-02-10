@@ -46,15 +46,10 @@ SignedUninstaller=true
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: "..\package\unclient.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\package\libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\package\QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\package\QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\package\QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\package\QtWebkit4.dll"; DestDir: "{app}"; Flags: ignoreversion skipifsourcedoesntexist
-Source: "..\package\QtXml4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\package\ssleay32.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\package\vcredist_x86.exe"; DestDir: "{app}\3rdparty"; Flags: ignoreversion skipifsourcedoesntexist
+Source: "..\package\unclient.exe"; DestDir: "{app}"; Flags: 
+Source: "..\package\*.dll"; DestDir: "{app}"; Flags: 
+Source: "..\package\platforms\qwindows.dll"; DestDir: "{app}\platforms"; Flags: skipifsourcedoesntexist
+Source: "..\package\vcredist_x86.exe"; DestDir: "{app}\3rdparty"; Flags: skipifsourcedoesntexist
 
 [Run]
-Filename: "{app}\3rdparty\vcredist_x86.exe"; Parameters: "/passive"; WorkingDir: "{app}\3rdparty"; StatusMsg: "Installing Micosoft's C/C++ runtime ..."; Flags: skipifdoesntexist
+Filename: "{app}\3rdparty\vcredist_x86.exe"; Parameters: "/q /norestart"; WorkingDir: "{app}\3rdparty"; StatusMsg: "Installing Micosoft C/C++ runtime ..."; Flags: skipifdoesntexist
