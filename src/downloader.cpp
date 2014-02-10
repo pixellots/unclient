@@ -55,6 +55,7 @@ void Downloader::doDownload(const QUrl& url, const QString& aFileName)
     QNetworkRequest request(url);
 
     connect(&m_oManager, SIGNAL(finished(QNetworkReply*)), SLOT(downloadFileFinished(QNetworkReply*)));
+    connect(&m_oManager, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), SLOT(onSslError(QNetworkReply*,QList<QSslError>)));
 
     QNetworkReply *reply = m_oManager.get(request);
 
@@ -79,6 +80,7 @@ QNetworkReply* Downloader::doDownload(const QUrl& url, const UpdateNode::Update&
     }
 
     connect(&m_oManager, SIGNAL(finished(QNetworkReply*)), SLOT(downloadFinished(QNetworkReply*)));
+    connect(&m_oManager, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), SLOT(onSslError(QNetworkReply*,QList<QSslError>)));
 
     QNetworkRequest request(url);
 
@@ -189,3 +191,20 @@ bool Downloader::isDownloading()
 {
     return m_oCurrentDownloads.size() > 0;
 }
+
+/*!
+Slot called on SSL errors
+*/
+void Downloader::onSslError(QNetworkReply *reply, const QList<QSslError>& errors)
+{
+    QSslError error(QSslError::NoError);
+
+    foreach(QSslError error, errors)
+        if(error.error() != QSslError::NoError)
+            UpdateNode::Logging() << error.errorString();
+
+    QList<QSslError> expectedSslErrors;
+    expectedSslErrors.append(error);
+    reply->ignoreSslErrors(expectedSslErrors);
+}
+

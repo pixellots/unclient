@@ -52,17 +52,17 @@ uint WinCommander::runProcessElevated(const QString &path,
 #ifdef Q_OS_WIN
     QString params;
     HWND hwnd = NULL;
-    LPCTSTR pszPath = path.utf16();
+    LPCTSTR pszPath = (LPCTSTR)path.utf16();
     foreach(QString item, parameters)
         params += "\"" + item + "\" ";
 
-    LPCTSTR pszParameters = params.utf16();
+    LPCTSTR pszParameters = (LPCTSTR)params.utf16();
     QString dir;
     if (workingDir.isEmpty())
         dir = QDir::toNativeSeparators(QDir::currentPath());
     else
         dir = QDir::toNativeSeparators(workingDir);
-    LPCTSTR pszDirectory = dir.utf16();
+    LPCTSTR pszDirectory = (LPCTSTR)dir.utf16();
 
     SHELLEXECUTEINFO shex;
     DWORD dwCode  =   0;

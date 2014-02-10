@@ -183,8 +183,8 @@ int main(int argc, char *argv[])
             config->setSingleMode(true);
             config->setVersion(arguments.at(i+1));
         }
-        else if(argument == "-host" && hasNext)
-            config->setHost(arguments.at(i+1));
+        else if(argument == "-http")
+            config->setHost(QString(UPDATENODE_SERVICE_URL).replace("https", "http"));
         else if(argument == "-s")
             config->setSilent(true);
         else if(argument == "-r")

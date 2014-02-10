@@ -25,6 +25,7 @@
 #include <QUrl>
 #include <QNetworkReply>
 #include <QNetworkProxyFactory>
+#include <QSslConfiguration>
 
 #include "qglobal.h"
 #if QT_VERSION >= 0x050000
@@ -90,6 +91,8 @@ bool Service::checkForUpdates()
 
         connect(m_pManager, SIGNAL(finished(QNetworkReply*)),
                 this, SLOT(requestReceived(QNetworkReply*)));
+        connect(m_pManager, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)),
+                this, SLOT(onSslError(QNetworkReply*,QList<QSslError>)));
     }
 
     m_mapConfig.clear();
@@ -379,6 +382,22 @@ QString Service::notificationTextManager()
             break;
     }
     return text;
+}
+
+/*!
+Slot called on SSL errors
+*/
+void Service::onSslError(QNetworkReply *reply, const QList<QSslError>& errors)
+{
+    QSslError error(QSslError::NoError);
+
+    foreach(QSslError error, errors)
+        if(error.error() != QSslError::NoError)
+            UpdateNode::Logging() << error.errorString();
+
+    QList<QSslError> expectedSslErrors;
+    expectedSslErrors.append(error);
+    reply->ignoreSslErrors(expectedSslErrors);
 }
 
 /*!

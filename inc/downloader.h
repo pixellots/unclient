@@ -30,6 +30,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QSslError>
 #include <QStringList>
 #include <QTimer>
 #include <QUrl>
@@ -60,6 +61,7 @@ namespace UpdateNode
          public slots:
              void downloadFinished(QNetworkReply *reply);
              void downloadFileFinished(QNetworkReply *reply);
+             void onSslError(QNetworkReply *reply, const QList<QSslError>& errors);
 
         signals:
              void done(QByteArray array, const QString& fileName);

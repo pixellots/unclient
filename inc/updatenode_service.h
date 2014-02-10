@@ -26,12 +26,13 @@
 #include <QObject>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QSslError>
 
 #include "config.h"
 #include "downloader.h"
 #include "status.h"
 
-#define UPDATENODE_SERVICE_URL            "https://updatenode.com/api"
+#define UPDATENODE_SERVICE_URL "https://updatenode.com/api"
 
 namespace UpdateNode
 {
@@ -59,6 +60,7 @@ namespace UpdateNode
             QString notificationTextManager();
         public slots:
             void requestReceived(QNetworkReply* reply);
+            void onSslError(QNetworkReply *reply, const QList<QSslError>& errors);
 
         signals:
             void done();
