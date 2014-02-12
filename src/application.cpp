@@ -300,7 +300,7 @@ void Application::killMeOrNot()
                 memcpy(data, "H", 1);
             else
                 memcpy(data, "S", 1);
-            qApp->quit();
+            qApp->exit(UPDATENODE_PROCERROR_ANOTHER_PROCESS);
         }
         else
         {
@@ -404,6 +404,10 @@ QString Application::errorCodeToString(int aCode) const
 
         case UPDATENODE_PROCERROR_SERVICE_ERROR:
             result = "UpdateNode API returned error";
+            break;
+
+        case UPDATENODE_PROCERROR_ANOTHER_PROCESS:
+            result = "Another instance of unclient has been launched";
             break;
 
         default:
