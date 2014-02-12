@@ -6,5 +6,6 @@
         <file>images/right.png</file>
         <file>images/updatenode.png</file>
         <file>images/empty.png</file>
+        <file>images/cancel.png</file>
     </qresource>
 </RCC>
