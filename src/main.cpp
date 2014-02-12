@@ -145,6 +145,8 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     UpdateNode::Application un_app;
 
+    a.setQuitOnLastWindowClosed(false);
+
     UpdateNode::Config* config = UpdateNode::Config::Instance();
 
     QString mode;
