@@ -22,6 +22,7 @@
 
 #include <QFile>
 #include <QMessageBox>
+#include <QMenu>
 #include <QDesktopServices>
 
 #include "multiappdialog.h"
@@ -52,6 +53,7 @@ MultiAppDialog::MultiAppDialog(QWidget *parent) :
     m_pUI->setupUi(this);
 
     m_iNewUpdates = 0;
+    m_iError = UPDATENODE_PROCERROR_CANCELED;
 
     m_oTextEdit.hide();
 
@@ -68,7 +70,6 @@ MultiAppDialog::MultiAppDialog(QWidget *parent) :
     m_pUI->toolCancel->hide();
     m_pUI->progressBar->hide();
 
-    connect(m_pUI->pshClose, SIGNAL(clicked()), SLOT(accept()));
     connect(m_pUI->pshCheck, SIGNAL(clicked()), SLOT(refresh()));
     connect(m_pUI->pshUpdate, SIGNAL(clicked()), SLOT(startInstall()));
     connect(m_pUI->toolCancel, SIGNAL(clicked()), SLOT(cancelProgress()));
@@ -76,6 +77,9 @@ MultiAppDialog::MultiAppDialog(QWidget *parent) :
     connect(m_pUI->treeUpdate, SIGNAL(itemSelectionChanged()), SLOT(updateSelectedUpdate()));
     connect(m_pUI->treeUpdate, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(checkSelection()));
     connect(m_pUI->treeUpdate, SIGNAL(customContextMenuRequested(QPoint)), SLOT(contextMenu(QPoint)));
+
+    connect(this, SIGNAL(rejected()), SLOT(onClose()));
+    connect(m_pUI->pshClose, SIGNAL(clicked()), SLOT(onClose()));
 
     m_pUI->treeUpdate->setContextMenuPolicy(Qt::CustomContextMenu);
 }
@@ -149,7 +153,6 @@ void MultiAppDialog::checkSelection()
         m_pUI->pshUpdate->setEnabled(false);
 }
 
-#include <QMenu>
 void MultiAppDialog::contextMenu(const QPoint& pos)
 {
     QPoint globalPos = m_pUI->treeUpdate->mapToGlobal(pos);
@@ -312,6 +315,7 @@ void MultiAppDialog::updateView(UpdateNode::Config* aConfig /* = NULL */)
     else
         m_pUI->pshUpdate->setEnabled(true);
 
+    adjustSize();
 }
 
 void MultiAppDialog::updateCounter()
@@ -329,11 +333,17 @@ void MultiAppDialog::updateCounter()
 
     m_pUI->treeUpdate->addTopLevelItem(m_pIgnoredItem);
     m_pIgnoredItem->setHidden(m_pIgnoredItem->childCount()==0);
+
+    if(m_iNewUpdates==0)
+        m_iError = UPDATENODE_PROCERROR_NO_UPDATES;
 }
 
 void MultiAppDialog::refresh()
 {
     UpdateNode::Config::Instance()->clear();
+    m_pUI->labelProgress->hide();
+    m_strErrorString = QString();
+    m_iError = UPDATENODE_PROCERROR_CANCELED;
 
     if(!UpdateNode::Config::Instance()->isSingleMode())
     {
@@ -348,6 +358,7 @@ void MultiAppDialog::refresh()
 
     m_pUI->pshCheck->setDisabled(false);
     QApplication::restoreOverrideCursor();
+    adjustSize();
 }
 
 void MultiAppDialog::startInstall()
@@ -382,7 +393,14 @@ void MultiAppDialog::startInstall()
     m_pUI->toolCancel->hide();
     m_pUI->progressBar->hide();
     m_pUI->pshCheck->show();
-    m_pUI->labelProgress->setText(tr("All updates have been installed successfully"));
+    if(m_strErrorString.isEmpty())
+    {
+        m_iError = 0;
+        m_pUI->labelProgress->setText(tr("All updates have been installed successfully"));
+    }
+    else
+        m_pUI->labelProgress->setText(m_strErrorString);
+
     qApp->processEvents();
 }
 
@@ -435,7 +453,11 @@ void MultiAppDialog::install()
         m_pCurrentItem->setCheckState(0, Qt::Unchecked);
         m_pCurrentItem->setFlags(Qt::NoItemFlags);
         m_bIsInstalling = false;
-        startInstall();
+
+        m_pUI->labelProgress->show();
+        m_pUI->labelProgress->setText(tr("Unable to execute the command!"));
+        m_strErrorString = m_pUI->labelProgress->text();
+        m_iError = UPDATENODE_PROCERROR_COMMAND_LAUNCH_FAILED;
     }
 }
 
@@ -498,5 +520,20 @@ void MultiAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
     m_pCurrentItem->setCheckState(0, Qt::Unchecked);
     m_pCurrentItem->setFlags(Qt::NoItemFlags);
     m_bIsInstalling = false;
-    startInstall();
+
+    adjustSize();
+
+    if(aExitCode==0)
+        startInstall();
+    else
+    {
+        m_strErrorString = m_pUI->labelProgress->text();
+        m_iError = UPDATENODE_PROCERROR_UPDATE_EXEC_FAILED;
+        return;
+    }
+}
+
+void MultiAppDialog::onClose()
+{
+    qApp->exit(m_iError);
 }

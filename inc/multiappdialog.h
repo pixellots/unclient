@@ -65,6 +65,7 @@ class MultiAppDialog : public QDialog
         void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
         void downloadDone(const UpdateNode::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString);
         void checkSelection();
+        void onClose();
 
         void processError();
         void processOutput();
@@ -82,6 +83,8 @@ class MultiAppDialog : public QDialog
         QTreeWidgetItem* m_pIgnoredItem;
 
         QTextEdit m_oTextEdit;
+        QString m_strErrorString;
+        int m_iError;
 
         int m_iNewUpdates;
         bool m_bIsInstalling;
