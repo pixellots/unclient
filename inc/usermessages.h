@@ -53,6 +53,7 @@ public slots:
     void onLeft();
     void onRight();
     void onRead();
+    void onClose();
     void openLink(const QUrl&);
 
 private:

@@ -70,6 +70,9 @@ UserMessages::UserMessages(QWidget *parent) :
     connect(ui->toolRight, SIGNAL(clicked()), SLOT(onRight()));
     connect(ui->pshRead, SIGNAL(clicked()), SLOT(onRead()));
 
+    connect(this, SIGNAL(rejected()), SLOT(onClose()));
+    connect(ui->pshClose, SIGNAL(clicked()), SLOT(onClose()));
+
     ui->progressBar->hide();
     hide();
 }
@@ -255,5 +258,10 @@ void UserMessages::onRead()
 void UserMessages::openLink(const QUrl& aUrl)
 {
     QDesktopServices::openUrl(aUrl);
+}
+
+void UserMessages::onClose()
+{
+    qApp->exit(UPDATENODE_PROCERROR_CANCELED);
 }
 

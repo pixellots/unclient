@@ -57,6 +57,9 @@ SingleAppDialog::SingleAppDialog(QWidget *parent) :
     connect(m_pDownloader, SIGNAL(downloadProgress(qint64,qint64)), SLOT(downloadProgress(qint64, qint64)));
     connect(m_pDownloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), SLOT(downloadDone(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)));
 
+    connect(this, SIGNAL(rejected()), SLOT(onClose()));
+    connect(m_pUi->pushButton, SIGNAL(clicked()), SLOT(onClose()));
+
     m_pUi->chkDetails->hide();
 
     m_iErrorCode = -1;
@@ -104,7 +107,9 @@ void SingleAppDialog::install()
 
     m_pUi->labelProgress->setText(tr("Installing update ..."));
     m_pUi->progressBar->hide();
+    m_pUi->pushButton->hide();
     hide();
+    adjustSize();
 
     if(!m_oCommander.run(m_oCurrentUpdate))
     {
@@ -112,14 +117,8 @@ void SingleAppDialog::install()
         return;
     }
 
-    adjustSize();
-    if(!UpdateNode::Config::Instance()->isSilent())
-        show();
-    else
-    {
-        m_oCommander.waitForFinished();
-    }
-    m_pUi->pushButton->setText(QObject::tr("Close"));
+    if(UpdateNode::Config::Instance()->isSilent())
+       m_oCommander.waitForFinished();
 }
 
 void SingleAppDialog::serviceDone()
@@ -156,9 +155,8 @@ void SingleAppDialog::serviceDone()
                 qApp->exit(UPDATENODE_PROCERROR_CANCELED);
                 return;
             }
-
+            userNotify.hide();
             adjustSize();
-            show();
         }
         download();
     }
@@ -258,10 +256,23 @@ void SingleAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus
 
     if(UpdateNode::Config::Instance()->isSilent() || m_oCurrentUpdate.getTypeEnum() == UpdateNode::Update::INSTALLER_SETS_VERSION)
         qApp->exit(m_iErrorCode);
+    else
+    {
+        m_pUi->pushButton->show();
+        m_pUi->pushButton->setText(QObject::tr("Close"));
+        show();
+    }
 }
 
 void SingleAppDialog::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
+    if(isHidden()
+            && bytesReceived < (qint64)bytesTotal/3)
+    {
+        adjustSize();
+        show();
+    }
+
     if(m_pUi->progressBar->maximum() <= bytesTotal)
     {
         m_pUi->progressBar->setRange(0, bytesTotal);
@@ -282,4 +293,9 @@ void SingleAppDialog::downloadDone(const UpdateNode::Update& aUpdate, QNetworkRe
 
     if(!m_pDownloader->isDownloading())
         install();
+}
+
+void SingleAppDialog::onClose()
+{
+    qApp->exit(UPDATENODE_PROCERROR_CANCELED);
 }

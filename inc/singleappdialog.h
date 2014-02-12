@@ -48,6 +48,7 @@ class SingleAppDialog : public QDialog
         void serviceDone();
         void onDetailsCheck();
         void onCancel();
+        void onClose();
 
         void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
         void downloadDone(const UpdateNode::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString);
