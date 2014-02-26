@@ -50,7 +50,7 @@ Full license description file: LICENSE.GPL
 1. **qmake** (In case you want to build without webkit) or **qmake -config webkit** for integrated webkit
 2. **make** on Linux/Mac or **nmake release** on Windows
 3. If you want to create a fresh version, you might call **(n)make deploy**
-4. On Windows, you can additionally create an installer based on installer/setup.iss definition using **name build_installer** (Requires Inno Setup in PATH)
+4. On Windows, you can additionally create an installer based on installer/setup.iss definition using **nmake build_installer** (Requires Inno Setup in PATH)
 
 ## Browse the Wiki
 
