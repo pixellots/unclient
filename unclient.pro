@@ -20,7 +20,7 @@ SUBDIRS=test
 ### version needs to be checked here
 VERSION_HIGH=1
 VERSION_LOW=0
-VERSION_REV=5
+VERSION_REV=6
 VERSION_BUILD=$$cat(build.no)
 
 VERSION=$${VERSION_HIGH}.$${VERSION_LOW}
@@ -81,7 +81,8 @@ SOURCES += src/main.cpp \
     src/logging.cpp \
     src/helpdialog.cpp \
     src/textbrowser.cpp \
-    src/wincommander.cpp
+    src/wincommander.cpp \
+    src/limittimer.cpp
 
 macx:SOURCES += src/maccommander.cpp
 macx:HEADERS += inc/maccommander.h
@@ -110,7 +111,8 @@ HEADERS += \
     inc/logging.h \
     inc/helpdialog.h \
     inc/textbrowser.h \
-    inc/wincommander.h
+    inc/wincommander.h \
+    inc/limittimer.h
 
 FORMS += \
     forms/singleappdialog.ui \
