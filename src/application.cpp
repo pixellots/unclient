@@ -410,6 +410,10 @@ QString Application::errorCodeToString(int aCode) const
             result = "Another instance of unclient has been launched";
             break;
 
+        case UPDATENODE_PROCERROR_TIMEOUT_REACHED:
+            result = "Timeout was reached";
+            break;
+
         default:
             result = "Unknown error";
             break;
