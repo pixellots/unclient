@@ -7,7 +7,7 @@ Standards-Version: 3.8.3
 Homepage: http://www.updatenode.com
 
 Package: unclient
-Architecture: all
+Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, openssl, libqt4-core, libqt4-gui, libqt4-network, libqt4-xml, libqt4-webkit
 Description: UpdateNode Client - update and messaging client
  unclient is a Qt based cross platform client to execute updates 
