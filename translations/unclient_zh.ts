@@ -4,22 +4,22 @@
 <context>
     <name>DialogUpdate</name>
     <message>
-        <location filename="../forms/multiappdialog.ui" line="14"/>
+        <location filename="../forms/multiappdialog.ui" line="20"/>
         <source>Software Update Manager</source>
         <translation>软件更新管理器</translation>
     </message>
     <message>
-        <location filename="../forms/multiappdialog.ui" line="97"/>
+        <location filename="../forms/multiappdialog.ui" line="182"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../forms/multiappdialog.ui" line="113"/>
+        <location filename="../forms/multiappdialog.ui" line="133"/>
         <source>Check</source>
         <translation>检查</translation>
     </message>
     <message>
-        <location filename="../forms/multiappdialog.ui" line="146"/>
+        <location filename="../forms/multiappdialog.ui" line="114"/>
         <source>Install</source>
         <translation>安装</translation>
     </message>
@@ -35,85 +35,86 @@
 <context>
     <name>MultiAppDialog</name>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="109"/>
-        <location filename="../src/multiappdialog.cpp" line="161"/>
+        <location filename="../src/multiappdialog.cpp" line="113"/>
+        <location filename="../src/multiappdialog.cpp" line="164"/>
         <source>Ignored</source>
         <translation>忽视</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="162"/>
+        <location filename="../src/multiappdialog.cpp" line="165"/>
         <source>Don&apos;t ignore update</source>
         <translation>不要忽略更新</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="164"/>
-        <location filename="../src/multiappdialog.cpp" line="171"/>
+        <location filename="../src/multiappdialog.cpp" line="167"/>
+        <location filename="../src/multiappdialog.cpp" line="174"/>
         <source>Ignore update</source>
         <translation>忽略更新</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="184"/>
+        <location filename="../src/multiappdialog.cpp" line="187"/>
         <source> - Update Manager</source>
         <translation> - 更新管理器</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="217"/>
+        <location filename="../src/multiappdialog.cpp" line="220"/>
         <source>Software Update Manager</source>
         <translation>软件更新管理器</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="287"/>
-        <location filename="../src/multiappdialog.cpp" line="294"/>
+        <location filename="../src/multiappdialog.cpp" line="290"/>
+        <location filename="../src/multiappdialog.cpp" line="297"/>
         <source> (Size: %1)</source>
         <translation> (大小: %1)</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="322"/>
+        <location filename="../src/multiappdialog.cpp" line="326"/>
         <source>There is a new software update available</source>
         <translation>有一个新的软件可更新</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="324"/>
+        <location filename="../src/multiappdialog.cpp" line="328"/>
         <source>There are %1 new software updates available</source>
         <translation>新的软件还有 %1 更新完成</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="326"/>
+        <location filename="../src/multiappdialog.cpp" line="330"/>
         <source>Your software is up to date</source>
         <translation>你的软件是最新的</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="375"/>
+        <location filename="../src/multiappdialog.cpp" line="386"/>
         <source>Downloading update %1 ...</source>
         <translation>下载更新 %1 ...</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="385"/>
+        <location filename="../src/multiappdialog.cpp" line="399"/>
         <source>All updates have been installed successfully</source>
         <translation>所有更新已经安装成功</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="427"/>
+        <location filename="../src/multiappdialog.cpp" line="445"/>
         <source>Installing update &quot;%1&quot;</source>
         <translation>安装更新 &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="433"/>
+        <location filename="../src/multiappdialog.cpp" line="451"/>
         <source>Update failed:&lt;br&gt;%1</source>
         <translation>更新失败:&lt;br&gt;%1</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="433"/>
+        <location filename="../src/multiappdialog.cpp" line="451"/>
+        <location filename="../src/multiappdialog.cpp" line="458"/>
         <source>Unable to execute the command!</source>
         <translation>无法执行命令!</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="464"/>
+        <location filename="../src/multiappdialog.cpp" line="486"/>
         <source>Update &apos;%1&apos; installed successfully</source>
         <translation>更新 &apos;%1&apos; 安装成功</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="484"/>
+        <location filename="../src/multiappdialog.cpp" line="506"/>
         <source>Update &apos;%1&apos; failed with error %2</source>
         <translation>更新&apos;%1&apos; 错误失败 %2</translation>
     </message>
@@ -121,7 +122,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/application.cpp" line="348"/>
+        <location filename="../src/application.cpp" line="343"/>
         <source>Unable to launch &apos;%1&apos;</source>
         <translation>无法启动 &apos;%1&apos;</translation>
     </message>
@@ -146,38 +147,38 @@
         <translation>读取信息</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="122"/>
+        <location filename="../src/singleappdialog.cpp" line="262"/>
         <location filename="../src/systemtray.cpp" line="67"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="330"/>
-        <location filename="../src/updatenode_service.cpp" line="357"/>
+        <location filename="../src/updatenode_service.cpp" line="345"/>
+        <location filename="../src/updatenode_service.cpp" line="372"/>
         <source>There are no new updates &amp; messages available</source>
         <translation>没有新的更新和信息</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="333"/>
-        <location filename="../src/updatenode_service.cpp" line="360"/>
+        <location filename="../src/updatenode_service.cpp" line="348"/>
+        <location filename="../src/updatenode_service.cpp" line="375"/>
         <source>There are new updates available</source>
         <translation>有新的更新可用</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="336"/>
-        <location filename="../src/updatenode_service.cpp" line="363"/>
+        <location filename="../src/updatenode_service.cpp" line="351"/>
+        <location filename="../src/updatenode_service.cpp" line="378"/>
         <source>There are new messages available</source>
         <translation>有新消息</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="339"/>
-        <location filename="../src/updatenode_service.cpp" line="366"/>
+        <location filename="../src/updatenode_service.cpp" line="354"/>
+        <location filename="../src/updatenode_service.cpp" line="381"/>
         <source>There are updates and messages available</source>
         <translation>有可用的更新和信息</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="342"/>
-        <location filename="../src/updatenode_service.cpp" line="369"/>
+        <location filename="../src/updatenode_service.cpp" line="357"/>
+        <location filename="../src/updatenode_service.cpp" line="384"/>
         <source>Undefined state</source>
         <translation>未定义的状态</translation>
     </message>
@@ -205,37 +206,37 @@
         <translation>取消 (&amp;C)</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="87"/>
+        <location filename="../src/singleappdialog.cpp" line="90"/>
         <source>Downloading update ...</source>
         <translation>下载更新 ...</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="89"/>
+        <location filename="../src/singleappdialog.cpp" line="92"/>
         <source>Downloading updates</source>
         <translation>下载更新</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="105"/>
+        <location filename="../src/singleappdialog.cpp" line="108"/>
         <source>Installing update ...</source>
         <translation>安装更新 ...</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="128"/>
+        <location filename="../src/singleappdialog.cpp" line="127"/>
         <source> - Update Client</source>
         <translation> - 更新客户端</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="230"/>
+        <location filename="../src/singleappdialog.cpp" line="234"/>
         <source>Update &apos;%1&apos; installed successfully</source>
         <translation>更新 &apos;%1&apos; 安装成功</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="240"/>
+        <location filename="../src/singleappdialog.cpp" line="244"/>
         <source>Update &apos;%1&apos; failed with error %2</source>
         <translation>更新 &apos;%1&apos; 发生错误 失败 %2</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="248"/>
+        <location filename="../src/singleappdialog.cpp" line="252"/>
         <source>Update &apos;%1&apos; closed unexpected</source>
         <translation>更新 &apos;%1&apos; 意外关闭</translation>
     </message>
@@ -264,43 +265,48 @@
 <context>
     <name>UserMessages</name>
     <message>
-        <location filename="../forms/usermessages.ui" line="93"/>
+        <location filename="../forms/usermessages.ui" line="99"/>
         <source>Mark as read</source>
         <translation>标记为已读</translation>
     </message>
     <message>
-        <location filename="../forms/usermessages.ui" line="135"/>
+        <location filename="../forms/usermessages.ui" line="141"/>
         <source>Not Now</source>
         <translation>不是现在</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="114"/>
-        <location filename="../src/usermessages.cpp" line="151"/>
+        <location filename="../src/usermessages.cpp" line="139"/>
+        <location filename="../src/usermessages.cpp" line="178"/>
         <source> - Message</source>
         <translation> - 信息</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="116"/>
+        <location filename="../src/usermessages.cpp" line="141"/>
         <source> - Messages</source>
         <translation> - 信息</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="153"/>
+        <location filename="../src/usermessages.cpp" line="179"/>
+        <source>Yes</source>
+        <translation>是的</translation>
+    </message>
+    <message>
+        <location filename="../src/usermessages.cpp" line="180"/>
         <source>Not now</source>
         <translation>不是现在</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="154"/>
+        <location filename="../src/usermessages.cpp" line="181"/>
         <source>There is a new message available:&lt;br&gt;&lt;br&gt;&lt;b&gt;%1&lt;/b&gt;&lt;br&gt;&lt;br&gt;Do you want to read this message in your standard browser now?</source>
         <translation>有一条新消息:&lt;br&gt;&lt;br&gt;&lt;b&gt;%1&lt;/b&gt;&lt;br&gt;&lt;br&gt;你现在是否想用标准浏览器阅读此消息？</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="182"/>
+        <location filename="../src/usermessages.cpp" line="212"/>
         <source>Loading %p% ...</source>
         <translation>加载 %p% ...</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="198"/>
+        <location filename="../src/usermessages.cpp" line="228"/>
         <source>Mark as read and close</source>
         <translation>标记为已读并关闭</translation>
     </message>

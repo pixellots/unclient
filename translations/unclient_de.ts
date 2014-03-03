@@ -4,22 +4,22 @@
 <context>
     <name>DialogUpdate</name>
     <message>
-        <location filename="../forms/multiappdialog.ui" line="97"/>
+        <location filename="../forms/multiappdialog.ui" line="182"/>
         <source>Close</source>
         <translation>Schließen</translation>
     </message>
     <message>
-        <location filename="../forms/multiappdialog.ui" line="113"/>
+        <location filename="../forms/multiappdialog.ui" line="133"/>
         <source>Check</source>
         <translation>Neu laden</translation>
     </message>
     <message>
-        <location filename="../forms/multiappdialog.ui" line="146"/>
+        <location filename="../forms/multiappdialog.ui" line="114"/>
         <source>Install</source>
         <translation>Installieren</translation>
     </message>
     <message>
-        <location filename="../forms/multiappdialog.ui" line="14"/>
+        <location filename="../forms/multiappdialog.ui" line="20"/>
         <source>Software Update Manager</source>
         <translation>Software Update Manager</translation>
     </message>
@@ -35,85 +35,86 @@
 <context>
     <name>MultiAppDialog</name>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="184"/>
+        <location filename="../src/multiappdialog.cpp" line="187"/>
         <source> - Update Manager</source>
         <translation>- Update Manager</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="287"/>
-        <location filename="../src/multiappdialog.cpp" line="294"/>
+        <location filename="../src/multiappdialog.cpp" line="290"/>
+        <location filename="../src/multiappdialog.cpp" line="297"/>
         <source> (Size: %1)</source>
         <translation> (Größe: %1)</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="217"/>
+        <location filename="../src/multiappdialog.cpp" line="220"/>
         <source>Software Update Manager</source>
         <translation>Software Update Manager</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="109"/>
-        <location filename="../src/multiappdialog.cpp" line="161"/>
+        <location filename="../src/multiappdialog.cpp" line="113"/>
+        <location filename="../src/multiappdialog.cpp" line="164"/>
         <source>Ignored</source>
         <translation>Ignoriert</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="162"/>
+        <location filename="../src/multiappdialog.cpp" line="165"/>
         <source>Don&apos;t ignore update</source>
         <translation>Update nicht ingorieren</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="164"/>
-        <location filename="../src/multiappdialog.cpp" line="171"/>
+        <location filename="../src/multiappdialog.cpp" line="167"/>
+        <location filename="../src/multiappdialog.cpp" line="174"/>
         <source>Ignore update</source>
         <translation>Update ignorieren</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="322"/>
+        <location filename="../src/multiappdialog.cpp" line="326"/>
         <source>There is a new software update available</source>
         <translation>Ein neues Software Update ist verfügbar</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="324"/>
+        <location filename="../src/multiappdialog.cpp" line="328"/>
         <source>There are %1 new software updates available</source>
         <translation>Es sind %1 neue Software Updates verfügbar</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="326"/>
+        <location filename="../src/multiappdialog.cpp" line="330"/>
         <source>Your software is up to date</source>
         <translation>Ihre Software ist bereits aktuell</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="375"/>
+        <location filename="../src/multiappdialog.cpp" line="386"/>
         <source>Downloading update %1 ...</source>
         <translation>Update %1 wird heruntergeladen ...</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="385"/>
+        <location filename="../src/multiappdialog.cpp" line="399"/>
         <source>All updates have been installed successfully</source>
         <translation>Alle Updates wurden erfolgreich installiert</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="427"/>
+        <location filename="../src/multiappdialog.cpp" line="445"/>
         <source>Installing update &quot;%1&quot;</source>
         <translation>Update &quot;%1&quot; wird installiert</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="433"/>
+        <location filename="../src/multiappdialog.cpp" line="451"/>
         <source>Update failed:&lt;br&gt;%1</source>
         <translation>Update fehlgeschlagen: &lt;br&gt;%1</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="433"/>
+        <location filename="../src/multiappdialog.cpp" line="451"/>
+        <location filename="../src/multiappdialog.cpp" line="458"/>
         <source>Unable to execute the command!</source>
         <translation>Kommando konnte nicht ausgeführt werden!</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="464"/>
+        <location filename="../src/multiappdialog.cpp" line="486"/>
         <source>Update &apos;%1&apos; installed successfully</source>
         <translation>Update &apos;%1&apos; erfolgreich installiert</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="484"/>
+        <location filename="../src/multiappdialog.cpp" line="506"/>
         <source>Update &apos;%1&apos; failed with error %2</source>
         <translation>Update &apos;%1&apos; fehlgeschlagen mit Fehler %2</translation>
     </message>
@@ -131,43 +132,43 @@
         <translation>Nachrichten lesen</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="122"/>
+        <location filename="../src/singleappdialog.cpp" line="262"/>
         <location filename="../src/systemtray.cpp" line="67"/>
         <source>Close</source>
         <translation>Schließen</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="330"/>
-        <location filename="../src/updatenode_service.cpp" line="357"/>
+        <location filename="../src/updatenode_service.cpp" line="345"/>
+        <location filename="../src/updatenode_service.cpp" line="372"/>
         <source>There are no new updates &amp; messages available</source>
         <translation>Keine neuen Updates &amp; Nachrichten verfügbar</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="333"/>
-        <location filename="../src/updatenode_service.cpp" line="360"/>
+        <location filename="../src/updatenode_service.cpp" line="348"/>
+        <location filename="../src/updatenode_service.cpp" line="375"/>
         <source>There are new updates available</source>
         <translation>Neue Updates sind verfügbar</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="336"/>
-        <location filename="../src/updatenode_service.cpp" line="363"/>
+        <location filename="../src/updatenode_service.cpp" line="351"/>
+        <location filename="../src/updatenode_service.cpp" line="378"/>
         <source>There are new messages available</source>
         <translation>Neue Nachrichten sind verfügbar</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="339"/>
-        <location filename="../src/updatenode_service.cpp" line="366"/>
+        <location filename="../src/updatenode_service.cpp" line="354"/>
+        <location filename="../src/updatenode_service.cpp" line="381"/>
         <source>There are updates and messages available</source>
         <translation>Neue Updates und Nachrichten verfügbar</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="342"/>
-        <location filename="../src/updatenode_service.cpp" line="369"/>
+        <location filename="../src/updatenode_service.cpp" line="357"/>
+        <location filename="../src/updatenode_service.cpp" line="384"/>
         <source>Undefined state</source>
         <translation>Undefinierter Zustand</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="348"/>
+        <location filename="../src/application.cpp" line="343"/>
         <source>Unable to launch &apos;%1&apos;</source>
         <translation>&apos;%1&apos; konnte nicht gestartet werden</translation>
     </message>
@@ -205,37 +206,37 @@
         <translation>&amp;Abbrechen</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="87"/>
+        <location filename="../src/singleappdialog.cpp" line="90"/>
         <source>Downloading update ...</source>
         <translation>Update wird heruntergeladen ...</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="89"/>
+        <location filename="../src/singleappdialog.cpp" line="92"/>
         <source>Downloading updates</source>
         <translation>Updates werden heruntergeladen</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="105"/>
+        <location filename="../src/singleappdialog.cpp" line="108"/>
         <source>Installing update ...</source>
         <translation>Update wird installiert ...</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="128"/>
+        <location filename="../src/singleappdialog.cpp" line="127"/>
         <source> - Update Client</source>
         <translation> - Update Client</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="230"/>
+        <location filename="../src/singleappdialog.cpp" line="234"/>
         <source>Update &apos;%1&apos; installed successfully</source>
         <translation>Update &apos;%1&apos; erfolgreich installiert</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="240"/>
+        <location filename="../src/singleappdialog.cpp" line="244"/>
         <source>Update &apos;%1&apos; failed with error %2</source>
         <translation>Update &apos;%1&apos; fehlgeschlagen mit Fehler %2</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="248"/>
+        <location filename="../src/singleappdialog.cpp" line="252"/>
         <source>Update &apos;%1&apos; closed unexpected</source>
         <translation>Update &apos;%1&apos; wurde unerwartet geschlossen</translation>
     </message>
@@ -264,43 +265,48 @@
 <context>
     <name>UserMessages</name>
     <message>
-        <location filename="../forms/usermessages.ui" line="93"/>
+        <location filename="../forms/usermessages.ui" line="99"/>
         <source>Mark as read</source>
         <translation>Als gelesen markieren</translation>
     </message>
     <message>
-        <location filename="../forms/usermessages.ui" line="135"/>
+        <location filename="../forms/usermessages.ui" line="141"/>
         <source>Not Now</source>
         <translation>Nicht jetzt</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="114"/>
-        <location filename="../src/usermessages.cpp" line="151"/>
+        <location filename="../src/usermessages.cpp" line="139"/>
+        <location filename="../src/usermessages.cpp" line="178"/>
         <source> - Message</source>
         <translation>- Nachricht</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="116"/>
+        <location filename="../src/usermessages.cpp" line="141"/>
         <source> - Messages</source>
         <translation>- Nachrichten</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="153"/>
+        <location filename="../src/usermessages.cpp" line="179"/>
+        <source>Yes</source>
+        <translation>Ja</translation>
+    </message>
+    <message>
+        <location filename="../src/usermessages.cpp" line="180"/>
         <source>Not now</source>
         <translation>Nicht jetzt</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="154"/>
+        <location filename="../src/usermessages.cpp" line="181"/>
         <source>There is a new message available:&lt;br&gt;&lt;br&gt;&lt;b&gt;%1&lt;/b&gt;&lt;br&gt;&lt;br&gt;Do you want to read this message in your standard browser now?</source>
         <translation>Eine neue Nachricht ist verfügar:&lt;br&gt;&lt;br&gt;&lt;b&gt;%1&lt;/b&gt;&lt;br&gt;&lt;br&gt;Möchten Sie diese Nachricht jetzt in Ihrem Standard-Browser öffnen?</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="182"/>
+        <location filename="../src/usermessages.cpp" line="212"/>
         <source>Loading %p% ...</source>
         <translation>Lade %p% ...</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="198"/>
+        <location filename="../src/usermessages.cpp" line="228"/>
         <source>Mark as read and close</source>
         <translation>Als gelesen markieren und schließen</translation>
     </message>
