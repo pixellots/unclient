@@ -119,7 +119,8 @@ Variable            | Description                         | Example
 -------------       | -------------                       | -------------
 UN_SEP              | Native separator                    | \\ or /
 UN_DOWNLOAD_PATH    | The download path where all file are\n downloaded thru | /tmp/UpdateNode/62525142523515263
-UN_CLIENT_PATH      | The directory where the unclient is \n launched from | C:\\Program Files\\My Product\\Update
+UN_CLIENT_PATH      | The directory where the unclient is \n located | C:\\Program Files\\My Product\\Update
+UN_WORK_PATH        | The current working directory       | C:\\Users\\user\\Desktop
 UN_VERSION          | The current unclient version        | 1.0
 UN_LANG             | Language set in unclient, or system\n language if no language was specified | de-DE
 UN_OS               | Operating system's name and version | Windows 6.2
@@ -426,6 +427,7 @@ QString Commander::resolveGeneral(const QString& aString)
     theString = theString.replace("[UN_SEP]", QDir::separator());
     theString = theString.replace("[UN_DOWNLOAD_PATH]", UpdateNode::LocalFile::getDownloadPath());
     theString = theString.replace("[UN_CLIENT_PATH]", settings.getCurrentClientDir());
+    theString = theString.replace("[UN_WORK_PATH]", QDir::currentPath());
     theString = theString.replace("[UN_VERSION]", QString("%1.%2").arg(APP_VERSION_HIGH).arg(APP_VERSION_LOW));
     theString = theString.replace("[UN_LANG]", UpdateNode::Config::Instance()->getLanguage());
     theString = theString.replace("[UN_OS]", UpdateNode::OSDetection::getOS());
