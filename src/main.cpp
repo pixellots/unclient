@@ -28,6 +28,7 @@
 #include "settings.h"
 #include "version.h"
 #include "status.h"
+#include "limittimer.h"
 #include "helpdialog.h"
 
 #ifndef APP_COPYRIGHT
@@ -60,6 +61,7 @@ int printHelp()
             + "  -s             \tsilent mode\n"
             + "  -r             \trelaunch client in temp directory (self update)\n"
             + "  -st            \tsystem tray icon (-check mode only)\n"
+            + "  -to <seconds>  \tsets timeout for update check in seconds (default: 20)\n"
             + "  -log <file>    \tenables logging\n"
             + "  -config <file> \tloads parameter settings from file\n"
             + "  -l <lang-code> \tlanguage code\n"
@@ -153,6 +155,7 @@ int main(int argc, char *argv[])
     QString argument;
     QStringList arguments = a.arguments();
     bool relaunched = false;
+    int timeout = 20;
 
     // get config data
     int index = arguments.indexOf("-config");
@@ -205,6 +208,8 @@ int main(int argc, char *argv[])
         }
         else if(arguments.at(i) == "-l" && hasNext)
             config->setLanguage(arguments.at(i+1));
+        else if(arguments.at(i) == "-to" && hasNext)
+            timeout = arguments.at(i+1).toInt();
         else if(arguments.at(i) == "-log" && hasNext)
             config->setLogging(arguments.at(i+1));
         else if(arguments.at(i) == "-sp" && hasNext)
@@ -285,6 +290,7 @@ int main(int argc, char *argv[])
         }
     }
 
+    UpdateNode::LimitTimer::Instance()->start(timeout * 1000);
     un_app.checkForUpdates();
 
     return un_app.returnANDlaunch(a.exec());
