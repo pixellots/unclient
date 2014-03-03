@@ -218,10 +218,21 @@ copy_binary.target = copy_binary
 QMAKE_EXTRA_TARGETS += copy_binary build_installer package_deploy clean_package_deploy create_package_deploy qt_deploy qtcore_deploy qtgui_deploy qtnetwork_deploy qtxml_deploy qtwebkit_deploy ssl_package_deploy vc_deploy
 }
 }
-!win32{
-package_deploy.commands = echo *** UNSUPPORTED ***
+
+unix{
+package_targz.commands = tar czf unclient-$${VERSION_HIGH}.$${VERSION_LOW}.$${VERSION_REV}.tar.gz * --exclude=.git --exclude=.gitignore --exclude=. --exclude=unclient-$${VERSION_HIGH}.$${VERSION_LOW}.$${VERSION_REV}.tar.gz
+package_targz.target = package_targz
+
+package_prepare.commands = mkdir -p unclient-$${VERSION_HIGH}.$${VERSION_LOW}.$${VERSION_REV} && cd unclient-$${VERSION_HIGH}.$${VERSION_LOW}.$${VERSION_REV} && tar xvfz ../unclient-$${VERSION_HIGH}.$${VERSION_LOW}.$${VERSION_REV}.tar.gz &&  dh_make --quilt -s -e support@updatenode.com -c gpl3 -f ../unclient-$${VERSION_HIGH}.$${VERSION_LOW}.$${VERSION_REV}.tar.gz && rm debian/* && $(COPY) ../deploy/linux/* debian/
+package_prepare.target = package_prepare
+
+package_build.commands = cd unclient-$${VERSION_HIGH}.$${VERSION_LOW}.$${VERSION_REV} && fakeroot dpkg-buildpackage -D
+package_build.target = package_build
+
+package_deploy.depends = package_targz package_prepare package_build
 package_deploy.target = package_deploy
-QMAKE_EXTRA_TARGETS += package_deploy
+
+QMAKE_EXTRA_TARGETS += package_deploy package_targz package_prepare package_build
 }
 
 ### every first qmake call and each call after deloy target does generate a fresh build number

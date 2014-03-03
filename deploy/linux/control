@@ -1,0 +1,19 @@
+Source: unclient
+Section: X11
+Priority: extra
+Maintainer: UpdateNode Dev Team <unclient@updatenode.com>
+Build-Depends: debhelper (>= 7), g++, openssl, qt4-dev-tools
+Standards-Version: 3.8.3
+Homepage: http://www.updatenode.com
+
+Package: unclient
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, openssl, libqt4-core, libqt4-gui, libqt4-network, libqt4-xml, libqt4-webkit
+Description: UpdateNode Client - update and messaging client
+ unclient is a Qt based cross platform client to execute updates 
+ and show messages based on your definition made on http://www.updatenode.com.
+ The client communicates with the service, downloads all required
+ data and executes the provided command based on your definition.
+ Messages can be displayed to customers in 3 different ways: 
+ as simple HTML, HTML using webkit (JS, HTML5, etc.),
+ or in an external browser
