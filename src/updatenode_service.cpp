@@ -40,6 +40,7 @@
 #include "product.h"
 #include "osdetection.h"
 #include "logging.h"
+#include "limittimer.h"
 
 using namespace UpdateNode;
 
@@ -62,6 +63,9 @@ Service::Service(QObject* parent)
 
     // Use system proxy settings - if set
     QNetworkProxyFactory::setUseSystemConfiguration(true);
+
+    connect(this, SIGNAL(done()), UpdateNode::LimitTimer::Instance(), SLOT(stop()));
+    connect(this, SIGNAL(doneManager()), UpdateNode::LimitTimer::Instance(), SLOT(stop()));
 }
 
 /*!
