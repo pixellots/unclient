@@ -225,7 +225,7 @@ unix{
 package_targz.commands = tar czf unclient-$${VERSION_HIGH}.$${VERSION_LOW}.$${VERSION_REV}.tar.gz * --exclude=.git --exclude=.gitignore --exclude=. --exclude=unclient-$${VERSION_HIGH}.$${VERSION_LOW}.$${VERSION_REV}.tar.gz
 package_targz.target = package_targz
 
-package_prepare.commands = mkdir -p unclient-$${VERSION_HIGH}.$${VERSION_LOW}.$${VERSION_REV} && cd unclient-$${VERSION_HIGH}.$${VERSION_LOW}.$${VERSION_REV} && tar xvfz ../unclient-$${VERSION_HIGH}.$${VERSION_LOW}.$${VERSION_REV}.tar.gz && dh_make --quilt -s -e support@updatenode.com -c gpl3 -f ../unclient-$${VERSION_HIGH}.$${VERSION_LOW}.$${VERSION_REV}.tar.gz && $(COPY) ../deploy/linux/* debian/ && rm -fr debian/*.ex debian/*.EX debian/README.*
+package_prepare.commands = mkdir -p unclient-$${VERSION_HIGH}.$${VERSION_LOW}.$${VERSION_REV} && cd unclient-$${VERSION_HIGH}.$${VERSION_LOW}.$${VERSION_REV} && tar xvfz ../unclient-$${VERSION_HIGH}.$${VERSION_LOW}.$${VERSION_REV}.tar.gz && dh_make --quilt -s -e support@updatenode.com -c gpl3 -f ../unclient-$${VERSION_HIGH}.$${VERSION_LOW}.$${VERSION_REV}.tar.gz && $(COPY) ../deploy/linux/* debian/ && rm -fr debian/*.ex debian/*.EX debian/README.* && vi debian/changelog
 package_prepare.target = package_prepare
 
 package_build.commands = cd unclient-$${VERSION_HIGH}.$${VERSION_LOW}.$${VERSION_REV} && fakeroot dpkg-buildpackage -D
