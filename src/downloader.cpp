@@ -167,8 +167,12 @@ void Downloader::downloadFinished(QNetworkReply *reply)
         UpdateNode::Logging() << "Download of " << url.toEncoded().constData() << " failed: " << reply->errorString();
     else
     {
+        reply->waitForReadyRead(10000);
         if(!reply->canReadLine())
+        {
+            emit done(update, QNetworkReply::TimeoutError, "Operation timed out");
             return;
+        }
 
         QString filename;
         filename = UpdateNode::LocalFile::getDownloadLocation(url.toString());
