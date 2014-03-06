@@ -1,0 +1,21 @@
+/***
+**** style sheet example ****
+****/
+
+/*
+*{ background: #999999;}
+QPushButton { color: white; 
+ border: 1px solid black;
+ padding: 3px;
+ border-radius: 1px;
+ background: qlineargradient(
+   x1:0, y1:0, x2:0, y2:1,
+   stop:0 #bec1d2,
+   stop: 0.4 #717990, 
+   stop: 0.5 #5c637d
+   stop:1 #68778e
+ );
+}
+
+QDialog { min-width: 500px;}
+*/

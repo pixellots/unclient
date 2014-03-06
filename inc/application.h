@@ -56,6 +56,7 @@ namespace UpdateNode
             void checkForUpdates();
 
             bool installTranslations();
+            bool installStyleSheet();
             void showSplashScreen(UpdateNode::Service* aService, const QString& aMode);
 
             int returnANDlaunch(int aResult);

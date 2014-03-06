@@ -42,23 +42,11 @@ like installing language, single instance when application is hidden, or relaunc
 */
 
 /*!
-Constructs a Application object.
-This constructor checks the existance of the default.qss file which contains the custom stylesheet.
-\n If no default.qss file is located in the current working dir, no style sheet is set.
+Constructs an Application object.
 */
 Application::Application(QObject *parent) :
     QObject(parent)
 {
-    QFile style("default.qss");
-    if(style.exists())
-    {
-         if(style.open(QIODevice::ReadOnly))
-         {
-             qApp->setStyleSheet(style.readAll());
-             style.close();
-         }
-    }
-
     m_pService = new UpdateNode::Service(0);
     m_pSystemTray = 0;
 }
@@ -70,6 +58,28 @@ Application::~Application()
 {
     if(m_pSystemTray)
         delete m_pSystemTray;
+}
+
+/*!
+This method checks the existance of the unclient.qss file and for the specified stylesheet as
+\n command line parameter -qss, which contains the custom stylesheet.
+\n If no file is located in the current working dir, or nothing is defined, no style sheet is set.
+*/
+bool Application::installStyleSheet()
+{
+    UpdateNode::Config* config = UpdateNode::Config::Instance();
+
+    QFile style("unclient.qss");
+    if(QFile::exists(config->getStyleSheet()))
+        style.setFileName(config->getStyleSheet());
+    if(style.open(QIODevice::ReadOnly))
+    {
+        UpdateNode::Logging() << "Style sheet definition taken from" << style.fileName();
+        qApp->setStyleSheet(style.readAll());
+        style.close();
+        return true;
+    }
+    return false;
 }
 
 /*!
