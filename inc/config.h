@@ -101,6 +101,12 @@ namespace UpdateNode
             void setSplashScreen(const QString& aFileName);
             QString getSplashScreen();
 
+            void setStyleSheet(const QString& aFileName);
+            QString getStyleSheet();
+
+            void setTimeOut(int aTimeOutInSeconds);
+            int getTimeOut();
+
         public:
             Config();
 
@@ -111,8 +117,6 @@ namespace UpdateNode
             bool m_bSytemTray;
             bool m_bSingleMode;
             bool m_bRelaunch;
-
-            int m_iUpdateInterval;
 
             QString m_strHost;
             QString m_strMainIcon;
@@ -125,6 +129,8 @@ namespace UpdateNode
             QString m_strLogging;
             QString m_strExec;
             QString m_strSplashImage;
+            QString m_strStyleSheet;
+            int     m_iTimeOut;
 
             UpdateNode::Product m_oProduct;
             UpdateNode::ProductVersion m_oCurrentVersion;

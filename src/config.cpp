@@ -62,6 +62,7 @@ Config::Config()
     m_bSytemTray = false;
     m_bSingleMode = false;
     m_bRelaunch = false;
+    m_iTimeOut = 20;
 }
 
 /*!
@@ -485,6 +486,42 @@ Returns the splash screen
 QString Config::getSplashScreen()
 {
     return m_strSplashImage;
+}
+
+/*!
+Sets the style sheet file
+\sa Config::getStyleSheet
+*/
+void Config::setStyleSheet(const QString& aFileName)
+{
+    m_strStyleSheet = aFileName;
+}
+
+/*!
+Returns the style sheet
+\sa Config::setStyleSheet
+*/
+QString Config::getStyleSheet()
+{
+    return m_strStyleSheet;
+}
+
+/*!
+Sets the time out for accessing data on UpdateNode
+\sa Config::getTimeOut
+*/
+void Config::setTimeOut(int aTimeOutInSeconds)
+{
+    m_iTimeOut = aTimeOutInSeconds;
+}
+
+/*!
+Returns the time out
+\sa Config::setTimeOut
+*/
+int Config::getTimeOut()
+{
+    return m_iTimeOut;
 }
 
 
