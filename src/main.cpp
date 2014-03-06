@@ -121,6 +121,10 @@ void getParametersFromFile(const QString& file)
         config->setExec(settings->value("exec_command").toString());
     if(settings->contains("splash"))
         config->setSplashScreen(settings->value("splash").toString());
+    if(settings->contains("stylesheet"))
+        config->setStyleSheet(settings->value("stylesheet").toString());
+    if(settings->contains("timeout"))
+        config->setTimeOut(settings->value("timeout").toInt());
 
     delete settings;
 }
@@ -155,13 +159,12 @@ int main(int argc, char *argv[])
     QString argument;
     QStringList arguments = a.arguments();
     bool relaunched = false;
-    int timeout = 20;
 
     // get config data
     int index = arguments.indexOf("-config");
     if(index>-1 || QFile::exists("unclient.cfg"))
     {
-        if(index>-1)
+        if(index>-1 && (index+1) < arguments.size())
             getParametersFromFile(arguments.at(index+1));
         else
             getParametersFromFile("unclient.cfg");
@@ -171,7 +174,7 @@ int main(int argc, char *argv[])
     {
         argument = arguments.at(i);
         bool hasNext = (i+1) < arguments.size();
-        
+
         if(argument == "-k" && hasNext)
             config->setKey(arguments.at(i+1));
         else if(argument == "-t" && hasNext)
@@ -206,17 +209,19 @@ int main(int argc, char *argv[])
             config->setMainIcon(arguments.at(i+1));
             a.setWindowIcon(QPixmap(arguments.at(i+1)));
         }
-        else if(arguments.at(i) == "-l" && hasNext)
+        else if(argument == "-l" && hasNext)
             config->setLanguage(arguments.at(i+1));
-        else if(arguments.at(i) == "-to" && hasNext)
-            timeout = arguments.at(i+1).toInt();
-        else if(arguments.at(i) == "-log" && hasNext)
+        else if(argument == "-to" && hasNext)
+            config->setTimeOut(arguments.at(i+1).toInt());
+        else if(argument == "-qss" && hasNext)
+            config->setStyleSheet(arguments.at(i+1));
+        else if(argument == "-log" && hasNext)
             config->setLogging(arguments.at(i+1));
-        else if(arguments.at(i) == "-sp" && hasNext)
+        else if(argument == "-sp" && hasNext)
             config->setSplashScreen(arguments.at(i+1));
-        else if(arguments.at(i) == "-exec" && hasNext)
+        else if(argument == "-exec" && hasNext)
             config->setExec(arguments.at(i+1));
-        else if(arguments.at(i) == "-h" || arguments.at(i) == "--h" || arguments.at(i) == "--help" || arguments.at(i) == "-help" || arguments.at(i) == "/?")
+        else if(argument == "-h" || argument == "--h" || argument == "--help" || argument == "-help" || argument == "/?")
             return printHelp();
         else if(argument == "-update" || argument == "-messages"
                 || argument == "-register" || argument == "-unregister" || argument == "-manager"
@@ -277,6 +282,7 @@ int main(int argc, char *argv[])
         un_app.setVisible();
 
     un_app.installTranslations();
+    un_app.installStyleSheet();
 
     if(mode == "-manager" || mode.isEmpty() || (mode == "-check" && !config->isSingleMode()))
     {
@@ -290,7 +296,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    UpdateNode::LimitTimer::Instance()->start(timeout * 1000);
+    UpdateNode::LimitTimer::Instance()->start(config->getTimeOut() * 1000);
     un_app.checkForUpdates();
 
     return un_app.returnANDlaunch(a.exec());
