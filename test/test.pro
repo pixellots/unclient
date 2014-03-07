@@ -40,7 +40,8 @@ SOURCES += \
     ../src/version.cpp \
     tst_clienttest.cpp \
     ../src/logging.cpp \
-    ../src/updatenode_service.cpp
+    ../src/updatenode_service.cpp \
+    ../src/limittimer.cpp
 
 DEFINES += SRCDIR=../src
 
@@ -59,7 +60,8 @@ HEADERS += \
     ../inc/wincommander.h \
     ../inc/version.h \
     ../inc/logging.h \
-    ../inc/updatenode_service.h
+    ../inc/updatenode_service.h \
+    ../inc/limittimer.h
 
 macx:SOURCES += ../src/maccommander.cpp
 macx:HEADERS += ../inc/maccommander.h

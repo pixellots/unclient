@@ -23,7 +23,7 @@
 #include "limittimer.h"
 #include "status.h"
 
-#include <QApplication>
+#include <QCoreApplication>
 
 using namespace UpdateNode;
 
