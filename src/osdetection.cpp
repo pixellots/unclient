@@ -22,6 +22,8 @@
 
 #include "osdetection.h"
 #include <QSysInfo>
+#include <QFile>
+#include <QTextStream>
 #include <QProcess>
 #include <QStringList>
 #include <QProcessEnvironment>
@@ -84,12 +86,36 @@ QString OSDetection::getMacVersion()
 }
 
 /*!
-Returns the used Linux version, like returned when executing  "uname -r". Additionally, \n
-Env variable DESKTOP_SESSION is taken. If there is no information available about the current version \n
-"Linux (unknown)" is returned.
+Returns the used Linux version, first tries to get lsb-release, os-release and last "uname -r". \n
+Additionally, env variable DESKTOP_SESSION is taken. If there is no information available about \n
+the current version "Linux (unknown)" is returned.
 */
 QString OSDetection::getLinuxVersion()
 {
+    QFile lsbRelease("/etc/lsb-release");
+    if(lsbRelease.open(QIODevice::ReadOnly))
+    {
+        QTextStream textStream(&lsbRelease);
+        while (!textStream.atEnd())
+        {
+            QString line = textStream.readLine();
+            if(line.contains("DISTRIB_DESCRIPTION"))
+                return line.split("=").at(1).simplified().replace("\"", "");
+        }
+    }
+
+    QFile osRelease("/etc/os-release");
+    if(osRelease.open(QIODevice::ReadOnly))
+    {
+        QTextStream textStream(&osRelease);
+        while (!textStream.atEnd())
+        {
+            QString line = textStream.readLine();
+            if(line.contains("PRETTY_NAME"))
+                return line.split("=").at(1).simplified().replace("\"", "");
+        }
+    }
+
     QStringList fullKernelVersion;
     QProcess proc;
     proc.start("uname -r");
