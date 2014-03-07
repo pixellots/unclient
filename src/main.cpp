@@ -63,6 +63,7 @@ int printHelp()
             + "  -st            \tsystem tray icon (-check mode only)\n"
             + "  -to <seconds>  \tsets timeout for update check in seconds (default: 20)\n"
             + "  -log <file>    \tenables logging\n"
+            + "  -qss <file>    \ttakes stylesheet definition from file\n"
             + "  -config <file> \tloads parameter settings from file\n"
             + "  -l <lang-code> \tlanguage code\n"
             + "  -sp <png_file> \tsplash screen (PNG)\n"
