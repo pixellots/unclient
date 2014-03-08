@@ -62,7 +62,7 @@ SingleAppDialog::SingleAppDialog(QWidget *parent) :
 
     m_pUi->chkDetails->hide();
 
-    m_iErrorCode = -1;
+    m_iErrorCode = UPDATENODE_PROCERROR_CANCELED;
 }
 
 SingleAppDialog::~SingleAppDialog()
@@ -197,10 +197,7 @@ void SingleAppDialog::onDetailsCheck()
 
 void SingleAppDialog::onCancel()
 {
-    if(m_iErrorCode == -1)
-        qApp->exit(UPDATENODE_PROCERROR_CANCELED);
-    else
-        qApp->exit(m_iErrorCode);
+    qApp->exit(m_iErrorCode);
 }
 
 void SingleAppDialog::processError()
@@ -225,12 +222,12 @@ void SingleAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus
 
     settings.setUpdate(m_oCurrentUpdate, UpdateNode::LocalFile::getDownloadLocation(m_oCurrentUpdate.getDownloadLink()), aExitCode);
 
-    m_iErrorCode = aExitCode;
-
     if(aExitStatus == QProcess::NormalExit)
     {
         if(aExitCode == 0)
         {
+            m_iErrorCode = UPDATENODE_PROCERROR_SUCCESS;
+
             m_pUi->labelProgress->setText(tr("Update '%1' installed successfully").arg(m_oCurrentUpdate.getTitle()));
 
             UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << "updated successfully!";
@@ -297,5 +294,6 @@ void SingleAppDialog::downloadDone(const UpdateNode::Update& aUpdate, QNetworkRe
 
 void SingleAppDialog::onClose()
 {
-    qApp->exit(UPDATENODE_PROCERROR_CANCELED);
+    if(m_iErrorCode==-1)
+        qApp->exit(UPDATENODE_PROCERROR_CANCELED);
 }
