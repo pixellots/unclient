@@ -272,10 +272,12 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
 
                 if(command.indexOf("gksudo")>-1)
                     commandParameters = splitCommandLine("--description \"" + description + "\"\"" + resolve(qApp->applicationFilePath() + " -copy\" " + m_oUpdate.getCommandLine()));
+                if(command.indexOf("kdesudo")>-1)
+                    commandParameters = splitCommandLine("--comment \"" + description + " needs administrative privileges. Please enter your password.\"\"" + resolve(qApp->applicationFilePath() + " -copy\" " + m_oUpdate.getCommandLine()));
                 else if(command.indexOf("pkexec")>-1)
                     commandParameters = splitCommandLine(resolve(qApp->applicationFilePath() + " -copy " + m_oUpdate.getCommandLine()));
                 else
-                    commandParameters = splitCommandLine("\"" + resolve(qApp->applicationFilePath() + " -copy " + m_oUpdate.getCommandLine()) + "\"");
+                    commandParameters = splitCommandLine("\"" + resolve(qApp->applicationFilePath() + " -copy\" " + m_oUpdate.getCommandLine()));
 
 #else
                 commandParameters.insert(0, "-copy");
