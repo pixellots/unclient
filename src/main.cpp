@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
         QCoreApplication app(argc, argv);
         QStringList args = app.arguments();
         int index = args.indexOf("-copy");
-        if(index>-1 && args.size()==4)
+        if(index>-1 && args.size()>=4)
         {
             if(UpdateNode::Commander::copy(args.at(2), args.at(3)))
                 return 0;
