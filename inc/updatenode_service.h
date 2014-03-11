@@ -32,7 +32,7 @@
 #include "downloader.h"
 #include "status.h"
 
-#define UPDATENODE_SERVICE_URL "https://updatenode.com/api"
+#define UPDATENODE_SERVICE_URL "https://www.updatenode.com/api"
 
 namespace UpdateNode
 {
