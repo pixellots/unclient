@@ -123,7 +123,8 @@ FORMS += \
     forms/usermessages_ex.ui
 
 RESOURCES += res.qrc \
-    translations.qrc
+    translations.qrc \
+    cert.qrc
 
 win32{
 ### on Windows we need some additional libs for the UAC
