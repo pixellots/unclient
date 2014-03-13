@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>cert/geotrust.cer</file>
+    </qresource>
+</RCC>
