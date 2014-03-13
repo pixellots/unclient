@@ -32,6 +32,8 @@
 #include <QTemporaryFile>
 #include <QProcess>
 #include <QMessageBox>
+#include <QSslConfiguration>
+#include <QSslCertificate>
 
 using namespace UpdateNode;
 
@@ -42,13 +44,26 @@ like installing language, single instance when application is hidden, or relaunc
 */
 
 /*!
-Constructs an Application object.
+Constructs an Application object and adding a root certificate to the CA certificates database for
+GeoTrust SSL handshake
 */
 Application::Application(QObject *parent) :
     QObject(parent)
 {
     m_pService = new UpdateNode::Service(0);
     m_pSystemTray = 0;
+
+    QSslConfiguration defaultSSLConfig = QSslConfiguration::defaultConfiguration();
+    QList<QSslCertificate> certificates = defaultSSLConfig.caCertificates();
+    QFile cert;
+    cert.setFileName(":/cert/geotrust.cer");
+    if(cert.open(QIODevice::ReadOnly))
+    {
+        QSslCertificate certificate(&cert, QSsl::Der);
+        certificates.append(certificate);
+    }
+    defaultSSLConfig.setCaCertificates(certificates);
+    QSslConfiguration::setDefaultConfiguration(defaultSSLConfig);
 }
 
 /*!
