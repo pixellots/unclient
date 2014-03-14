@@ -19,6 +19,7 @@
 ** Full license description file: LICENSE.GPL
 **
 ****************************************************************************/
+
 #ifndef STATUS_H
 #define STATUS_H
 
