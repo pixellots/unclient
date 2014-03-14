@@ -538,16 +538,26 @@ void Application::afterCheck()
         else
             text = m_pService->notificationTextManager();
 
-        if(config->isSystemTray() && (m_pService->returnCode() != 101 || m_pService->returnCodeManager() != 101))
+        if(config->isSystemTray() && (m_pService->returnCode() != 0 || m_pService->returnCodeManager() != 0))
         {
             m_pSystemTray = new UpdateNode::SystemTray();
             QObject::connect(m_pSystemTray, SIGNAL(launchClient()), this, SLOT(setVisible()));
             QObject::connect(m_pSystemTray, SIGNAL(launchMessages()), this, SLOT(setVisible()));
 
             if(config->isSingleMode())
-                QObject::connect(m_pSystemTray, SIGNAL(launchClient()), &m_oSingleDialog, SLOT(serviceDone()));
+            {
+                if(m_pService->returnCode()==UpdateNode::Service::MESSAGE)
+                    QObject::connect(m_pSystemTray, SIGNAL(launchClient()), &m_oMessageDialog, SLOT(serviceDone()));
+                else
+                    QObject::connect(m_pSystemTray, SIGNAL(launchClient()), &m_oSingleDialog, SLOT(serviceDone()));
+            }
             else
-                QObject::connect(m_pSystemTray, SIGNAL(launchClient()), &m_oManageDialog, SLOT(serviceDoneManager()));
+            {
+                if(m_pService->returnCodeManager()==UpdateNode::Service::MESSAGE)
+                    QObject::connect(m_pSystemTray, SIGNAL(launchClient()), &m_oMessageDialog, SLOT(serviceDone()));
+                else
+                    QObject::connect(m_pSystemTray, SIGNAL(launchClient()), &m_oManageDialog, SLOT(serviceDoneManager()));
+            }
             QObject::connect(m_pSystemTray, SIGNAL(launchMessages()), &m_oMessageDialog, SLOT(serviceDone()));
 
             if(config->isSingleMode())

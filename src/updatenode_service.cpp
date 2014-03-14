@@ -265,7 +265,6 @@ Builds the return code based on the results from all checked products
 */
 int Service::returnCodeManager()
 {
-    QString result;
     UpdateNode::Config* config = UpdateNode::Config::Instance();
 
     int update_cnt = 0;
@@ -322,17 +321,6 @@ int Service::returnCode(int aUpdateCount, int aMessageCount)
         status = Service::MESSAGE; // message
     else
         status = Service::UPDATE_MESSAGE; // update & message
-
-    if(UpdateNode::Config::Instance()->isSystemTray())
-    {
-        switch(status)
-        {
-            case Service::MESSAGE:
-                return Service::NOTHING;
-            default:
-                return status;
-       }
-    }
 
     return status;
 }
