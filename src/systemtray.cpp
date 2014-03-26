@@ -60,8 +60,13 @@ SystemTray::SystemTray(QObject *parent) :
     QObject::connect(&m_oSystemTray, SIGNAL(messageClicked()), this, SIGNAL(launchClient()));
     QObject::connect(m_pUpdateAction, SIGNAL(triggered()), this, SIGNAL(launchClient()));
 
-    m_pMessageAction = m_oMenu.addAction(QObject::tr("Read Messages"));
-    QObject::connect(m_pMessageAction, SIGNAL(triggered()), this, SIGNAL(launchMessages()));
+    if(config->isSingleMode())
+    {
+        m_pMessageAction = m_oMenu.addAction(QObject::tr("Read Messages"));
+        QObject::connect(m_pMessageAction, SIGNAL(triggered()), this, SIGNAL(launchMessages()));
+    }
+    else
+        m_pMessageAction = NULL;
 
     m_oMenu.addSeparator();
     QObject::connect(m_oMenu.addAction(QObject::tr("Close")), SIGNAL(triggered()), qApp, SLOT(quit()));
@@ -94,19 +99,23 @@ void SystemTray::actionsBasedOnReturn(int aRetrunCode)
     {
         case UpdateNode::Service::NOTHING:
             m_pUpdateAction->setDisabled(true);
-            m_pMessageAction->setDisabled(true);
+            if(m_pMessageAction)
+                m_pMessageAction->setDisabled(true);
             break;
         case UpdateNode::Service::UPDATE:
             m_pUpdateAction->setDisabled(false);
-            m_pMessageAction->setDisabled(true);
+            if(m_pMessageAction)
+                m_pMessageAction->setDisabled(true);
             break;
         case UpdateNode::Service::MESSAGE:
             m_pUpdateAction->setDisabled(true);
-            m_pMessageAction->setDisabled(false);
+            if(m_pMessageAction)
+                m_pMessageAction->setDisabled(false);
             break;
         case UpdateNode::Service::UPDATE_MESSAGE:
             m_pUpdateAction->setDisabled(false);
-            m_pMessageAction->setDisabled(false);
+            if(m_pMessageAction)
+                m_pMessageAction->setDisabled(false);
             break;
         default:
             m_pUpdateAction->setDisabled(true);
