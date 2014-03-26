@@ -553,10 +553,7 @@ void Application::afterCheck()
             }
             else
             {
-                if(m_pService->returnCodeManager()==UpdateNode::Service::MESSAGE)
-                    QObject::connect(m_pSystemTray, SIGNAL(launchClient()), &m_oMessageDialog, SLOT(serviceDone()));
-                else
-                    QObject::connect(m_pSystemTray, SIGNAL(launchClient()), &m_oManageDialog, SLOT(serviceDoneManager()));
+                QObject::connect(m_pSystemTray, SIGNAL(launchClient()), &m_oManageDialog, SLOT(serviceDoneManager()));
             }
             QObject::connect(m_pSystemTray, SIGNAL(launchMessages()), &m_oMessageDialog, SLOT(serviceDone()));
 
