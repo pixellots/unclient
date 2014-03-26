@@ -275,13 +275,15 @@ int Service::returnCodeManager()
             if(!UpdateNode::Settings().isUpdateIgnored(update.getCode()))
                 update_cnt++;
 
+        /* currently not supported defect #1
+         *
         foreach(UpdateNode::Message message, config->configurations().at(i)->messages())
             if(!UpdateNode::Settings().messageShownAndLoaded(message.getCode()))
                 message_cnt++;
+         */
     }
     return returnCode(update_cnt, message_cnt);
 }
-
 
 /*!
 Builds the return code based on the results from a specified Config \aconfig
@@ -361,16 +363,12 @@ QString Service::notificationTextManager()
     switch(returnCodeManager())
     {
         case Service::NOTHING:
+        case Service::MESSAGE:
             text = QObject::tr("There are no new updates & messages available");
             break;
         case Service::UPDATE:
-            text = QObject::tr("There are new updates available");
-            break;
-        case Service::MESSAGE:
-            text = QObject::tr("There are new messages available");
-            break;
         case Service::UPDATE_MESSAGE:
-            text = QObject::tr("There are updates and messages available");
+            text = QObject::tr("There are new updates available");
             break;
         default:
             text = QObject::tr("Undefined state");
