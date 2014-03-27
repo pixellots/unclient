@@ -172,13 +172,7 @@ QString Commander::setCommandBasedOnOS() const
 // Do nothing on Windows
 #else
 #ifdef Q_OS_MAC // Mac
-    if(m_oUpdate.isAdminRequired() && !isProcessElevated())
-    {
-        if(QFile::exists("/usr/bin/cocoasudo"))
-            command = "/usr/bin/cocoasudo";
-       else
-            return command;
-    }
+// Do nothing on Mac
 #endif
 #endif
 #endif
