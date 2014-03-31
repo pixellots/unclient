@@ -64,6 +64,11 @@ Application::Application(QObject *parent) :
     }
     defaultSSLConfig.setCaCertificates(certificates);
     QSslConfiguration::setDefaultConfiguration(defaultSSLConfig);
+
+#ifdef MACOSX
+    if(QFileInfo(QCoreApplication::applicationFilePath()).isBundle())
+        QDir::setCurrent(QCoreApplication::applicationDirPath());
+#endif
 }
 
 /*!
