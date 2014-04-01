@@ -60,6 +60,7 @@ namespace UpdateNode
             void showSplashScreen(UpdateNode::Service* aService, const QString& aMode);
 
             int returnANDlaunch(int aResult);
+            bool isBundle();
 
         public slots:
             void setVisible(bool aShown = true);
@@ -81,6 +82,7 @@ namespace UpdateNode
             QSharedMemory m_oSharedMemory;
             QTimer m_oTimer;
             bool m_visible;
+            bool m_bundle;
             QString m_strMode;
             UpdateNode::Service* m_pService;
 

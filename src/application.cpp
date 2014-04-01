@@ -65,9 +65,13 @@ Application::Application(QObject *parent) :
     defaultSSLConfig.setCaCertificates(certificates);
     QSslConfiguration::setDefaultConfiguration(defaultSSLConfig);
 
-#ifdef MACOSX
-    if(QFileInfo(QCoreApplication::applicationFilePath()).isBundle())
+    m_bundle = false;
+#ifdef Q_OS_MACX
+    if(QFileInfo(QCoreApplication::applicationDirPath()+"/../..").isBundle())
+    {
+        m_bundle = true;
         QDir::setCurrent(QCoreApplication::applicationDirPath());
+    }
 #endif
 }
 
@@ -81,6 +85,15 @@ Application::~Application()
 }
 
 /*!
+Returns true if the binary is located in Contents/MacOS subfolder of an bundle,
+\n indicating that the application was launched as a bundle
+*/
+bool Application::isBundle()
+{
+    return m_bundle;
+}
+
+/*!
 This method checks the existance of the unclient.qss file and for the specified stylesheet as
 \n command line parameter -qss, which contains the custom stylesheet.
 \n If no file is located in the current working dir, or nothing is defined, no style sheet is set.
@@ -89,7 +102,13 @@ bool Application::installStyleSheet()
 {
     UpdateNode::Config* config = UpdateNode::Config::Instance();
 
-    QFile style("unclient.qss");
+    QString styleRef = "unclient.qss";
+#ifdef Q_OS_MACX
+    if(m_bundle)
+        styleRef = "../Resources/unclient.qss";
+#endif
+
+    QFile style(styleRef);
     if(QFile::exists(config->getStyleSheet()))
         style.setFileName(config->getStyleSheet());
     if(style.open(QIODevice::ReadOnly))
@@ -113,10 +132,16 @@ bool Application::installTranslations()
 {
     UpdateNode::Config* config = UpdateNode::Config::Instance();
 
+    QString languageRef = "";
+#ifdef Q_OS_MACX
+    if(m_bundle)
+        languageRef = "../Resources/";
+#endif
+
     QString translationFrom;
-    if(!m_oTranslator.load("unclient_" + config->getLanguage()))
+    if(!m_oTranslator.load(languageRef + "unclient_" + config->getLanguage()))
     {
-        if(!m_oTranslator.load("translations/unclient_" + config->getLanguage()))
+        if(!m_oTranslator.load(languageRef + "translations/unclient_" + config->getLanguage()))
         {
             if(m_oTranslator.load(":/translations/unclient_" + config->getLanguage()))
                 translationFrom = "*internal resource*";
@@ -371,6 +396,13 @@ int Application::returnANDlaunch(int aResult)
 
         if(!QProcess::startDetached(exec))
             QMessageBox::critical(0, QString("%1 %2").arg(UPDATENODE_COMPANY_STR).arg(UPDATENODE_APPLICATION_STR), QObject::tr("Unable to launch '%1'").arg(exec));
+    }
+
+    if(m_strMode != "-messages" && UpdateNode::Config::Instance()->isSingleMode()
+        && UpdateNode::Config::Instance()->isEnforceMessages())
+    {
+        m_oMessageDialog.serviceDone();
+        m_oMessageDialog.exec();
     }
 
     UpdateNode::Logging() << "unclient finished with: " << errorCodeToString(aResult);

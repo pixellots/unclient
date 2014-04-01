@@ -68,6 +68,9 @@ namespace UpdateNode
             void setSystemTray(bool aTray);
             bool isSystemTray();
 
+            bool isEnforceMessages();
+            void setEnforceMessages(bool aEnforceMessages);
+
             QString getOS() const;
 
             void setProduct(const Product& aProduct);
@@ -117,6 +120,7 @@ namespace UpdateNode
             bool m_bSytemTray;
             bool m_bSingleMode;
             bool m_bRelaunch;
+            bool m_bEnforeMessages;
 
             QString m_strHost;
             QString m_strMainIcon;

@@ -62,6 +62,7 @@ Config::Config()
     m_bSytemTray = false;
     m_bSingleMode = false;
     m_bRelaunch = false;
+    m_bEnforeMessages = false;
     m_iTimeOut = 20;
 }
 
@@ -524,6 +525,23 @@ int Config::getTimeOut()
     return m_iTimeOut;
 }
 
+/*!
+Checks if messages are enforced even not running in -messages mode
+\sa Config::setEnforceMessages
+*/
+bool Config::isEnforceMessages()
+{
+    return m_bEnforeMessages;
+}
+
+/*!
+Sets messages enforcement mode
+\sa Config::isEnforeMessages
+*/
+void Config::setEnforceMessages(bool aEnforceMessages)
+{
+    m_bEnforeMessages = aEnforceMessages;
+}
 
 
 

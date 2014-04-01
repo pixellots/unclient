@@ -61,6 +61,8 @@ int printHelp()
             + "  -s             \tsilent mode\n"
             + "  -r             \trelaunch client in temp directory (self update)\n"
             + "  -st            \tsystem tray icon (-check mode only)\n"
+            + "  -http          \tdo not use a secure SSL connection (not recommended)\n"
+            + "  -em            \tenforce additional messages mode before terminating\n"
             + "  -to <seconds>  \tsets timeout for update check in seconds (default: 20)\n"
             + "  -log <file>    \tenables logging\n"
             + "  -qss <file>    \ttakes stylesheet definition from file\n"
@@ -68,7 +70,6 @@ int printHelp()
             + "  -l <lang-code> \tlanguage code\n"
             + "  -sp <png_file> \tsplash screen (PNG)\n"
             + "  -exec <command>\tlaunches command before terminating\n"
-            + "  -http          \tdo not use a secure SSL connection (not recommended)\n"
             + "\n";
 
 #ifdef Q_OS_UNIX
@@ -116,6 +117,8 @@ void getParametersFromFile(const QString& file)
         config->setSystemTray(settings->value("systemtray").toString().toLower()=="true");
     if(settings->contains("relaunch"))
         config->setRelaunch(settings->value("relaunch").toString().toLower()=="true");
+    if(settings->contains("enforce_messages"))
+        config->setEnforceMessages(settings->value("enforce_messages").toString().toLower()=="true");
     if(settings->contains("log"))
         config->setLogging(settings->value("log").toString());
     if(settings->contains("exec_command"))
@@ -163,12 +166,18 @@ int main(int argc, char *argv[])
 
     // get config data
     int index = arguments.indexOf("-config");
-    if(index>-1 || QFile::exists("unclient.cfg"))
+
+    QString configRef = "unclient.cfg";
+#ifdef Q_OS_MACX
+    if(un_app.isBundle())
+        configRef = "../Resources/unclient.cfg";
+#endif
+    if(index>-1 || QFile::exists(configRef))
     {
         if(index>-1 && (index+1) < arguments.size())
             getParametersFromFile(arguments.at(index+1));
         else
-            getParametersFromFile("unclient.cfg");
+            getParametersFromFile(configRef);
     }
 
     for (int i = 0; i < arguments.size(); ++i)
@@ -201,6 +210,8 @@ int main(int argc, char *argv[])
             config->setSilent(true);
         else if(argument == "-r")
             config->setRelaunch(true);
+        else if(argument == "-en")
+            config->setEnforceMessages(true);
         else if(argument == "-re")
             relaunched = true;
         else if(argument == "-st")
