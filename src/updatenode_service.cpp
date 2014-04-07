@@ -182,7 +182,7 @@ bool Service::checkForUpdates(UpdateNode::Config* aConfig)
 #endif
 
     request.setRawHeader("charset", "utf-8" );
-    request.setRawHeader("User-Agent", QString("UpdateNodeClient %1.%2 (%3)").arg(APP_VERSION_HIGH).arg(APP_VERSION_LOW).arg(globalConfig->getOS()).toLatin1());
+    request.setRawHeader("User-Agent", QString("UpdateNode Client %1.%2.%3 (%4)").arg(APP_VERSION_HIGH).arg(APP_VERSION_LOW).arg(APP_VERSION_REV).arg(globalConfig->getOS()).toLatin1());
 
     QNetworkReply* reply = m_pManager->get(request);
 

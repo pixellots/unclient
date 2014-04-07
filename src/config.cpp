@@ -192,7 +192,7 @@ QString Config::getOS() const
 #ifdef Q_OS_UNIX
     return "Linux";
 #else
-#ifdef Win32
+#ifdef Q_OS_WIN
     return "Windows";
 #else
     return "Mac";
