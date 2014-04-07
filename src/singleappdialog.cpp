@@ -99,7 +99,7 @@ void SingleAppDialog::install()
 {
     if(m_oReadyUpdates.isEmpty() || m_bDownloadOnly)
     {
-        accept();
+        qApp->exit(UPDATENODE_PROCERROR_SUCCESS);
         return;
     }
 
