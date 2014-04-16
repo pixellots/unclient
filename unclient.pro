@@ -42,7 +42,7 @@ SUBDIRS=test
 ### version needs to be checked here
 VERSION_HIGH=1
 VERSION_LOW=0
-VERSION_REV=7
+VERSION_REV=8
 VERSION_BUILD=$$cat(build.no)
 
 VERSION=$${VERSION_HIGH}.$${VERSION_LOW}
@@ -150,7 +150,7 @@ RESOURCES += res.qrc \
 
 win32{
 ### on Windows we need some additional libs for the UAC
-LIBS+= Shell32.lib Advapi32.lib
+LIBS+= Shell32.lib Advapi32.lib Netapi32.lib
 ### rc file for Windows and the above QMAKE settings does not work perfect
 RC_FILE = unclient.rc
 ### do not elevate automatically

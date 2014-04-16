@@ -31,6 +31,7 @@
 #include <stdlib.h>
 #ifdef Q_OS_WIN
 #include <Windows.h>
+#include <lm.h>
 #endif
 
 using namespace UpdateNode;
