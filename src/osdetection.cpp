@@ -59,6 +59,19 @@ QString OSDetection::getWindowsVersion()
         int major = osinfo.dwMajorVersion;
         int minor = osinfo.dwMinorVersion;
 
+        // fix obsolete GetVersionEx starting from Windows 8.1
+        if(major == 6 && minor == 2)
+        {
+            LPBYTE pinfoRawData;
+            if  (NERR_Success == NetWkstaGetInfo(NULL,100, &pinfoRawData))
+            {
+                WKSTA_INFO_100 * pworkstationInfo = (WKSTA_INFO_100 *)pinfoRawData;
+                major = pworkstationInfo->wki100_ver_major;
+                minor = pworkstationInfo->wki100_ver_minor;
+                ::NetApiBufferFree(pinfoRawData);
+                return prefix + QString("%1.%2").arg(major).arg(minor);
+            }
+        }
         return prefix + QString("%1.%2").arg(major).arg(minor);
     }
 #endif
