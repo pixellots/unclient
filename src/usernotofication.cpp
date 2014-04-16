@@ -45,9 +45,11 @@ UserNotofication::UserNotofication(QWidget *parent) :
 
     connect(ui->treeWidget, SIGNAL(itemSelectionChanged()), SLOT(updateSelectedUpdate()));
     connect(ui->pshDetails, SIGNAL(clicked()), SLOT(detailsClicked()));
+    connect(ui->pshSkip, SIGNAL(clicked()), SLOT(ignoreUpdate()));
 
     ui->treeWidget->hide();
     ui->textBrowser->hide();
+    ui->pshSkip->hide();
 
     ui->labelLogo->hide();
 }
@@ -141,6 +143,7 @@ void UserNotofication::detailsClicked()
 {
     if(ui->treeWidget->isVisible())
     {
+        ui->pshSkip->hide();
         ui->treeWidget->hide();
         ui->textBrowser->setHidden(true);
         ui->pshDetails->setText(tr("Show Details"));
@@ -148,11 +151,26 @@ void UserNotofication::detailsClicked()
     }
     else
     {
+        ui->pshSkip->show();
         ui->treeWidget->show();
         ui->textBrowser->show();
         ui->pshDetails->setText(tr("Hide Details"));
     }
     adjustSize();
     //layout()->setSizeConstraint(QLayout::SetMinimumSize);
+}
 
+void UserNotofication::ignoreUpdate()
+{
+    UpdateNode::Settings settings;
+
+    if(ui->treeWidget->topLevelItem(0))
+    {
+        QTreeWidgetItem* item = ui->treeWidget->topLevelItem(0);
+
+        UpdateNode::Update update = item->data(0, Qt::UserRole).value<UpdateNode::Update>();
+        settings.setIgnoreUpdate(update.getCode(), true);
+
+        reject();
+    }
 }
