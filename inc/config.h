@@ -110,6 +110,9 @@ namespace UpdateNode
             void setTimeOut(int aTimeOutInSeconds);
             int getTimeOut();
 
+            void setCustomRequestValue(const QString& aValue);
+            QString getCustomRequestValue();
+
         public:
             Config();
 
@@ -134,6 +137,7 @@ namespace UpdateNode
             QString m_strExec;
             QString m_strSplashImage;
             QString m_strStyleSheet;
+            QString m_strCustomRequestValue;
             int     m_iTimeOut;
 
             UpdateNode::Product m_oProduct;

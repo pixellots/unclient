@@ -543,6 +543,24 @@ void Config::setEnforceMessages(bool aEnforceMessages)
     m_bEnforeMessages = aEnforceMessages;
 }
 
+/*!
+Sets a custom request value
+\sa Config::getCustomRequestValue
+*/
+void Config::setCustomRequestValue(const QString& aValue)
+{
+    m_strCustomRequestValue = aValue;
+}
+
+/*!
+Returns the custom request value
+\sa Config::setCustomRequestValue
+*/
+QString Config::getCustomRequestValue()
+{
+    return m_strCustomRequestValue;
+}
+
 
 
 
