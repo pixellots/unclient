@@ -236,6 +236,8 @@ UpdateNode::Update XmlParser::parseUpdate(QDomNode aNode)
             update.setCommandLine(e.text());
         else if(e.tagName()=="requires_admin")
             update.setRequiresAdmin(e.text().toInt()==1);
+        else if(e.tagName()=="mandatory")
+            update.setMandatory(e.text().toInt()==1);
         else if(e.tagName()=="file_size")
             update.setFileSize(e.text());
         else if(e.tagName()=="target")

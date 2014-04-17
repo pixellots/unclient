@@ -151,7 +151,16 @@ void UserNotofication::detailsClicked()
     }
     else
     {
-        ui->pshSkip->show();
+        if(ui->treeWidget->topLevelItem(0))
+        {
+            QTreeWidgetItem* item = ui->treeWidget->topLevelItem(0);
+            UpdateNode::Update update = item->data(0, Qt::UserRole).value<UpdateNode::Update>();
+
+            if(!update.isMandatory())
+                ui->pshSkip->show();
+        }
+        else
+            ui->pshSkip->show();
         ui->treeWidget->show();
         ui->textBrowser->show();
         ui->pshDetails->setText(tr("Hide Details"));

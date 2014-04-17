@@ -159,12 +159,18 @@ void MultiAppDialog::contextMenu(const QPoint& pos)
 
     QMenu myMenu;
 
-    if(!m_pUI->treeUpdate->currentItem()->parent())
+    if(!m_pUI->treeUpdate->currentItem() || !m_pUI->treeUpdate->currentItem()->parent())
         return;
     else if(m_pUI->treeUpdate->currentItem()->parent()->text(0) == tr("Ignored"))
         myMenu.addAction(tr("Don't ignore update"));
     else
+    {
+        UpdateNode::Update update = m_pUI->treeUpdate->currentItem()->data(0, Qt::UserRole).value<UpdateNode::Update>();
+        if(update.isMandatory())
+            return;
+
         myMenu.addAction(tr("Ignore update"));
+    }
 
     QAction* selectedItem = myMenu.exec(globalPos);
     if(selectedItem)

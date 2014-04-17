@@ -147,11 +147,12 @@ void SingleAppDialog::serviceDone()
 
         UpdateNode::Settings settings;
 
-        if(settings.isUpdateIgnored(update_list.at(0).getCode()))
+        if(!update_list.at(0).isMandatory() && settings.isUpdateIgnored(update_list.at(0).getCode()))
         {
             qApp->exit(UPDATENODE_PROCERROR_NO_UPDATES);
             return;
         }
+
         config->addUpdate(update_list.at(0));
 
         if(!config->isSilent())

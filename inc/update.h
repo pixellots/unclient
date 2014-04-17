@@ -61,6 +61,9 @@ namespace UpdateNode
             void setRequiresAdmin(bool aAdminRequired);
             bool isAdminRequired() const;
 
+            void setMandatory(bool aMandatoryUpdate);
+            bool isMandatory() const;
+
             void setTargetVersion(const ProductVersion& aTarget);
             ProductVersion getTargetVersion() const;
 
@@ -78,6 +81,7 @@ namespace UpdateNode
             QString m_strFileSize;
             int m_iType;
             bool m_bAdminRequired;
+            bool m_bMandatory;
 
             ProductVersion m_oTarget;
     };

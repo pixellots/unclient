@@ -40,6 +40,7 @@ Constructs an empty Update object.
 Update::Update()
 {
     m_bAdminRequired = false;
+    m_bMandatory = false;
     m_iType = 1;
 }
 
@@ -238,5 +239,23 @@ Returns the update code. The returned string is empty when no code was set
 QString Update::getCode() const
 {
     return m_strCode;
+}
+
+/*!
+Returns whether this update can be ignored or not
+\sa Update::setMandatory
+*/
+bool Update::isMandatory() const
+{
+    return m_bMandatory;
+}
+
+/*!
+Sets the mandatory flag for a update. By default an update is not mandatory
+\sa Update::isMandatory
+*/
+void Update::setMandatory(bool aMandatoryUpdate)
+{
+    m_bMandatory = aMandatoryUpdate;
 }
 
