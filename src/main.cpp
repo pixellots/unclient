@@ -50,6 +50,7 @@ int printHelp()
             + "  -manager        \truns update manager mode\n"
             + "  -register       \tregistrates the current version\n"
             + "  -unregister     \tunregistrates the current version\n"
+            + "  -clean          \tcleans any version mapping for a particular product code\n"
             + "\n\n"
             + "Options:\n\n"
             + "  -k <key>       \tunique UpdateNode key\n"
@@ -58,6 +59,7 @@ int printHelp()
             + "  -pc <code>     \tproduct code\n"
             + "  -v <version>   \tproduct version\n"
             + "  -i <img_file>  \tmain icon\n"
+            + "  -c <custom>    \tcustom request value\n"
             + "  -s             \tsilent mode\n"
             + "  -r             \trelaunch client in temp directory (self update)\n"
             + "  -st            \tsystem tray icon (-check mode only)\n"
@@ -129,6 +131,8 @@ void getParametersFromFile(const QString& file)
         config->setStyleSheet(settings->value("stylesheet").toString());
     if(settings->contains("timeout"))
         config->setTimeOut(settings->value("timeout").toInt());
+    if(settings->contains("custom"))
+        config->setCustomRequestValue(settings->value("custom").toString());
 
     delete settings;
 }
@@ -237,7 +241,7 @@ int main(int argc, char *argv[])
             return printHelp();
         else if(argument == "-update" || argument == "-messages"
                 || argument == "-register" || argument == "-unregister" || argument == "-manager"
-                || argument == "-check" || argument == "-download" || argument == "-execute")
+                || argument == "-check" || argument == "-download" || argument == "-execute" || argument == "-clean")
             mode = argument;
     }
 
@@ -256,9 +260,11 @@ int main(int argc, char *argv[])
     un_app.setMode(mode);
 
     UpdateNode::Settings settings;
-    if(mode == "-register" || mode == "-unregister")
+    if(mode == "-register" || mode == "-unregister" || mode == "-clean")
     {
-        if(mode == "-register")
+        if(mode == "-clean")
+           return settings.clean() ? 0 : 1;
+        else if(mode == "-register")
            return settings.registerVersion() ? 0 : 1;
         else
            return settings.unRegisterVersion() ? 0 : 1;
