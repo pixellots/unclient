@@ -138,6 +138,20 @@ bool Settings::unRegisterVersion()
 }
 
 /*!
+Cleans the mapping history for updates for a particular product
+*/
+bool Settings::clean()
+{
+    UpdateNode::Config* config = UpdateNode::Config::Instance();
+
+    QString id = m_strCurrentVersion + config->getProductCode() + "/";
+
+    remove(id);
+
+    return true;
+}
+
+/*!
 Builds the configuration list based on previous registered versions
 \sa Settings::registerVersion
 \sa Settings::unRegisterVersion

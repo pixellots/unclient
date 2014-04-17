@@ -49,6 +49,7 @@ namespace UpdateNode
             bool registerVersion();
             bool unRegisterVersion();
             void getRegisteredVersion();
+            bool clean();
 
             void setUpdate(UpdateNode::Update aUpdate, const QString& aLocalFile, int aResult);
             void setMessage(UpdateNode::Message aMessage, bool aShown, bool aLoaded);
