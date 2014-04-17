@@ -145,6 +145,7 @@ bool Service::checkForUpdates(UpdateNode::Config* aConfig)
     url_query.addQueryItem("os", UpdateNode::OSDetection::getOS());
     url_query.addQueryItem("arch", UpdateNode::OSDetection::getArch());
     url_query.addQueryItem("lang", globalConfig->getLanguage());
+    url_query.addQueryItem("custom", globalConfig->getCustomRequestValue());
 
     if(aConfig->getVersionCode().isEmpty())
     {
@@ -165,6 +166,7 @@ bool Service::checkForUpdates(UpdateNode::Config* aConfig)
     url.addQueryItem("os", UpdateNode::OSDetection::getOS());
     url.addQueryItem("arch", UpdateNode::OSDetection::getArch());
     url.addQueryItem("lang", globalConfig->getLanguage());
+    url.addQueryItem("custom", globalConfig->getCustomRequestValue());
 
     if(aConfig->getVersionCode().isEmpty())
     {
