@@ -227,6 +227,8 @@ int main(int argc, char *argv[])
         }
         else if(argument == "-l" && hasNext)
             config->setLanguage(arguments.at(i+1));
+        else if(argument == "-c" && hasNext)
+            config->setCustomRequestValue(arguments.at(i+1));
         else if(argument == "-to" && hasNext)
             config->setTimeOut(arguments.at(i+1).toInt());
         else if(argument == "-qss" && hasNext)
