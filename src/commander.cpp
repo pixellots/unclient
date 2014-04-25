@@ -125,6 +125,7 @@ UN_VERSION          | The current unclient version        | 1.0
 UN_LANG             | Language set in unclient, or system\n language if no language was specified | de-DE
 UN_OS               | Operating system's name and version | Windows 6.2
 UN_ARCH             | Operating system's architecture     | x86
+UN_CUSTOM           | Custom request value                | NoServer
 
 */
 
@@ -428,6 +429,7 @@ QString Commander::resolveGeneral(const QString& aString)
     theString = theString.replace("[UN_LANG]", UpdateNode::Config::Instance()->getLanguage());
     theString = theString.replace("[UN_OS]", UpdateNode::OSDetection::getOS());
     theString = theString.replace("[UN_ARCH]", UpdateNode::OSDetection::getArch());
+    theString = theString.replace("[UN_CUSTOM]", UpdateNode::Config::Instance()->getCustomRequestValue());
 
     // replace environment vars
     QStringList env = QProcessEnvironment::systemEnvironment().toStringList();
