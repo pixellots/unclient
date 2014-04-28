@@ -51,6 +51,7 @@ int printHelp()
             + "  -register       \tregistrates the current version\n"
             + "  -unregister     \tunregistrates the current version\n"
             + "  -clean          \tcleans any version mapping for a particular product code\n"
+            + "  -genconfig      \tgenerates a config file \"unclient.cfg\" based on given parameters\n"
             + "\n\n"
             + "Options:\n\n"
             + "  -k <key>       \tunique UpdateNode key\n"
@@ -84,59 +85,6 @@ int printHelp()
     return 0;
 }
 
-void getParametersFromFile(const QString& file)
-{
-    UpdateNode::Config* config = UpdateNode::Config::Instance();
-    QSettings *settings = new QSettings(file, QSettings::IniFormat);
-    if(settings->contains("key"))
-        config->setKey(settings->value("key").toString());
-    if(settings->contains("test_key"))
-        config->setTestKey(settings->value("test_key").toString());
-    if(settings->contains("version_code"))
-    {
-        config->setSingleMode(true);
-        config->setVersionCode(settings->value("version_code").toString());
-    }
-    if(settings->contains("product_code"))
-    {
-        config->setSingleMode(true);
-        config->setProductCode(settings->value("product_code").toString());
-    }
-    if(settings->contains("version"))
-    {
-        config->setSingleMode(true);
-        config->setVersion(settings->value("version").toString());
-    }
-    if(settings->contains("icon"))
-        config->setMainIcon(settings->value("icon").toString());
-    if(settings->contains("language"))
-        config->setLanguage(settings->value("language").toString());
-    if(settings->contains("silent"))
-        config->setSilent(settings->value("silent").toString().toLower()=="true");
-    if(settings->contains("http") && settings->value("http").toString().toLower()=="true")
-        config->setHost(QString(UPDATENODE_SERVICE_URL).replace("https", "http"));
-    if(settings->contains("systemtray"))
-        config->setSystemTray(settings->value("systemtray").toString().toLower()=="true");
-    if(settings->contains("relaunch"))
-        config->setRelaunch(settings->value("relaunch").toString().toLower()=="true");
-    if(settings->contains("enforce_messages"))
-        config->setEnforceMessages(settings->value("enforce_messages").toString().toLower()=="true");
-    if(settings->contains("log"))
-        config->setLogging(settings->value("log").toString());
-    if(settings->contains("exec_command"))
-        config->setExec(settings->value("exec_command").toString());
-    if(settings->contains("splash"))
-        config->setSplashScreen(settings->value("splash").toString());
-    if(settings->contains("stylesheet"))
-        config->setStyleSheet(settings->value("stylesheet").toString());
-    if(settings->contains("timeout"))
-        config->setTimeOut(settings->value("timeout").toInt());
-    if(settings->contains("custom"))
-        config->setCustomRequestValue(settings->value("custom").toString());
-
-    delete settings;
-}
-
 int main(int argc, char *argv[])
 {
     if(argc > 1 && strcmp(argv[1],"-copy") == 0)
@@ -167,6 +115,7 @@ int main(int argc, char *argv[])
     QString argument;
     QStringList arguments = a.arguments();
     bool relaunched = false;
+    bool fromConfigFile = false;
 
     // get config data
     int index = arguments.indexOf("-config");
@@ -178,10 +127,11 @@ int main(int argc, char *argv[])
 #endif
     if(index>-1 || QFile::exists(configRef))
     {
+        fromConfigFile = true;
         if(index>-1 && (index+1) < arguments.size())
-            getParametersFromFile(arguments.at(index+1));
+            config->getParametersFromFile(arguments.at(index+1));
         else
-            getParametersFromFile(configRef);
+            config->getParametersFromFile(configRef);
     }
 
     for (int i = 0; i < arguments.size(); ++i)
@@ -214,7 +164,7 @@ int main(int argc, char *argv[])
             config->setSilent(true);
         else if(argument == "-r")
             config->setRelaunch(true);
-        else if(argument == "-en")
+        else if(argument == "-em")
             config->setEnforceMessages(true);
         else if(argument == "-re")
             relaunched = true;
@@ -253,6 +203,13 @@ int main(int argc, char *argv[])
         return un_app.returnANDlaunch(UPDATENODE_PROCERROR_WRONG_PARAMETER);
     else if(config->getVersion().isEmpty() && !config->getProductCode().isEmpty())
         return un_app.returnANDlaunch(UPDATENODE_PROCERROR_WRONG_PARAMETER);
+
+    index = arguments.indexOf("-genconfig");
+    if(index>-1)
+    {
+        config->setParametersToFile("unclient.cfg");
+        return 0;
+    }
 
     if(mode.isEmpty() && config->isSingleMode())
         mode = "-update";
