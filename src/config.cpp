@@ -21,12 +21,15 @@
 ****************************************************************************/
 
 #include <QLocale>
+#include <QSettings>
 #include <QCryptographicHash>
 
-#include <stdlib.h>
 #include "config.h"
+#include "updatenode_service.h"
 
 using namespace UpdateNode;
+
+#define DEFAULT_TIMEOUT 20
 
 /*!
 \class UpdateNode::Config
@@ -63,7 +66,7 @@ Config::Config()
     m_bSingleMode = false;
     m_bRelaunch = false;
     m_bEnforeMessages = false;
-    m_iTimeOut = 20;
+    m_iTimeOut = DEFAULT_TIMEOUT;
 }
 
 /*!
@@ -559,6 +562,114 @@ Returns the custom request value
 QString Config::getCustomRequestValue()
 {
     return m_strCustomRequestValue;
+}
+
+/*!
+Reads commandline parameters from config file
+\sa Config::setParametersToFile
+*/
+void Config::getParametersFromFile(const QString& aFile)
+{
+   QSettings *settings = new QSettings(aFile, QSettings::IniFormat);
+    if(settings->contains("key"))
+        setKey(settings->value("key").toString());
+    if(settings->contains("test_key"))
+        setTestKey(settings->value("test_key").toString());
+    if(settings->contains("version_code"))
+    {
+        setSingleMode(true);
+        setVersionCode(settings->value("version_code").toString());
+    }
+    if(settings->contains("product_code"))
+    {
+        setSingleMode(true);
+        setProductCode(settings->value("product_code").toString());
+    }
+    if(settings->contains("version"))
+    {
+        setSingleMode(true);
+        setVersion(settings->value("version").toString());
+    }
+    if(settings->contains("icon"))
+        setMainIcon(settings->value("icon").toString());
+    if(settings->contains("language"))
+        setLanguage(settings->value("language").toString());
+    if(settings->contains("silent"))
+        setSilent(settings->value("silent").toString().toLower()=="true");
+    if(settings->contains("http") && settings->value("http").toString().toLower()=="true")
+        setHost(QString(UPDATENODE_SERVICE_URL).replace("https", "http"));
+    if(settings->contains("systemtray"))
+        setSystemTray(settings->value("systemtray").toString().toLower()=="true");
+    if(settings->contains("relaunch"))
+        setRelaunch(settings->value("relaunch").toString().toLower()=="true");
+    if(settings->contains("enforce_messages"))
+        setEnforceMessages(settings->value("enforce_messages").toString().toLower()=="true");
+    if(settings->contains("log"))
+        setLogging(settings->value("log").toString());
+    if(settings->contains("exec_command"))
+        setExec(settings->value("exec_command").toString());
+    if(settings->contains("splash"))
+        setSplashScreen(settings->value("splash").toString());
+    if(settings->contains("stylesheet"))
+        setStyleSheet(settings->value("stylesheet").toString());
+    if(settings->contains("timeout"))
+        setTimeOut(settings->value("timeout").toInt());
+    if(settings->contains("custom"))
+        setCustomRequestValue(settings->value("custom").toString());
+
+    delete settings;
+}
+
+/*!
+Writes current commandline parameters to a config file \n
+Parameter aAll ignores some values when set to false
+\sa Config::getParametersFromFile
+*/
+void Config::setParametersToFile(const QString& aFile, bool aAll /* = true */)
+{
+    QFile::remove(aFile);
+
+    QSettings *settings = new QSettings(aFile, QSettings::IniFormat);
+
+    settings->clear();
+
+    settings->setValue("key", getKey());
+    if(!getTestKey().isEmpty())
+        settings->setValue("test_key", getTestKey());
+    if(!getProductCode().isEmpty())
+        settings->setValue("product_code", getProductCode());
+    if(!getVersion().isEmpty())
+        settings->setValue("version", getVersion());
+    if(!getVersionCode().isEmpty())
+        settings->setValue("version_code", getVersionCode());
+    if(!getCustomRequestValue().isEmpty())
+        settings->setValue("custom", getCustomRequestValue());
+    if(!getExec().isEmpty() && aAll)
+        settings->setValue("exec_command", getExec());
+    if(!getHost().isEmpty())
+        settings->setValue("http", "true");
+    if(!m_strLanguage.isEmpty())
+        settings->setValue("language", getLanguage());
+    if(!getLoggingFile().isEmpty())
+        settings->setValue("log", getLoggingFile());
+    if(!getSplashScreen().isEmpty() && aAll)
+        settings->setValue("splash", getSplashScreen());
+    if(!getStyleSheet().isEmpty())
+        settings->setValue("stylesheet", getStyleSheet());
+    if(getTimeOut()!=DEFAULT_TIMEOUT)
+        settings->setValue("timeout", getTimeOut());
+    if(!mainIcon().isEmpty())
+        settings->setValue("icon", mainIcon());
+    if(isEnforceMessages() && aAll)
+        settings->setValue("enforce_messages", "true");
+    if(isRelaunch() && aAll)
+        settings->setValue("relaunch", "true");
+    if(isSilent() && aAll)
+        settings->setValue("silent", "true");
+    if(isSystemTray() && aAll)
+        settings->setValue("systemtray", "true");
+
+    delete settings;
 }
 
 

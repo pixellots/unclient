@@ -113,6 +113,9 @@ namespace UpdateNode
             void setCustomRequestValue(const QString& aValue);
             QString getCustomRequestValue();
 
+            void getParametersFromFile(const QString& aFile);
+            void setParametersToFile(const QString& aFile, bool aAll = true);
+
         public:
             Config();
 
