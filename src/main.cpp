@@ -115,7 +115,6 @@ int main(int argc, char *argv[])
     QString argument;
     QStringList arguments = a.arguments();
     bool relaunched = false;
-    bool fromConfigFile = false;
 
     // get config data
     int index = arguments.indexOf("-config");
@@ -125,9 +124,8 @@ int main(int argc, char *argv[])
     if(un_app.isBundle())
         configRef = "../Resources/unclient.cfg";
 #endif
-    if(index>-1 || QFile::exists(configRef))
+    if(arguments.indexOf("-genconfig") == -1 && (index>-1 || QFile::exists(configRef)))
     {
-        fromConfigFile = true;
         if(index>-1 && (index+1) < arguments.size())
             config->getParametersFromFile(arguments.at(index+1));
         else

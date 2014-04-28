@@ -631,8 +631,6 @@ void Config::setParametersToFile(const QString& aFile, bool aAll /* = true */)
 
     QSettings *settings = new QSettings(aFile, QSettings::IniFormat);
 
-    settings->clear();
-
     settings->setValue("key", getKey());
     if(!getTestKey().isEmpty())
         settings->setValue("test_key", getTestKey());
