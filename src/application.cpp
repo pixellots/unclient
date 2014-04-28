@@ -401,10 +401,14 @@ int Application::returnANDlaunch(int aResult)
     if(m_strMode != "-messages" && UpdateNode::Config::Instance()->isSingleMode()
         && UpdateNode::Config::Instance()->isEnforceMessages())
     {
-        m_oMessageDialog.serviceDone();
-        m_oMessageDialog.exec();
-    }
+        QString tempFile = QDir::tempPath() + "/UpdateNode/" + UpdateNode::Config::Instance()->getKeyHashed() + "/unclient_temp.cfg";
 
+        UpdateNode::Config::Instance()->setParametersToFile(tempFile, false);
+        UpdateNode::Logging() << "Enforcing message mode";
+
+        if(!QProcess::startDetached(QApplication::applicationFilePath() + " -messages -config " + tempFile))
+            UpdateNode::Logging() << "Failed to enforce message mode";
+    }
     UpdateNode::Logging() << "unclient finished with: " << errorCodeToString(aResult);
 
     qApp->exit(aResult);
