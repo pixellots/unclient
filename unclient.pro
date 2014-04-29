@@ -104,7 +104,8 @@ SOURCES += src/main.cpp \
     src/helpdialog.cpp \
     src/textbrowser.cpp \
     src/wincommander.cpp \
-    src/limittimer.cpp
+    src/limittimer.cpp \
+    src/binarysettings.cpp
 
 macx:SOURCES += src/maccommander.cpp
 macx:HEADERS += inc/maccommander.h
@@ -134,7 +135,8 @@ HEADERS += \
     inc/helpdialog.h \
     inc/textbrowser.h \
     inc/wincommander.h \
-    inc/limittimer.h
+    inc/limittimer.h \
+    inc/binarysettings.h
 
 FORMS += \
     forms/singleappdialog.ui \
