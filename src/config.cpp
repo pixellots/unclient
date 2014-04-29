@@ -26,6 +26,7 @@
 
 #include "config.h"
 #include "updatenode_service.h"
+#include "binarysettings.h"
 
 using namespace UpdateNode;
 
@@ -570,7 +571,19 @@ Reads commandline parameters from config file
 */
 void Config::getParametersFromFile(const QString& aFile)
 {
-   QSettings *settings = new QSettings(aFile, QSettings::IniFormat);
+    QSettings *settings = NULL;
+
+    if(QFileInfo(aFile).suffix()!="cfg")
+    {
+        const QSettings::Format BinFormat =
+                 QSettings::registerFormat("bin",
+                                           UpdateNode::BinarySettings::readBinFile,
+                                           UpdateNode::BinarySettings::writeBinFile);
+        settings = new QSettings(aFile, BinFormat);
+    }
+    else
+        settings = new QSettings(aFile, QSettings::IniFormat);
+
     if(settings->contains("key"))
         setKey(settings->value("key").toString());
     if(settings->contains("test_key"))
@@ -629,7 +642,18 @@ void Config::setParametersToFile(const QString& aFile, bool aAll /* = true */)
 {
     QFile::remove(aFile);
 
-    QSettings *settings = new QSettings(aFile, QSettings::IniFormat);
+    QSettings *settings = NULL;
+
+    if(QFileInfo(aFile).suffix()!="cfg")
+    {
+        const QSettings::Format BinFormat =
+                 QSettings::registerFormat("bin",
+                                           UpdateNode::BinarySettings::readBinFile,
+                                           UpdateNode::BinarySettings::writeBinFile);
+        settings = new QSettings(aFile, BinFormat);
+    }
+    else
+        settings = new QSettings(aFile, QSettings::IniFormat);
 
     settings->setValue("key", getKey());
     if(!getTestKey().isEmpty())
