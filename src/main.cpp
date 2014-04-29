@@ -124,15 +124,22 @@ int main(int argc, char *argv[])
     if(un_app.isBundle())
         configRef = "../Resources/unclient.cfg";
 #endif
-    if(arguments.indexOf("-genconfig") == -1 && (index>-1 || QFile::exists(configRef)))
+
+    if(index>-1 && (index+1) < arguments.size())
+        configRef = arguments.at(index+1);
+
+    if(arguments.indexOf("-genconfig") == -1)
     {
-        if(index>-1 && (index+1) < arguments.size())
-            config->getParametersFromFile(arguments.at(index+1));
-        else
+        if(QFile::exists(configRef))
             config->getParametersFromFile(configRef);
+        else if(QFile::exists("unclient.bin"))
+        {
+            configRef = "unclient.bin";
+            config->getParametersFromFile(configRef);
+        }
+        else if(arguments.size()==1)
+            return printHelp();
     }
-    else if(arguments.size()==1)
-        return printHelp();
 
     for (int i = 0; i < arguments.size(); ++i)
     {
@@ -207,7 +214,7 @@ int main(int argc, char *argv[])
     index = arguments.indexOf("-genconfig");
     if(index>-1)
     {
-        config->setParametersToFile("unclient.cfg");
+        config->setParametersToFile(configRef);
         return 0;
     }
 
