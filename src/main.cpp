@@ -131,6 +131,8 @@ int main(int argc, char *argv[])
         else
             config->getParametersFromFile(configRef);
     }
+    else if(arguments.size()==1)
+        return printHelp();
 
     for (int i = 0; i < arguments.size(); ++i)
     {
