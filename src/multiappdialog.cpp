@@ -82,6 +82,11 @@ MultiAppDialog::MultiAppDialog(QWidget *parent) :
     connect(m_pUI->pshClose, SIGNAL(clicked()), SLOT(onClose()));
 
     m_pUI->treeUpdate->setContextMenuPolicy(Qt::CustomContextMenu);
+
+#ifdef Q_OS_WIN
+    QIcon icon = QApplication::style()->standardIcon(QStyle::SP_VistaShield);
+    m_pUI->pshUpdate->setIcon(icon);
+#endif
 }
 
 MultiAppDialog::~MultiAppDialog()

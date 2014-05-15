@@ -116,6 +116,11 @@ void UserNotofication::updateView()
 
     updateSelectedUpdate();
 
+#ifdef Q_OS_WIN
+    QIcon icon = QApplication::style()->standardIcon(QStyle::SP_VistaShield);
+    ui->pshYes->setIcon(icon);
+#endif
+
     adjustSize();
 
     setWindowState( (windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
