@@ -217,7 +217,7 @@ p, li { white-space: pre-wrap; }
      <item>
       <widget class="QPushButton" name="pshYes">
        <property name="text">
-        <string>Continue</string>
+        <string>Install</string>
        </property>
        <property name="default">
         <bool>true</bool>
