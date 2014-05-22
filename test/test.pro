@@ -34,6 +34,7 @@ SOURCES += \
     ../src/osdetection.cpp \
     ../src/message.cpp \
     ../src/settings.cpp \
+	../src/binarysettings.cpp \
     ../src/update.cpp \
     ../src/xmlparser.cpp \
     ../src/wincommander.cpp \
@@ -55,6 +56,7 @@ HEADERS += \
     ../inc/osdetection.h \
     ../inc/message.h \
     ../inc/settings.h \
+	../inc/binarysettings.h \
     ../inc/update.h \
     ../inc/xmlparser.h \
     ../inc/wincommander.h \
@@ -67,7 +69,7 @@ macx:SOURCES += ../src/maccommander.cpp
 macx:HEADERS += ../inc/maccommander.h
 
 win32{
-LIBS+= Shell32.lib Advapi32.lib
+LIBS+= Shell32.lib Advapi32.lib Netapi32.lib
 }
 
 macx{
