@@ -566,6 +566,24 @@ QString Config::getCustomRequestValue()
 }
 
 /*!
+Sets a custom value to identify the customer
+\sa Config::getIdentifier
+*/
+void Config::setIdentifier(const QString& aIdent)
+{
+    m_strIdentifier = aIdent;
+}
+
+/*!
+Returns the custom client identify
+\sa Config::getIdentifier
+*/
+QString Config::getIdentifier()
+{
+    return m_strIdentifier;
+}
+
+/*!
 Reads commandline parameters from config file
 \sa Config::setParametersToFile
 */
