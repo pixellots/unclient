@@ -72,6 +72,7 @@ int printHelp()
             + "  -config <file> \tloads parameter settings from file\n"
             + "  -l <lang-code> \tlanguage code\n"
             + "  -sp <png_file> \tsplash screen (PNG)\n"
+            + "  -ident <custom>\tadditional client identifier (optional)\n"
             + "  -exec <command>\tlaunches command before terminating\n"
             + "\n";
 
@@ -196,6 +197,8 @@ int main(int argc, char *argv[])
             config->setSplashScreen(arguments.at(i+1));
         else if(argument == "-exec" && hasNext)
             config->setExec(arguments.at(i+1));
+        else if(argument == "-ident" && hasNext)
+            config->setIdentifier(arguments.at(i+1));
         else if(argument == "-h" || argument == "--h" || argument == "--help" || argument == "-help" || argument == "/?")
             return printHelp();
         else if(argument == "-update" || argument == "-messages"
