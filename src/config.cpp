@@ -647,6 +647,8 @@ void Config::getParametersFromFile(const QString& aFile)
         setTimeOut(settings->value("timeout").toInt());
     if(settings->contains("custom"))
         setCustomRequestValue(settings->value("custom").toString());
+    if(settings->contains("identifier"))
+        setIdentifier(settings->value("identifier").toString());
 
     delete settings;
 }
@@ -686,6 +688,8 @@ void Config::setParametersToFile(const QString& aFile, bool aAll /* = true */)
         settings->setValue("custom", getCustomRequestValue());
     if(!getExec().isEmpty() && aAll)
         settings->setValue("exec_command", getExec());
+    if(!getIdentifier().isEmpty())
+        settings->setValue("identifier", getIdentifier());
     if(!getHost().isEmpty())
         settings->setValue("http", "true");
     if(!m_strLanguage.isEmpty())
