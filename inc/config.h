@@ -110,6 +110,9 @@ namespace UpdateNode
             void setTimeOut(int aTimeOutInSeconds);
             int getTimeOut();
 
+            void setIdentifier(const QString& aIdent);
+            QString getIdentifier();
+
             void setCustomRequestValue(const QString& aValue);
             QString getCustomRequestValue();
 
@@ -128,6 +131,7 @@ namespace UpdateNode
             bool m_bRelaunch;
             bool m_bEnforeMessages;
 
+            QString m_strIdentifier;
             QString m_strHost;
             QString m_strMainIcon;
             QString m_strKey;
