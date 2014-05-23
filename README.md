@@ -31,7 +31,7 @@ Full license description file: LICENSE.GPL
 
 ### Windows
 
-* Install Vistual Studio
+* Install Visual Studio
 * Install [Qt Framework](http://qt-project.org/)
 * Install [OpenSSL](http://slproweb.com/products/Win32OpenSSL.html)
 * Install [Inno Setup](http://www.jrsoftware.org/isinfo.php) *(Optional - only if you want to build an installer)*
@@ -57,4 +57,3 @@ Full license description file: LICENSE.GPL
 Read more about features and all the different ways to call and communicate with unclient in our [Wiki](https://bitbucket.org/updatenode/unclient/wiki)
 
 *Copyright (C) 2014 UpdateNode UG (haftungsbeschränkt)*
-
