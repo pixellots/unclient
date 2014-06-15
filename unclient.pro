@@ -57,7 +57,8 @@ TRANSLATIONS = \
     translations/$${TARGET}_ja.ts \
     translations/$${TARGET}_zh.ts \
     translations/$${TARGET}_es.ts \
-    translations/$${TARGET}_ru.ts
+    translations/$${TARGET}_ru.ts \
+	translations/$${TARGET}_ko.ts
 
 ### qmake settings - sometimes this is not the reality
 QMAKE_TARGET_COMPANY = UpdateNode

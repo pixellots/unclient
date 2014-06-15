@@ -153,30 +153,30 @@
         <translation>Cerrar</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="341"/>
-        <location filename="../src/updatenode_service.cpp" line="369"/>
+        <location filename="../src/updatenode_service.cpp" line="343"/>
+        <location filename="../src/updatenode_service.cpp" line="371"/>
         <source>There are no new updates &amp; messages available</source>
         <translation>No hay nuevas actualizaciones &amp; mensajes disponibles</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="344"/>
-        <location filename="../src/updatenode_service.cpp" line="373"/>
+        <location filename="../src/updatenode_service.cpp" line="346"/>
+        <location filename="../src/updatenode_service.cpp" line="375"/>
         <source>There are new updates available</source>
         <translation>Hay nuevas actualizaciones disponibles</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="347"/>
+        <location filename="../src/updatenode_service.cpp" line="349"/>
         <source>There are new messages available</source>
         <translation>Hay nuevos mensajes disponibles</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="350"/>
+        <location filename="../src/updatenode_service.cpp" line="352"/>
         <source>There are updates and messages available</source>
         <translation>Hay nuevas actualizaciones y mensajes disponibles</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="353"/>
-        <location filename="../src/updatenode_service.cpp" line="376"/>
+        <location filename="../src/updatenode_service.cpp" line="355"/>
+        <location filename="../src/updatenode_service.cpp" line="378"/>
         <source>Undefined state</source>
         <translation>Estado indefinido</translation>
     </message>
