@@ -4,6 +4,7 @@
         <file>translations/unclient_es.qm</file>
         <file>translations/unclient_ja.qm</file>
         <file>translations/unclient_ru.qm</file>
+        <file>translations/unclient_ko.qm</file>
         <file>translations/unclient_zh.qm</file>
     </qresource>
 </RCC>
