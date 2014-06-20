@@ -65,6 +65,8 @@ UserMessages::UserMessages(QWidget *parent) :
     ui->webView->page()->networkAccessManager()->setCache(cache);
     ui->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     connect(ui->webView, SIGNAL(linkClicked(const QUrl&)), SLOT(openLink(const QUrl&)));
+#else
+    connect(ui->textBrowser, SIGNAL(anchorClicked(QUrl)), SLOT(openLink(QUrl)));
 #endif
     connect(ui->toolLeft, SIGNAL(clicked()), SLOT(onLeft()));
     connect(ui->toolRight, SIGNAL(clicked()), SLOT(onRight()));
@@ -232,16 +234,22 @@ void UserMessages::showMessage()
 
 void UserMessages::onLeft()
 {
-	m_bFromRight = true;
-    m_iCurrentIndex--;
-    showMessage();
+    if(m_iCurrentIndex>0)
+    {
+        m_bFromRight = true;
+        m_iCurrentIndex--;
+        showMessage();
+    }
 }
 
 void UserMessages::onRight()
 {
-	m_bFromRight = false;
-    m_iCurrentIndex++;
-    showMessage();
+    if(m_iCurrentIndex < m_listMessages.size()-1)
+    {
+        m_bFromRight = false;
+        m_iCurrentIndex++;
+        showMessage();
+    }
 }
 
 void UserMessages::onRead()
@@ -257,7 +265,16 @@ void UserMessages::onRead()
 
 void UserMessages::openLink(const QUrl& aUrl)
 {
-    QDesktopServices::openUrl(aUrl);
+    if(aUrl.toString() == "#onRead")
+        QTimer::singleShot(0, this, SLOT(onRead()));
+    else if(aUrl.toString() == "#onLeft")
+        QTimer::singleShot(0, this, SLOT(onLeft()));
+    else if(aUrl.toString() == "#onRight")
+        QTimer::singleShot(0, this, SLOT(onRight()));
+    else if(aUrl.toString() == "#onClose")
+        reject();
+    else
+        QDesktopServices::openUrl(aUrl);
 }
 
 void UserMessages::onClose()

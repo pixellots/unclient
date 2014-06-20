@@ -42,7 +42,7 @@ SUBDIRS=test
 ### version needs to be checked here
 VERSION_HIGH=1
 VERSION_LOW=1
-VERSION_REV=1
+VERSION_REV=2
 VERSION_BUILD=$$cat(build.no)
 
 VERSION=$${VERSION_HIGH}.$${VERSION_LOW}
@@ -58,7 +58,7 @@ TRANSLATIONS = \
     translations/$${TARGET}_zh.ts \
     translations/$${TARGET}_es.ts \
     translations/$${TARGET}_ru.ts \
-	translations/$${TARGET}_ko.ts
+    translations/$${TARGET}_ko.ts
 
 ### qmake settings - sometimes this is not the reality
 QMAKE_TARGET_COMPANY = UpdateNode
