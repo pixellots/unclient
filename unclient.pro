@@ -170,7 +170,12 @@ QMAKE_EXTRA_TARGETS += updateqm
 webkit{
 message("INFO: Webkit support enabled")
 win32{
+qtimageformats_deploy_create.commands = -$(MKDIR) package\\imageformats
+qtimageformats_deploy_create.target = qtimageformats_deploy_create
+qtimageformats_deploy_copy.commands = $(COPY) "%QTDIR%\\plugins\\imageformats\\qjpeg4.dll" package\\imageformats && $(COPY) "%QTDIR%\\plugins\\imageformats\\qgif4.dll" package\\imageformats
+qtimageformats_deploy_copy.target = qtimageformats_deploy_copy
 qtwebkit_deploy.commands = $(COPY) "%QTDIR%\\bin\\qtwebkit4.dll" package
+qtwebkit_deploy.depends = qtimageformats_deploy_create qtimageformats_deploy_copy
 qtwebkit_deploy.target = qtwebkit_deploy
 }
 SETUP_NAME=$${SETUP_NAME}_webkit
@@ -243,7 +248,7 @@ build_installer.target = build_installer
 copy_binary.commands = $(COPY) release\\unclient.exe package
 copy_binary.target = copy_binary
 
-QMAKE_EXTRA_TARGETS += copy_binary build_installer package_deploy clean_package_deploy create_package_deploy qt_deploy qtcore_deploy qtgui_deploy qtnetwork_deploy qtxml_deploy qtwebkit_deploy ssl_package_deploy vc_deploy
+QMAKE_EXTRA_TARGETS += copy_binary build_installer package_deploy clean_package_deploy create_package_deploy qt_deploy qtcore_deploy qtgui_deploy qtnetwork_deploy qtxml_deploy qtwebkit_deploy ssl_package_deploy vc_deploy qtimageformats_deploy_create qtimageformats_deploy_copy
 }
 }
 
