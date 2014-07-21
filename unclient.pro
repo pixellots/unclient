@@ -106,7 +106,8 @@ SOURCES += src/main.cpp \
     src/textbrowser.cpp \
     src/wincommander.cpp \
     src/limittimer.cpp \
-    src/binarysettings.cpp
+    src/binarysettings.cpp \
+    src/cookiejar.cpp
 
 macx:SOURCES += src/maccommander.cpp
 macx:HEADERS += inc/maccommander.h
@@ -137,7 +138,8 @@ HEADERS += \
     inc/textbrowser.h \
     inc/wincommander.h \
     inc/limittimer.h \
-    inc/binarysettings.h
+    inc/binarysettings.h \
+    inc/cookiejar.h
 
 FORMS += \
     forms/singleappdialog.ui \
