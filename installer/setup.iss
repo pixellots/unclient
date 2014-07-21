@@ -50,6 +50,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Source: "..\package\unclient.exe"; DestDir: "{app}"; Flags: 
 Source: "..\package\*.dll"; DestDir: "{app}"; Flags: 
 Source: "..\package\platforms\qwindows.dll"; DestDir: "{app}\platforms"; Flags: skipifsourcedoesntexist
+Source: "..\package\imageformats\*.dll"; DestDir: "{app}\imageformats"; Flags: skipifsourcedoesntexist
 Source: "..\package\vcredist_x86.exe"; DestDir: "{app}\3rdparty"; Flags: skipifsourcedoesntexist
 
 [Run]
