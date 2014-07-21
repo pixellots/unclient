@@ -28,6 +28,7 @@
 #include <QUrl>
 
 #include "message.h"
+#include "cookiejar.h"
 #include "updatenode_service.h"
 
 namespace Ui {
@@ -62,6 +63,7 @@ private:
 private:
 #ifdef QT_WEBKIT_LIB
     Ui::UserMessagesEx *ui;
+    UpdateNode::CookieJar* m_pCookieJar;
 #else
     Ui::UserMessages *ui;
 #endif

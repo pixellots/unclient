@@ -59,12 +59,10 @@ UserMessages::UserMessages(QWidget *parent) :
 
 	m_bFromRight = false;
 
-    QNetworkDiskCache* cache = new QNetworkDiskCache(this);
-    cache->setCacheDirectory(UpdateNode::LocalFile::getCachePath());
 #ifdef QT_WEBKIT_LIB
-    ui->webView->page()->networkAccessManager()->setCache(cache);
     ui->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     connect(ui->webView, SIGNAL(linkClicked(const QUrl&)), SLOT(openLink(const QUrl&)));
+    m_pCookieJar = NULL;
 #else
     connect(ui->textBrowser, SIGNAL(anchorClicked(QUrl)), SLOT(openLink(QUrl)));
 #endif
@@ -83,6 +81,8 @@ UserMessages::~UserMessages()
 {
 #ifdef QT_WEBKIT_LIB
     delete ui->webView->page()->networkAccessManager()->cache();
+    if(m_pCookieJar)
+        delete m_pCookieJar;
 #endif
     delete ui;
 }
@@ -199,6 +199,18 @@ void UserMessages::showMessage()
     else
     {
 #ifdef QT_WEBKIT_LIB
+        QNetworkDiskCache* cache = new QNetworkDiskCache(this);
+        cache->setCacheDirectory(UpdateNode::LocalFile::getCachePath());
+
+        ui->webView->page()->networkAccessManager()->setCache(cache);
+
+        if(!m_pCookieJar)
+        {
+            m_pCookieJar = new UpdateNode::CookieJar;
+            m_pCookieJar->load();
+            ui->webView->page()->networkAccessManager()->setCookieJar(m_pCookieJar);
+        }
+
         if(!m_listMessages.at(m_iCurrentIndex).getMessage().isEmpty())
             ui->webView->setHtml(m_listMessages.at(m_iCurrentIndex).getMessage());
         else
@@ -279,6 +291,10 @@ void UserMessages::openLink(const QUrl& aUrl)
 
 void UserMessages::onClose()
 {
+#ifdef QT_WEBKIT_LIB
+    if(m_pCookieJar)
+        m_pCookieJar->save();
+#endif
     qApp->exit(UPDATENODE_PROCERROR_CANCELED);
 }
 
