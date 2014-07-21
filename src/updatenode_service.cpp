@@ -245,14 +245,20 @@ void Service::requestReceived(QNetworkReply* reply)
     if(reply->error() == QNetworkReply::NoError && !config->product().getIconUrl().isEmpty())
     {
         if(!m_pDownloader)
+        {
             m_pDownloader = new UpdateNode::Downloader();
 
-        if(UpdateNode::Config::Instance()->isSingleMode())
-            connect(m_pDownloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), this, SIGNAL(done()));
-        else if(m_mapConfig.size()==0)
-            connect(m_pDownloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), this, SIGNAL(doneManager()));
+            if(UpdateNode::Config::Instance()->isSingleMode())
+                connect(m_pDownloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), this, SIGNAL(done()));
+            else if(m_mapConfig.size()==0)
+                connect(m_pDownloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), this, SIGNAL(doneManager()));
+        }
 
-        m_pDownloader->doDownload(config->product().getIconUrl(), UpdateNode::Update());
+        // passing the product code as its important for the image caching
+        UpdateNode::Update temp;
+        temp.setCode(config->product().getCode());
+
+        m_pDownloader->doDownload(config->product().getIconUrl(), temp);
     }
     else
     {
