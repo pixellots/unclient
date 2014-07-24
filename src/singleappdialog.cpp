@@ -91,6 +91,7 @@ void SingleAppDialog::download()
         else
             m_pUi->labelProgress->setText(tr("Downloading updates"));
 
+        m_oCurrentUpdate = update_list.at(i);
         m_pDownloader->doDownload(update_list.at(i).getDownloadLink(), update_list.at(i));
     }
 }
@@ -273,10 +274,29 @@ void SingleAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus
 void SingleAppDialog::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
     if(isHidden()
-            && bytesReceived < (qint64)bytesTotal/3)
+            && (bytesReceived < (qint64)bytesTotal/3 || bytesTotal==-1))
     {
         adjustSize();
         show();
+    }
+
+    if(bytesTotal==-1)
+    {
+        QStringList split = m_oCurrentUpdate.getFileSize().split(" ");
+
+        bytesTotal = split.at(0).split(".").at(0).toLongLong();
+        if(split.size()>1)
+        {
+            if(split.at(1).toLower()=="kb")
+                bytesTotal = bytesTotal * 1024;
+            else if(split.at(1).toLower()=="mb")
+                bytesTotal = bytesTotal * 1024 * 1024;
+            else if(split.at(1).toLower()=="gb")
+                bytesTotal = bytesTotal * 1024 * 1024 * 1024;
+            else if(split.at(1).toLower()=="tb")
+                bytesTotal = bytesTotal * 1024 * 1024 * 1024 * 1024;
+        }
+        m_pUi->progressBar->setRange(0, bytesTotal);
     }
 
     if(m_pUi->progressBar->maximum() <= bytesTotal)
