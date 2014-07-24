@@ -71,6 +71,7 @@ Starts a download for a specified url with an reference to Update object specifi
 */
 QNetworkReply* Downloader::doDownload(const QUrl& url, const UpdateNode::Update& aUpdate)
 {
+    QUrl finalUrl = url;
     UpdateNode::Settings settings;
     QString cachedFile = settings.getCachedFile(aUpdate.getCode());
     if(!cachedFile.isEmpty() && QFile::exists(cachedFile))
@@ -79,10 +80,13 @@ QNetworkReply* Downloader::doDownload(const QUrl& url, const UpdateNode::Update&
         return NULL;
     }
 
+    finalUrl.setUserName(QUrl::fromEncoded(finalUrl.userName().toLatin1()).toString());
+    finalUrl.setPassword(QUrl::fromEncoded(finalUrl.password().toLatin1()).toString());
+
     connect(&m_oManager, SIGNAL(finished(QNetworkReply*)), SLOT(downloadFinished(QNetworkReply*)));
     connect(&m_oManager, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), SLOT(onSslError(QNetworkReply*,QList<QSslError>)));
 
-    QNetworkRequest request(url);
+    QNetworkRequest request(finalUrl);
 
     QNetworkReply *reply = m_oManager.get(request);
 
