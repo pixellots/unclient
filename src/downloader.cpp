@@ -27,6 +27,7 @@
 #include "localfile.h"
 #include "settings.h"
 #include "status.h"
+#include "security.h"
 
 using namespace UpdateNode;
 
@@ -74,10 +75,18 @@ QNetworkReply* Downloader::doDownload(const QUrl& url, const UpdateNode::Update&
     QUrl finalUrl = url;
     UpdateNode::Settings settings;
     QString cachedFile = settings.getCachedFile(aUpdate.getCode());
-    if(!cachedFile.isEmpty() && QFile::exists(cachedFile))
+
+    if(!cachedFile.isEmpty())
     {
-        emit done(aUpdate, QNetworkReply::NoError, QString());
-        return NULL;
+        if(!aUpdate.getChecksum().isEmpty())
+            if(!UpdateNode::Security::validateChecksum(cachedFile, aUpdate.getChecksum(), aUpdate.getChecksumAlg()))
+                QFile::remove(cachedFile);
+
+        if(QFile::exists(cachedFile))
+        {
+            emit done(aUpdate, QNetworkReply::NoError, QString());
+            return NULL;
+        }
     }
 
     finalUrl.setUserName(QUrl::fromEncoded(finalUrl.userName().toLatin1()).toString());
@@ -177,6 +186,16 @@ void Downloader::downloadFinished(QNetworkReply *reply)
         filename = UpdateNode::LocalFile::getDownloadLocation(url.toString());
 
         saveToDisk(filename, reply, update.getCode());
+
+        if(!update.getChecksum().isEmpty())
+        {
+            if(!UpdateNode::Security::validateChecksum(filename, update.getChecksum(), update.getChecksumAlg()))
+            {
+                error = QNetworkReply::UnknownContentError;
+                errorString = tr("Invalid checksum. Try again later, or check your internet connection.");
+                QFile::remove(filename);
+            }
+        }
     }
 
     m_oCurrentDownloads.remove(reply);
