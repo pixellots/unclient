@@ -24,6 +24,7 @@
 #include "logging.h"
 #include "config.h"
 #include "settings.h"
+#include "security.h"
 #include <QApplication>
 #include <QThread>
 #include <QDir>
@@ -196,20 +197,14 @@ bool Application::relaunchUpdateSave(const QString& aKey)
     QFile currentFile(qApp->applicationFilePath());
     QFile newFile(newClientPath.absolutePath() + QDir::separator() + clientExecutable);
 
-    quint16 src, dst;
+    QString src, dst;
 
     if(newClientPath == qApp->applicationDirPath())
         return false;
 
-    if(currentFile.open(QIODevice::ReadOnly))
-    {
-        QByteArray data;
-        data = currentFile.readAll();
-        src = qChecksum(data, data.length());
-        currentFile.close();
-        UpdateNode::Logging() << src;
-    }
-    else
+    src = UpdateNode::Security::generateChecksum(currentFile.fileName(), "sha512");
+
+    if(src.isEmpty())
         return false;
 
     if(!newFile.exists())
@@ -225,15 +220,9 @@ bool Application::relaunchUpdateSave(const QString& aKey)
     }
 
 
-    if(newFile.open(QIODevice::ReadOnly))
-    {
-        QByteArray data;
-        data = newFile.readAll();
-        dst = qChecksum(data, data.length());
-        newFile.close();
-        UpdateNode::Logging() << newFile.fileName() << dst;
-    }
-    else
+    dst = UpdateNode::Security::generateChecksum(newFile.fileName(), "sha512");
+
+    if(dst.isEmpty())
         return false;
 
     if(src == dst)
@@ -478,6 +467,18 @@ QString Application::errorCodeToString(int aCode) const
 
         case UPDATENODE_PROCERROR_TIMEOUT_REACHED:
             result = "Timeout was reached";
+            break;
+
+        case UPDATENODE_PROCERROR_DATA_UNTRUSTED:
+            result = "Untrusted data. Check for malware, or verify your proxy settings";
+            break;
+
+        case UPDATENODE_PROCERROR_CHECKSUM_FAILED:
+            result = "Failed to verify the binary checksum";
+            break;
+
+        case UPDATENODE_PROCERROR_SIGNATURE_BROKEN:
+            result = "Binary signature is invalid. The update is untrusted";
             break;
 
         default:
