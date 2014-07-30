@@ -512,6 +512,24 @@ QString Config::getStyleSheet()
 }
 
 /*!
+Sets the signature public key filename
+\sa Config::getPublicKeyFile
+*/
+void Config::setPublicKeyFile(const QString& aFileName)
+{
+    m_strPublicKeyFile = aFileName;
+}
+
+/*!
+Returns the signature public key filename
+\sa Config::setPublicKeyFile
+*/
+QString Config::getPublicKeyFile()
+{
+    return m_strPublicKeyFile;
+}
+
+/*!
 Sets the time out for accessing data on UpdateNode
 \sa Config::getTimeOut
 */
@@ -643,6 +661,8 @@ void Config::getParametersFromFile(const QString& aFile)
         setSplashScreen(settings->value("splash").toString());
     if(settings->contains("stylesheet"))
         setStyleSheet(settings->value("stylesheet").toString());
+    if(settings->contains("public_key"))
+        setPublicKeyFile(settings->value("public_key").toString());
     if(settings->contains("timeout"))
         setTimeOut(settings->value("timeout").toInt());
     if(settings->contains("custom"))
@@ -700,6 +720,8 @@ void Config::setParametersToFile(const QString& aFile, bool aAll /* = true */)
         settings->setValue("splash", getSplashScreen());
     if(!getStyleSheet().isEmpty())
         settings->setValue("stylesheet", getStyleSheet());
+    if(!getPublicKeyFile().isEmpty())
+        settings->setValue("public_key", getPublicKeyFile());
     if(getTimeOut()!=DEFAULT_TIMEOUT)
         settings->setValue("timeout", getTimeOut());
     if(!mainIcon().isEmpty())

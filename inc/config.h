@@ -107,6 +107,9 @@ namespace UpdateNode
             void setStyleSheet(const QString& aFileName);
             QString getStyleSheet();
 
+            void setPublicKeyFile(const QString& aFileName);
+            QString getPublicKeyFile();
+
             void setTimeOut(int aTimeOutInSeconds);
             int getTimeOut();
 
@@ -145,6 +148,7 @@ namespace UpdateNode
             QString m_strSplashImage;
             QString m_strStyleSheet;
             QString m_strCustomRequestValue;
+            QString m_strPublicKeyFile;
             int     m_iTimeOut;
 
             UpdateNode::Product m_oProduct;
