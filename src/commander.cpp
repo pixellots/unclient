@@ -229,7 +229,7 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
 
     if(!aUpdate.getSignature().isEmpty())
     {
-        if(file.open(QIODevice::ReadOnly) && !UpdateNode::Security::verfiySignature(file.readAll(), aUpdate.getSignature().toAscii(), UpdateNode::Config::Instance()->getPublicKeyFile()))
+        if(file.open(QIODevice::ReadOnly) && !UpdateNode::Security::verfiySignature(file.readAll(), aUpdate.getSignature().toLatin1(), UpdateNode::Config::Instance()->getPublicKeyFile()))
         {
             if(file.isOpen())
                 file.close();
