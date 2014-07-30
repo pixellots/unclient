@@ -42,7 +42,8 @@ SOURCES += \
     tst_clienttest.cpp \
     ../src/logging.cpp \
     ../src/updatenode_service.cpp \
-    ../src/limittimer.cpp
+    ../src/limittimer.cpp \
+    ../src/security.cpp
 
 DEFINES += SRCDIR=../src
 
@@ -63,10 +64,17 @@ HEADERS += \
     ../inc/version.h \
     ../inc/logging.h \
     ../inc/updatenode_service.h \
-    ../inc/limittimer.h
+    ../inc/limittimer.h \
+    ../inc/security.h
 
 macx:SOURCES += ../src/maccommander.cpp
 macx:HEADERS += ../inc/maccommander.h
+
+win32{
+INCLUDEPATH += C:/OpenSSL-Win32/include
+LIBS+= -L"C:/OpenSSL-Win32/lib" -llibeay32
+LIBS+= User32.lib Gdi32.lib
+}
 
 win32{
 LIBS+= Shell32.lib Advapi32.lib Netapi32.lib
@@ -80,3 +88,5 @@ LIBS += -framework Security
 
 unix:QMAKE_POST_LINK += ./$$TARGET
 win32:QMAKE_POST_LINK += $${TARGET}.exe
+
+RESOURCES += ../signature.qrc

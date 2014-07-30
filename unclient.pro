@@ -41,8 +41,8 @@ SUBDIRS=test
 
 ### version needs to be checked here
 VERSION_HIGH=1
-VERSION_LOW=1
-VERSION_REV=2
+VERSION_LOW=2
+VERSION_REV=0
 VERSION_BUILD=$$cat(build.no)
 
 VERSION=$${VERSION_HIGH}.$${VERSION_LOW}
@@ -107,7 +107,8 @@ SOURCES += src/main.cpp \
     src/wincommander.cpp \
     src/limittimer.cpp \
     src/binarysettings.cpp \
-    src/cookiejar.cpp
+    src/cookiejar.cpp \
+    src/security.cpp
 
 macx:SOURCES += src/maccommander.cpp
 macx:HEADERS += inc/maccommander.h
@@ -139,7 +140,8 @@ HEADERS += \
     inc/wincommander.h \
     inc/limittimer.h \
     inc/binarysettings.h \
-    inc/cookiejar.h
+    inc/cookiejar.h \
+    inc/security.h
 
 FORMS += \
     forms/singleappdialog.ui \
@@ -151,7 +153,8 @@ FORMS += \
 
 RESOURCES += res.qrc \
     translations.qrc \
-    cert.qrc
+    cert.qrc \
+    signature.qrc
 
 win32{
 ### on Windows we need some additional libs for the UAC
@@ -306,4 +309,21 @@ CONFIG-=app_bundle
 }
 LIBS += -framework CoreFoundation
 LIBS += -framework Security
+}
+
+####### openssl handling
+win32{
+static{
+INCLUDEPATH += C:/OpenSSL-Win32/include
+LIBS+= User32.lib Gdi32.lib
+}
+!static{
+INCLUDEPATH += C:/OpenSSL-Win32/include
+LIBS+= -L"C:/OpenSSL-Win32/lib" -llibeay32
+LIBS+= User32.lib Gdi32.lib
+}
+}
+
+unix{
+LIBS += -lcrypto -lssl
 }
