@@ -32,6 +32,7 @@
 #include "downloader.h"
 #include "localfile.h"
 #include "settings.h"
+#include "security.h"
 #include "updatenode_service.h"
 
 class ClientTest : public QObject
@@ -40,8 +41,10 @@ class ClientTest : public QObject
     
 public:
     ClientTest();
-    
+
 private Q_SLOTS:
+    void test_security_hash();
+    void test_security_signature();
     void test_version_compare();
     void test_commander_copy();
     void test_commander_resolve();
@@ -79,7 +82,7 @@ ClientTest::ClientTest()
     update.setTitle("title");
     update.setType(0);
 
-    UpdateNode::Config::Instance()->setLogging("-");
+    //UpdateNode::Config::Instance()->setLogging("-");
     UpdateNode::Config::Instance()->setKey("unittest");
     UpdateNode::Config::Instance()->setProductCode("product_code");
     UpdateNode::Config::Instance()->setVersion("1.0");
@@ -498,6 +501,30 @@ void ClientTest::test_settings_map()
     QVERIFY(settings.getProductVersion()=="3.0");
     QVERIFY(settings.getVersionCode()=="version_1234_2");
 
+}
+
+void ClientTest::test_security_hash()
+{
+    QVERIFY(UpdateNode::Security::validateChecksum("../../images/left.png", "f9f80037efbb635b39ce1fea03b4071a693d7200"));
+    QVERIFY(UpdateNode::Security::validateChecksum("../../images/right.png", "4e76c3eb851586f6cb01ba415fa80f31c7a159f1"));
+    QVERIFY(UpdateNode::Security::validateChecksum("../../images/unclient.ico", "1719cbca21ad66831e3420973805c9a8da134963"));
+    QVERIFY(!UpdateNode::Security::validateChecksum("../../images/unclient.ico", "invalid"));
+
+    QVERIFY(UpdateNode::Security::validateChecksum("../../images/unclient.ico", "3957fcbb770e6aad7a3f2cf217bc75de", "md5"));
+    QVERIFY(UpdateNode::Security::validateChecksum("../../images/unclient.ico", "1719cbca21ad66831e3420973805c9a8da134963", "sha1"));
+    QVERIFY(UpdateNode::Security::validateChecksum("../../images/unclient.ico", "5dd5da9e7f4b8796323b21c90572e6c7705683f0deb065c82768d8f5", "sha224"));
+    QVERIFY(UpdateNode::Security::validateChecksum("../../images/unclient.ico", "931613cd59ec296cab7b31157275591cfda6509259d0de1103a8aa31df6bf369", "sha256"));
+    QVERIFY(UpdateNode::Security::validateChecksum("../../images/unclient.ico", "2ea77c3ad9240c0a9a8afc57a31a0efe5cbf0ffd1cb986b55438b6ef9d51337805ab46189fcda2962e41c3fd9caf403b", "sha384"));
+    QVERIFY(UpdateNode::Security::validateChecksum("../../images/unclient.ico", "50bee95f1884e756e5d170424d686fcfb40a57d05eb43ba39508fb7d22fe97a89f60d9edc25f88a638be77687dfc2e89042686a47cbd01fc95a894288af72194", "sha512"));
+}
+
+void ClientTest::test_security_signature()
+{
+    QFile file("../../LICENSE.GPL");
+    QVERIFY(file.open(QIODevice::ReadOnly));
+    QVERIFY(UpdateNode::Security::verfiySignature(file.readAll(), "b8d3d2b2b56ae2daf672c544de5729feb823a7abeb1a5deb16375ebb9c6d3d84c5230fae52ca5996114f3dde5efaceddee0535f65e3e6d24632b900a8dba9c0f1252e0cf8c704d06ef454a0692c391e5e5c249ec0cc6eccfa45c1a955ed537eb952bd286915266048caf43e97b71e708f445b2b045e28c74d0827f4d9a6e76bd0743e5cf0e994ea8df8db434865a9eeca49871729e0a215892d0b81090023c087974d87286b552ee8d6d72129a6ebfee8ec40f7b9ed7afbc24114655af85a474c51407f71984fa6ceb73b9586e7d651f7d0ae280887080ad831a64489f19bd6abc79918a4bf7f07307f62ddb527cd0974fd3681542b2d4785215f2503673d6dc", "../public.key"));
+    QVERIFY(!UpdateNode::Security::verfiySignature(file.readAll(), "b8d3d2b2b56ae2daf672c544de5729feb823a7abeb1a5deb16375ebb9c6d3d84c5230fae52ca5996114f3dde5efaceddee0535f65e3e6d24632b900a8dba9c0f1252e0cf8c704d06ef454a0692c391e5e5c249ec0cc6eccfa45c1a955ed537eb952bd286915266048caf43e97b71e708f445b2b045e28c74d0827f4d9a6e76bd0743e5cf0e994ea8df8db434865a9eeca49871729e0a215892d0b81090023c087974d87286b552ee8d6d72129a6ebfee8ec40f7b9ed7afbc24114655af85a474c51407f71984fa6ceb73b9586e7d651f7d0ae280887080ad831a64489f19bd6abc79918a4bf7f07307f62ddb527cd0974fd3681542b2d4785215f2503673d6dc", "../public.key"));
+    file.close();
 }
 
 QTEST_MAIN(ClientTest)
