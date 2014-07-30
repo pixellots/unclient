@@ -43,7 +43,7 @@ Full license description file: LICENSE.GPL
 
 ### Linux (Ubuntu)
 
-* sudo apt-get install g++ openssl qt4-dev-tools 
+* sudo apt-get install g++ openssl libssl-dev qt4-dev-tools 
 
 ## How to build
 
