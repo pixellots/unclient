@@ -251,7 +251,12 @@ void SingleAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus
             m_pUi->labelProgress->setText(tr("Update '%1' failed with error %2").arg(m_oCurrentUpdate.getTitle()).arg(aExitCode));
 
             UpdateNode::Logging() << m_oCurrentUpdate.getTitle() << "update failed - ErrorCode " << aExitCode;
-            m_iErrorCode = UPDATENODE_PROCERROR_UPDATE_EXEC_FAILED;
+            if(aExitCode==-1000)
+                m_iErrorCode = UPDATENODE_PROCERROR_CHECKSUM_FAILED;
+            else if(aExitCode==-2000)
+                m_iErrorCode = UPDATENODE_PROCERROR_SIGNATURE_BROKEN;
+            else
+                m_iErrorCode = UPDATENODE_PROCERROR_UPDATE_EXEC_FAILED;
         }
     }
     else

@@ -539,7 +539,13 @@ void MultiAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus)
     else
     {
         m_strErrorString = m_pUI->labelProgress->text();
-        m_iError = UPDATENODE_PROCERROR_UPDATE_EXEC_FAILED;
+        if(aExitCode==-1000)
+            m_iError = UPDATENODE_PROCERROR_CHECKSUM_FAILED;
+        else if(aExitCode==-2000)
+            m_iError = UPDATENODE_PROCERROR_SIGNATURE_BROKEN;
+        else
+            m_iError = UPDATENODE_PROCERROR_UPDATE_EXEC_FAILED;
+
         return;
     }
 }
