@@ -238,6 +238,25 @@ UpdateNode::Update XmlParser::parseUpdate(QDomNode aNode)
             update.setRequiresAdmin(e.text().toInt()==1);
         else if(e.tagName()=="mandatory")
             update.setMandatory(e.text().toInt()==1);
+        else if(e.tagName()=="checksum")
+        {
+            if(n.hasChildNodes())
+            {
+                QDomNode cs = n.firstChild();
+                while(!cs.isNull())
+                {
+                    if(cs.toElement().tagName()=="value")
+                        update.setChecksum(cs.toElement().text());
+                    else if(cs.toElement().tagName()=="type")
+                        update.setChecksumAlg(cs.toElement().text());
+                    cs = cs.nextSibling();
+                }
+            }
+        }
+        else if(e.tagName()=="checksum_algorithm")
+            update.setChecksumAlg(e.text());
+        else if(e.tagName()=="signature")
+            update.setSignature(e.text());
         else if(e.tagName()=="file_size")
             update.setFileSize(e.text());
         else if(e.tagName()=="target")
