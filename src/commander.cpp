@@ -40,6 +40,7 @@
 #include "settings.h"
 #include "localfile.h"
 #include "version.h"
+#include "security.h"
 
 using namespace UpdateNode;
 
@@ -210,11 +211,36 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
     m_bCopy = false;
     m_oUpdate = aUpdate;
 
-    command = setCommandBasedOnOS();
+   command = setCommandBasedOnOS();
 
     QString filename = UpdateNode::LocalFile::getDownloadLocation(m_oUpdate.getDownloadLink());
     QFile file(filename);
     file.setPermissions(QFile::ExeUser | QFile::ReadUser | QFile::WriteUser);
+
+    if(!aUpdate.getChecksum().isEmpty())
+    {
+        if(!UpdateNode::Security::validateChecksum(filename, aUpdate.getChecksum(), aUpdate.getChecksumAlg()))
+        {
+            emit updateExit(-1000, QProcess::NormalExit);
+            QFile::remove(filename);
+            return false;
+        }
+    }
+
+    if(!aUpdate.getSignature().isEmpty())
+    {
+        if(file.open(QIODevice::ReadOnly) && !UpdateNode::Security::verfiySignature(file.readAll(), aUpdate.getSignature().toAscii(), UpdateNode::Config::Instance()->getPublicKeyFile()))
+        {
+            if(file.isOpen())
+                file.close();
+            emit updateExit(-2000, QProcess::NormalExit);
+            QFile::remove(filename);
+            return false;
+        }
+
+        if(file.isOpen())
+            file.close();
+    }
 
     if(command.isEmpty())
     {
