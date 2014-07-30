@@ -29,6 +29,7 @@
 #include "version.h"
 #include "status.h"
 #include "limittimer.h"
+#include "security.h"
 #include "helpdialog.h"
 
 #ifndef APP_COPYRIGHT
@@ -70,6 +71,7 @@ int printHelp()
             + "  -log <file>    \tenables logging\n"
             + "  -qss <file>    \ttakes stylesheet definition from file\n"
             + "  -config <file> \tloads parameter settings from file\n"
+            + "  -pk <file>     \tsignature public key file\n"
             + "  -l <lang-code> \tlanguage code\n"
             + "  -sp <png_file> \tsplash screen (PNG)\n"
             + "  -ident <custom>\tadditional client identifier (optional)\n"
@@ -88,10 +90,31 @@ int printHelp()
 
 int main(int argc, char *argv[])
 {
-    if(argc > 1 && strcmp(argv[1],"-copy") == 0)
+    if(argc > 1 && (strcmp(argv[1],"-copy") == 0 || strcmp(argv[1],"-sha1") == 0))
     {
+        QApplication app(argc, argv);
+
+        if(strcmp(argv[1],"-sha1") == 0)
+        {
+            QString sha1 = UpdateNode::Security::generateChecksum(argv[2]);
+#ifdef Q_OS_UNIX
+            printf("%s %s\n", !sha1.isEmpty() ? sha1.toStdString().c_str() : "n/a", argv[2]);
+            return 0;
+#else
+            Helpdialog help;
+
+            if(!sha1.isEmpty())
+                help.setText(QString(argv[2]), "\n" + sha1);
+            else
+                help.setText(QString(argv[2]), "\nn/a");
+
+            help.adjustSize();
+            help.exec();
+            return 0;
+#endif
+        }
+
         // check for copy commmand
-        QCoreApplication app(argc, argv);
         QStringList args = app.arguments();
         int index = args.indexOf("-copy");
         if(index>-1 && args.size()>=4)
@@ -191,6 +214,8 @@ int main(int argc, char *argv[])
             config->setTimeOut(arguments.at(i+1).toInt());
         else if(argument == "-qss" && hasNext)
             config->setStyleSheet(arguments.at(i+1));
+        else if(argument == "-pk" && hasNext)
+            config->setPublicKeyFile(arguments.at(i+1));
         else if(argument == "-log" && hasNext)
             config->setLogging(arguments.at(i+1));
         else if(argument == "-sp" && hasNext)
