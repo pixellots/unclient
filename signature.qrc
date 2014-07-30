@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>signature/public.key</file>
+    </qresource>
+</RCC>
