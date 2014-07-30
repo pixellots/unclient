@@ -41,6 +41,7 @@
 #include "osdetection.h"
 #include "logging.h"
 #include "limittimer.h"
+#include "security.h"
 
 using namespace UpdateNode;
 
@@ -212,7 +213,18 @@ void Service::requestReceived(QNetworkReply* reply)
         int v = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
         if (v >= 200 && v < 300) // Success
         {
-            QString replyText = QString::fromUtf8(reply->readAll());
+            QByteArray raw_data = reply->readAll();
+            QByteArray signature = reply->rawHeader("UpdateNode-signature");
+            QByteArray checksum  = reply->rawHeader("UpdateNode-checksum");
+
+            if(signature.isEmpty() || checksum.isEmpty() || !UpdateNode::Security::validateChecksumData(raw_data, checksum)
+                    || !UpdateNode::Security::verfiySignature(raw_data, signature))
+            {
+                qApp->exit(UPDATENODE_PROCERROR_DATA_UNTRUSTED);
+                return;
+            }
+
+            QString replyText = QString::fromUtf8(raw_data);
 
             UpdateNode::XmlParser* parser = new UpdateNode::XmlParser(this, config);
             parser->parse(replyText);
