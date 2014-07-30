@@ -70,6 +70,16 @@ namespace UpdateNode
             void setCode(const QString& aCode);
             QString getCode() const;
 
+            void setChecksum(const QString& aChecksum);
+            QString getChecksum() const;
+
+            void setChecksumAlg(const QString& aChecksumAlg);
+            QString getChecksumAlg() const;
+
+            void setSignature(const QString& aSignature);
+            QString getSignature() const;
+
+
         private:
             QString m_strTitle;
             QString m_strDescription;
@@ -77,6 +87,9 @@ namespace UpdateNode
             QString m_strCommand;
             QString m_strCommandLine;
             QString m_strCode;
+            QString m_strChecksum;
+            QString m_strChecksumAlg;
+            QString m_strSignature;
 
             QString m_strFileSize;
             int m_iType;

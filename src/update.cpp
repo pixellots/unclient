@@ -259,3 +259,56 @@ void Update::setMandatory(bool aMandatoryUpdate)
     m_bMandatory = aMandatoryUpdate;
 }
 
+/*!
+Returns the checksum of the download file
+\sa Update::getChecksum
+*/
+void Update::setChecksum(const QString& aChecksum)
+{
+    m_strChecksum = aChecksum;
+}
+
+/*!
+Sets the download file checksum
+\sa Update::setChecksum
+*/
+QString Update::getChecksum() const
+{
+    return m_strChecksum;
+}
+
+/*!
+Returns the algorithm of the download file checksum
+\sa Update::getChecksumAlg
+*/
+void Update::setChecksumAlg(const QString& aChecksumAlg)
+{
+    m_strChecksumAlg = aChecksumAlg;
+}
+
+/*!
+Sets the download file checksum algorithm
+\sa Update::setChecksumAlg
+*/
+QString Update::getChecksumAlg() const
+{
+    return m_strChecksumAlg;
+}
+
+/*!
+Returns the signature of the download file
+\sa Update::getSignature
+*/
+void Update::setSignature(const QString& aSignature)
+{
+    m_strSignature = aSignature;
+}
+
+/*!
+Sets the download file signature
+\sa Update::setSignature
+*/
+QString Update::getSignature() const
+{
+    return m_strSignature;
+}
