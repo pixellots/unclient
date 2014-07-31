@@ -109,12 +109,12 @@
         <translation>コマンドを実行できません！</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="497"/>
+        <location filename="../src/multiappdialog.cpp" line="498"/>
         <source>Update &apos;%1&apos; installed successfully</source>
         <translation>アップデート&apos;%1&apos;のインストールに成功しました</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="517"/>
+        <location filename="../src/multiappdialog.cpp" line="518"/>
         <source>Update &apos;%1&apos; failed with error %2</source>
         <translation>アップデート&apos;%1&apos;に失敗しました（エラー：%2）</translation>
     </message>
@@ -132,51 +132,51 @@
         <translation>メッセージを読む</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="268"/>
+        <location filename="../src/singleappdialog.cpp" line="277"/>
         <location filename="../src/systemtray.cpp" line="72"/>
         <source>Close</source>
         <translation>閉じる</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="343"/>
-        <location filename="../src/updatenode_service.cpp" line="371"/>
+        <location filename="../src/updatenode_service.cpp" line="361"/>
+        <location filename="../src/updatenode_service.cpp" line="389"/>
         <source>There are no new updates &amp; messages available</source>
         <translation>利用可能な新しいアップデート &amp; とメッセージはありません</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="346"/>
-        <location filename="../src/updatenode_service.cpp" line="375"/>
+        <location filename="../src/updatenode_service.cpp" line="364"/>
+        <location filename="../src/updatenode_service.cpp" line="393"/>
         <source>There are new updates available</source>
         <translation>利用可能な新しいアップデートがあります</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="349"/>
+        <location filename="../src/updatenode_service.cpp" line="367"/>
         <source>There are new messages available</source>
         <translation>新しいメッセージがあります</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="352"/>
+        <location filename="../src/updatenode_service.cpp" line="370"/>
         <source>There are updates and messages available</source>
         <translation>利用可能なアップデートとメッセージがあります</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="355"/>
-        <location filename="../src/updatenode_service.cpp" line="378"/>
+        <location filename="../src/updatenode_service.cpp" line="373"/>
+        <location filename="../src/updatenode_service.cpp" line="396"/>
         <source>Undefined state</source>
         <translation>未定義状態</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="398"/>
+        <location filename="../src/application.cpp" line="387"/>
         <source>Unable to launch &apos;%1&apos;</source>
         <translation>&apos;%1&apos;を始めることができません</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="176"/>
+        <location filename="../src/application.cpp" line="177"/>
         <source>Checking for messages ...</source>
         <translation>メッセージを確認しています...</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="178"/>
+        <location filename="../src/application.cpp" line="179"/>
         <source>Checking for updates ...</source>
         <translation>アップデートを確認しています...</translation>
     </message>
@@ -214,27 +214,27 @@
         <translation>アップデートをダウンロードしています</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="108"/>
+        <location filename="../src/singleappdialog.cpp" line="109"/>
         <source>Installing update ...</source>
         <translation>アップデートをインストールしています...</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="127"/>
+        <location filename="../src/singleappdialog.cpp" line="131"/>
         <source> - Update Client</source>
         <translation> - アップデート・クライアント</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="240"/>
+        <location filename="../src/singleappdialog.cpp" line="244"/>
         <source>Update &apos;%1&apos; installed successfully</source>
         <translation>アップデート&apos;%1&apos;のインストールは成功しました</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="250"/>
+        <location filename="../src/singleappdialog.cpp" line="254"/>
         <source>Update &apos;%1&apos; failed with error %2</source>
         <translation>アップデート&apos;%1&apos;は失敗しました（エラー%2）</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="258"/>
+        <location filename="../src/singleappdialog.cpp" line="267"/>
         <source>Update &apos;%1&apos; closed unexpected</source>
         <translation>アップデート&apos;%1&apos;は予期せず閉じました</translation>
     </message>
@@ -242,14 +242,22 @@
 <context>
     <name>UpdateNode::Commander</name>
     <message>
-        <location filename="../src/commander.cpp" line="232"/>
+        <location filename="../src/commander.cpp" line="260"/>
         <source>Installing update &apos;%1&apos;</source>
         <translation>アップデート&apos;%1&apos;をインストールしています</translation>
     </message>
     <message>
-        <location filename="../src/commander.cpp" line="317"/>
+        <location filename="../src/commander.cpp" line="345"/>
         <source>Error: Update &apos;%1&apos; failed to start</source>
         <translation>エラー：アップデート&apos;%1&apos;は開始できませんでした</translation>
+    </message>
+</context>
+<context>
+    <name>UpdateNode::Downloader</name>
+    <message>
+        <location filename="../src/downloader.cpp" line="195"/>
+        <source>Invalid checksum. Try again later, or check your internet connection.</source>
+        <translation>無効なチェックサム。後でもう一度やり直して、またはインターネット接続を確認してください。</translation>
     </message>
 </context>
 <context>
@@ -273,38 +281,38 @@
         <translation>今ではない</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="139"/>
-        <location filename="../src/usermessages.cpp" line="178"/>
+        <location filename="../src/usermessages.cpp" line="141"/>
+        <location filename="../src/usermessages.cpp" line="180"/>
         <source> - Message</source>
         <translation> - メッセージ</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="141"/>
+        <location filename="../src/usermessages.cpp" line="143"/>
         <source> - Messages</source>
         <translation> - メッセージ</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="179"/>
+        <location filename="../src/usermessages.cpp" line="181"/>
         <source>Yes</source>
         <translation>はい</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="180"/>
+        <location filename="../src/usermessages.cpp" line="182"/>
         <source>Not now</source>
         <translation>今ではない</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="181"/>
+        <location filename="../src/usermessages.cpp" line="183"/>
         <source>There is a new message available:&lt;br&gt;&lt;br&gt;&lt;b&gt;%1&lt;/b&gt;&lt;br&gt;&lt;br&gt;Do you want to read this message in your standard browser now?</source>
         <translation>新しいメッセージはありますか。&lt;br&gt;&lt;br&gt;&lt;b&gt;％1&lt;/b&gt;&lt;br&gt;&lt;br&gt;これで、標準的なブラウザでこのメッセージを読むことをお勧めしますか？</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="212"/>
+        <location filename="../src/usermessages.cpp" line="226"/>
         <source>Loading %p% ...</source>
         <translation>%p%をロードしています...</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="228"/>
+        <location filename="../src/usermessages.cpp" line="242"/>
         <source>Mark as read and close</source>
         <translation>既読としてマークを付けて閉じる</translation>
     </message>

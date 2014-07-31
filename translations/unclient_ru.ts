@@ -109,12 +109,12 @@
         <translation>Невозможно выполнить команду!</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="497"/>
+        <location filename="../src/multiappdialog.cpp" line="498"/>
         <source>Update &apos;%1&apos; installed successfully</source>
         <translation>Обновление &apos;%1&apos; успешно установлено</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="517"/>
+        <location filename="../src/multiappdialog.cpp" line="518"/>
         <source>Update &apos;%1&apos; failed with error %2</source>
         <translation>Обновление не завершено &apos;%1&apos; ошибка %2</translation>
     </message>
@@ -122,17 +122,17 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/application.cpp" line="398"/>
+        <location filename="../src/application.cpp" line="387"/>
         <source>Unable to launch &apos;%1&apos;</source>
         <translation>Невозможно запустить &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="176"/>
+        <location filename="../src/application.cpp" line="177"/>
         <source>Checking for messages ...</source>
         <translation>Проверка сообщений ...</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="178"/>
+        <location filename="../src/application.cpp" line="179"/>
         <source>Checking for updates ...</source>
         <translation>Проверка обновлений ...</translation>
     </message>
@@ -147,36 +147,36 @@
         <translation>Читать сообщения</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="268"/>
+        <location filename="../src/singleappdialog.cpp" line="277"/>
         <location filename="../src/systemtray.cpp" line="72"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="343"/>
-        <location filename="../src/updatenode_service.cpp" line="371"/>
+        <location filename="../src/updatenode_service.cpp" line="361"/>
+        <location filename="../src/updatenode_service.cpp" line="389"/>
         <source>There are no new updates &amp; messages available</source>
         <translation>Нет доступных обновлений сообщений</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="346"/>
-        <location filename="../src/updatenode_service.cpp" line="375"/>
+        <location filename="../src/updatenode_service.cpp" line="364"/>
+        <location filename="../src/updatenode_service.cpp" line="393"/>
         <source>There are new updates available</source>
         <translation>Доступны новые обновления</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="349"/>
+        <location filename="../src/updatenode_service.cpp" line="367"/>
         <source>There are new messages available</source>
         <translation>Доступны новые сообщения</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="352"/>
+        <location filename="../src/updatenode_service.cpp" line="370"/>
         <source>There are updates and messages available</source>
         <translation>Доступны новые обновления и сообщения</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="355"/>
-        <location filename="../src/updatenode_service.cpp" line="378"/>
+        <location filename="../src/updatenode_service.cpp" line="373"/>
+        <location filename="../src/updatenode_service.cpp" line="396"/>
         <source>Undefined state</source>
         <translation>Состояние не определено</translation>
     </message>
@@ -214,27 +214,27 @@
         <translation>Загрузка обновлений</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="108"/>
+        <location filename="../src/singleappdialog.cpp" line="109"/>
         <source>Installing update ...</source>
         <translation>Установка обновления ...</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="127"/>
+        <location filename="../src/singleappdialog.cpp" line="131"/>
         <source> - Update Client</source>
         <translation> - Обновить клиент</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="240"/>
+        <location filename="../src/singleappdialog.cpp" line="244"/>
         <source>Update &apos;%1&apos; installed successfully</source>
         <translation>Обновление &apos;%1&apos; успешно установлено</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="250"/>
+        <location filename="../src/singleappdialog.cpp" line="254"/>
         <source>Update &apos;%1&apos; failed with error %2</source>
         <translation>Обновление не завершено &apos;%1&apos; ошибка %2</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="258"/>
+        <location filename="../src/singleappdialog.cpp" line="267"/>
         <source>Update &apos;%1&apos; closed unexpected</source>
         <translation>Обновление &apos;%1&apos; экстренно прервано</translation>
     </message>
@@ -242,14 +242,22 @@
 <context>
     <name>UpdateNode::Commander</name>
     <message>
-        <location filename="../src/commander.cpp" line="232"/>
+        <location filename="../src/commander.cpp" line="260"/>
         <source>Installing update &apos;%1&apos;</source>
         <translation>Установка обновления &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../src/commander.cpp" line="317"/>
+        <location filename="../src/commander.cpp" line="345"/>
         <source>Error: Update &apos;%1&apos; failed to start</source>
         <translation>Ошибка: &apos;%1&apos; запуск обновления не удался</translation>
+    </message>
+</context>
+<context>
+    <name>UpdateNode::Downloader</name>
+    <message>
+        <location filename="../src/downloader.cpp" line="195"/>
+        <source>Invalid checksum. Try again later, or check your internet connection.</source>
+        <translation>Неверная контрольная сумма. Повторите попытку позже, или проверить подключение к интернету.</translation>
     </message>
 </context>
 <context>
@@ -273,38 +281,38 @@
         <translation>Не сейчас</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="139"/>
-        <location filename="../src/usermessages.cpp" line="178"/>
+        <location filename="../src/usermessages.cpp" line="141"/>
+        <location filename="../src/usermessages.cpp" line="180"/>
         <source> - Message</source>
         <translation> - Сообщение</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="141"/>
+        <location filename="../src/usermessages.cpp" line="143"/>
         <source> - Messages</source>
         <translation> - Сообщения</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="179"/>
+        <location filename="../src/usermessages.cpp" line="181"/>
         <source>Yes</source>
         <translation>да</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="180"/>
+        <location filename="../src/usermessages.cpp" line="182"/>
         <source>Not now</source>
         <translation>Не сейчас</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="181"/>
+        <location filename="../src/usermessages.cpp" line="183"/>
         <source>There is a new message available:&lt;br&gt;&lt;br&gt;&lt;b&gt;%1&lt;/b&gt;&lt;br&gt;&lt;br&gt;Do you want to read this message in your standard browser now?</source>
         <translation>Доступно новое сообщение:&lt;br&gt;&lt;br&gt;&lt;b&gt;%1&lt;/b&gt;&lt;br&gt;&lt;br&gt; Желаете прочесть это сообщение с помощью стандартного браузера?</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="212"/>
+        <location filename="../src/usermessages.cpp" line="226"/>
         <source>Loading %p% ...</source>
         <translation>Загрузка %p% ...</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="228"/>
+        <location filename="../src/usermessages.cpp" line="242"/>
         <source>Mark as read and close</source>
         <translation>Отметит как прочитанное и закрыть</translation>
     </message>

@@ -129,12 +129,12 @@
         <translation>명령을 실행할 수 없습니다!</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="497"/>
+        <location filename="../src/multiappdialog.cpp" line="498"/>
         <source>Update &apos;%1&apos; installed successfully</source>
         <translation>업데이트 &apos;%1&apos; 성공적으로 설치했습니다</translation>
     </message>
     <message>
-        <location filename="../src/multiappdialog.cpp" line="517"/>
+        <location filename="../src/multiappdialog.cpp" line="518"/>
         <source>Update &apos;%1&apos; failed with error %2</source>
         <translation>업데이트&apos;%1&apos; 오류로 인해 실패했습니다 %2</translation>
     </message>
@@ -156,36 +156,36 @@
         <translation>메시지를 읽고</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="268"/>
+        <location filename="../src/singleappdialog.cpp" line="277"/>
         <location filename="../src/systemtray.cpp" line="72"/>
         <source>Close</source>
         <translation>닫음</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="343"/>
-        <location filename="../src/updatenode_service.cpp" line="371"/>
+        <location filename="../src/updatenode_service.cpp" line="361"/>
+        <location filename="../src/updatenode_service.cpp" line="389"/>
         <source>There are no new updates &amp; messages available</source>
         <translation>새로운 업데이트가 없습니다 &amp; 사용할 수 있는 메세지</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="346"/>
-        <location filename="../src/updatenode_service.cpp" line="375"/>
+        <location filename="../src/updatenode_service.cpp" line="364"/>
+        <location filename="../src/updatenode_service.cpp" line="393"/>
         <source>There are new updates available</source>
         <translation>새로운 업데이트를 사용할 수 있습니다</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="349"/>
+        <location filename="../src/updatenode_service.cpp" line="367"/>
         <source>There are new messages available</source>
         <translation>새로운 업데이트를 사용할 수 있습니다</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="352"/>
+        <location filename="../src/updatenode_service.cpp" line="370"/>
         <source>There are updates and messages available</source>
         <translation>사용할 수있는 업데이트 및 메시지가 있습니다</translation>
     </message>
     <message>
-        <location filename="../src/updatenode_service.cpp" line="355"/>
-        <location filename="../src/updatenode_service.cpp" line="378"/>
+        <location filename="../src/updatenode_service.cpp" line="373"/>
+        <location filename="../src/updatenode_service.cpp" line="396"/>
         <source>Undefined state</source>
         <translation>정의되지 않은 상태</translation>
     </message>
@@ -194,17 +194,17 @@
         <translation type="obsolete">종료</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="398"/>
+        <location filename="../src/application.cpp" line="387"/>
         <source>Unable to launch &apos;%1&apos;</source>
         <translation>시작할 수 없습니다 &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="176"/>
+        <location filename="../src/application.cpp" line="177"/>
         <source>Checking for messages ...</source>
         <translation>메시지를 확인 중입니다...</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="178"/>
+        <location filename="../src/application.cpp" line="179"/>
         <source>Checking for updates ...</source>
         <translation>업데이트를 확인 중입니다...</translation>
     </message>
@@ -258,27 +258,27 @@
         <translation>업데이트를 다운로드 중입니다</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="108"/>
+        <location filename="../src/singleappdialog.cpp" line="109"/>
         <source>Installing update ...</source>
         <translation>업데이트를 설치 중입니다 ...</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="127"/>
+        <location filename="../src/singleappdialog.cpp" line="131"/>
         <source> - Update Client</source>
         <translation> - 클라이언트를 업데이트합니다</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="240"/>
+        <location filename="../src/singleappdialog.cpp" line="244"/>
         <source>Update &apos;%1&apos; installed successfully</source>
         <translation>업데이트 &apos;%1&apos; 성공적으로 설치했습니다</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="250"/>
+        <location filename="../src/singleappdialog.cpp" line="254"/>
         <source>Update &apos;%1&apos; failed with error %2</source>
         <translation>업데이트 &apos;%1&apos; 오류로 인해 실패했습니다 %2</translation>
     </message>
     <message>
-        <location filename="../src/singleappdialog.cpp" line="258"/>
+        <location filename="../src/singleappdialog.cpp" line="267"/>
         <source>Update &apos;%1&apos; closed unexpected</source>
         <translation>업데이트 &apos;%1&apos; 예기치 않게 닫음</translation>
     </message>
@@ -290,14 +290,22 @@
         <translation type="obsolete">업데이트를 설치 중입니다 &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../src/commander.cpp" line="232"/>
+        <location filename="../src/commander.cpp" line="260"/>
         <source>Installing update &apos;%1&apos;</source>
         <translation>업데이트를 설치 중입니다 &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../src/commander.cpp" line="317"/>
+        <location filename="../src/commander.cpp" line="345"/>
         <source>Error: Update &apos;%1&apos; failed to start</source>
         <translation>오류: 업데이트 &apos;%1&apos; 시작하는데 실패했습니다</translation>
+    </message>
+</context>
+<context>
+    <name>UpdateNode::Downloader</name>
+    <message>
+        <location filename="../src/downloader.cpp" line="195"/>
+        <source>Invalid checksum. Try again later, or check your internet connection.</source>
+        <translation>잘못된 체크섬. 나중에 다시 시도하거나 인터넷 연결을 확인하십시오.</translation>
     </message>
 </context>
 <context>
@@ -325,28 +333,28 @@
         <translation>지금은 아님</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="139"/>
-        <location filename="../src/usermessages.cpp" line="178"/>
+        <location filename="../src/usermessages.cpp" line="141"/>
+        <location filename="../src/usermessages.cpp" line="180"/>
         <source> - Message</source>
         <translation> - 메세지</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="141"/>
+        <location filename="../src/usermessages.cpp" line="143"/>
         <source> - Messages</source>
         <translation> -메세지들</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="179"/>
+        <location filename="../src/usermessages.cpp" line="181"/>
         <source>Yes</source>
         <translation>예</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="180"/>
+        <location filename="../src/usermessages.cpp" line="182"/>
         <source>Not now</source>
         <translation>지금은 아님</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="181"/>
+        <location filename="../src/usermessages.cpp" line="183"/>
         <source>There is a new message available:&lt;br&gt;&lt;br&gt;&lt;b&gt;%1&lt;/b&gt;&lt;br&gt;&lt;br&gt;Do you want to read this message in your standard browser now?</source>
         <translation>사용할 수있는 새로운 메시지가 있습니다 :&lt;br&gt;&lt;br&gt;&lt;b&gt;%1&lt;/b&gt;&lt;br&gt;&lt;br&gt;당신은 지금 당신의 표준 브라우저에서 메시지를 읽을 하시겠습니까?에게</translation>
     </message>
@@ -355,12 +363,12 @@
         <translation type="obsolete"> (%1/%2)</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="212"/>
+        <location filename="../src/usermessages.cpp" line="226"/>
         <source>Loading %p% ...</source>
         <translation>로딩 중입니다 %p% ...</translation>
     </message>
     <message>
-        <location filename="../src/usermessages.cpp" line="228"/>
+        <location filename="../src/usermessages.cpp" line="242"/>
         <source>Mark as read and close</source>
         <translation>읽은 상태로 표시하고 닫음</translation>
     </message>
