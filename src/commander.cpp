@@ -240,6 +240,8 @@ bool Commander::run(const UpdateNode::Update& aUpdate)
 
         if(file.isOpen())
             file.close();
+        else
+            return false;
     }
 
     if(command.isEmpty())

@@ -468,7 +468,8 @@ void MultiAppDialog::install()
         m_pUI->labelProgress->show();
         m_pUI->labelProgress->setText(tr("Unable to execute the command!"));
         m_strErrorString = m_pUI->labelProgress->text();
-        m_iError = UPDATENODE_PROCERROR_COMMAND_LAUNCH_FAILED;
+        if(m_iError == UPDATENODE_PROCERROR_CANCELED)
+            m_iError = UPDATENODE_PROCERROR_COMMAND_LAUNCH_FAILED;
     }
 }
 

@@ -114,7 +114,10 @@ void SingleAppDialog::install()
 
     if(!m_oCommander.run(m_oCurrentUpdate))
     {
-        qApp->exit(UPDATENODE_PROCERROR_COMMAND_LAUNCH_FAILED);
+        if(m_iErrorCode == UPDATENODE_PROCERROR_CANCELED)
+            qApp->exit(UPDATENODE_PROCERROR_COMMAND_LAUNCH_FAILED);
+        else
+            qApp->exit(m_iErrorCode);
         return;
     }
 
