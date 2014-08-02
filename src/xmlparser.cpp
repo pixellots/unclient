@@ -147,7 +147,14 @@ bool XmlParser::parseStatus()
         QDomElement e = n.toElement();
 
         if(e.tagName()=="code")
+        {
+            // validate
+            if(!m_pConfig->getProductCode().isEmpty()
+                    && m_pConfig->getProductCode() != e.text())
+                return false;
+
             product.setCode(e.text());
+        }
         else if(e.tagName()=="name")
             product.setName(e.text());
         else if(e.tagName()=="image")

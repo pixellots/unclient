@@ -227,7 +227,12 @@ void Service::requestReceived(QNetworkReply* reply)
             QString replyText = QString::fromUtf8(raw_data);
 
             UpdateNode::XmlParser* parser = new UpdateNode::XmlParser(this, config);
-            parser->parse(replyText);
+            if(!parser->parse(replyText))
+            {
+                UpdateNode::Logging() << "ERROR: Failed to read update data";
+                qApp->exit(UPDATENODE_PROCERROR_INTERNAL_ERROR);
+                return;
+            }
             m_strStatus = parser->getStatusString();
             m_iStatus = parser->getStatus();
             UpdateNode::Logging() << "UpdateNode RESULT: " << parser->getStatusString() << "(" << parser->getStatus() << ")";
