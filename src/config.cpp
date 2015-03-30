@@ -67,6 +67,7 @@ Config::Config()
     m_bSingleMode = false;
     m_bRelaunch = false;
     m_bEnforeMessages = false;
+    m_bAutoProxy = true;
     m_iTimeOut = DEFAULT_TIMEOUT;
 }
 
@@ -602,6 +603,23 @@ QString Config::getIdentifier()
 }
 
 /*!
+Enables/Disables the auto proxy configuration
+\sa Config::isAutoPrxy
+*/void Config::setAutoProxy(bool aEnable)
+{
+    m_bAutoProxy = aEnable;
+}
+
+/*!
+Returns if auto proxy configuration is enabled
+\sa Config::setAutoProxy
+*/
+bool Config::isAutoPrxy()
+{
+    return m_bAutoProxy;
+}
+
+/*!
 Reads commandline parameters from config file
 \sa Config::setParametersToFile
 */
@@ -667,6 +685,8 @@ void Config::getParametersFromFile(const QString& aFile)
         setTimeOut(settings->value("timeout").toInt());
     if(settings->contains("custom"))
         setCustomRequestValue(settings->value("custom").toString());
+    if(settings->contains("noproxy"))
+        setAutoProxy(settings->value("noproxy").toString().toLower()=="true");
     if(settings->contains("identifier"))
         setIdentifier(settings->value("identifier").toString());
 
@@ -712,6 +732,8 @@ void Config::setParametersToFile(const QString& aFile, bool aAll /* = true */)
         settings->setValue("identifier", getIdentifier());
     if(!getHost().isEmpty())
         settings->setValue("http", "true");
+    if(!isAutoPrxy())
+        settings->setValue("noproxy", "false");
     if(!m_strLanguage.isEmpty())
         settings->setValue("language", getLanguage());
     if(!getLoggingFile().isEmpty())

@@ -122,6 +122,9 @@ namespace UpdateNode
             void getParametersFromFile(const QString& aFile);
             void setParametersToFile(const QString& aFile, bool aAll = true);
 
+            void setAutoProxy(bool aEnable);
+            bool isAutoPrxy();
+
         public:
             Config();
 
@@ -133,6 +136,7 @@ namespace UpdateNode
             bool m_bSingleMode;
             bool m_bRelaunch;
             bool m_bEnforeMessages;
+            bool m_bAutoProxy;
 
             QString m_strIdentifier;
             QString m_strHost;
