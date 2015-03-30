@@ -41,8 +41,8 @@ SUBDIRS=test
 
 ### version needs to be checked here
 VERSION_HIGH=1
-VERSION_LOW=2
-VERSION_REV=1
+VERSION_LOW=3
+VERSION_REV=0
 VERSION_BUILD=$$cat(build.no)
 
 VERSION=$${VERSION_HIGH}.$${VERSION_LOW}
