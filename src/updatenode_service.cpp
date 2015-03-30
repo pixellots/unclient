@@ -90,6 +90,9 @@ bool Service::checkForUpdates()
 
     m_iStatus = -1;
 
+    if(!config->isAutoPrxy())
+       QNetworkProxyFactory::setUseSystemConfiguration(false);
+
     if(!m_pManager)
     {
         m_pManager = new QNetworkAccessManager(this);
@@ -134,6 +137,9 @@ bool Service::checkForUpdates(UpdateNode::Config* aConfig)
         UpdateNode::Logging() << "WARNING: Running in HTTP mode";
         url = url.fromUserInput(globalConfig->getHost());
     }
+
+    if(!aConfig->isAutoPrxy())
+        QNetworkProxyFactory::setUseSystemConfiguration(false);
 
 #if QT_VERSION >= 0x050000
     QUrlQuery url_query;
