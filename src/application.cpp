@@ -46,7 +46,7 @@ like installing language, single instance when application is hidden, or relaunc
 
 /*!
 Constructs an Application object and adding a root certificate to the CA certificates database for
-GeoTrust SSL handshake
+GeoSign SSL handshake
 */
 Application::Application(QObject *parent) :
     QObject(parent)
@@ -57,7 +57,7 @@ Application::Application(QObject *parent) :
     QSslConfiguration defaultSSLConfig = QSslConfiguration::defaultConfiguration();
     QList<QSslCertificate> certificates = defaultSSLConfig.caCertificates();
     QFile cert;
-    cert.setFileName(":/cert/geotrust.cer");
+    cert.setFileName(":/cert/Root-R1.cer");
     if(cert.open(QIODevice::ReadOnly))
     {
         QSslCertificate certificate(&cert, QSsl::Der);
