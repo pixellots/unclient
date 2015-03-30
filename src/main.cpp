@@ -66,6 +66,7 @@ int printHelp()
             + "  -r             \trelaunch client in temp directory (self update)\n"
             + "  -st            \tsystem tray icon (-check mode only)\n"
             + "  -http          \tdo not use a secure SSL connection (not recommended)\n"
+            + "  -noproxy       \tdisable automatic proxy configuration\n"
             + "  -em            \tenforce additional messages mode before terminating\n"
             + "  -to <seconds>  \tsets timeout for update check in seconds (default: 20)\n"
             + "  -log <file>    \tenables logging\n"
@@ -197,6 +198,8 @@ int main(int argc, char *argv[])
             config->setRelaunch(true);
         else if(argument == "-em")
             config->setEnforceMessages(true);
+        else if(argument == "-noproxy")
+            config->setAutoProxy(false);
         else if(argument == "-re")
             relaunched = true;
         else if(argument == "-st")
