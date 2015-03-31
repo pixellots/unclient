@@ -91,6 +91,11 @@ int printHelp()
 
 int main(int argc, char *argv[])
 {
+#if QT_VERSION >= 0x050000
+    QCoreApplication::setSetuidAllowed(true);
+    qputenv("QT_LOGGING_RULES", "qt.network.ssl.warning=false");
+#endif
+
     if(argc > 1 && (strcmp(argv[1],"-copy") == 0 || strcmp(argv[1],"-sha1") == 0))
     {
         QApplication app(argc, argv);
