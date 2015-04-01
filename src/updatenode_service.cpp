@@ -273,7 +273,7 @@ void Service::requestReceived(QNetworkReply* reply)
 
             if(UpdateNode::Config::Instance()->isSingleMode())
                 connect(m_pDownloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), this, SIGNAL(done()));
-            else if(m_mapConfig.size()==0)
+            else /*if(m_mapConfig.size()==0)*/
                 connect(m_pDownloader, SIGNAL(done(const UpdateNode::Update&, QNetworkReply::NetworkError, const QString&)), this, SIGNAL(doneManager()));
         }
 
