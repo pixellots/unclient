@@ -281,7 +281,11 @@ void Service::requestReceived(QNetworkReply* reply)
         UpdateNode::Update temp;
         temp.setCode(config->product().getCode());
 
-        m_pDownloader->doDownload(config->product().getIconUrl(), temp);
+        QString iconUrl = config->product().getIconUrl();
+        if(!UpdateNode::Config::Instance()->getHost().isEmpty())
+            m_pDownloader->doDownload(iconUrl.replace("https", "http"), temp);
+        else
+            m_pDownloader->doDownload(iconUrl, temp);
     }
     else
     {
