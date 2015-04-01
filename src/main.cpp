@@ -33,7 +33,7 @@
 #include "helpdialog.h"
 
 #ifndef APP_COPYRIGHT
-#define APP_COPYRIGHT "(C) 2014 UpdateNode UG (haftungsbeschränkt). All rights reserved."
+#define APP_COPYRIGHT "(C) 2015 UpdateNode UG (haftungsbeschränkt). All rights reserved."
 #endif
 
 int printHelp()
