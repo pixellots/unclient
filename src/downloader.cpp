@@ -173,6 +173,10 @@ void Downloader::downloadFinished(QNetworkReply *reply)
 
     error = reply->error();
     errorString = reply->errorString();
+
+    if(!m_oCurrentDownloads.contains(reply))
+        return;
+
     UpdateNode::Update update = m_oCurrentDownloads.value(reply);
 
     QUrl url = reply->url();
