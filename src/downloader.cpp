@@ -134,7 +134,17 @@ bool Downloader::saveToDisk(const QString &filename, QIODevice *data, const QStr
         return false;
     }
 
-    file.write(data->readAll());
+    QByteArray buffer;
+    int chunksize = 1024 * 1024;
+    while (!(buffer = data->read(chunksize)).isEmpty())
+    {
+        if(file.write(buffer) == -1)
+        {
+            UpdateNode::Logging() << "File operation failed for " << filename <<  ": " << file.errorString();
+            return false;
+        }
+    }
+
     file.close();
 
     UpdateNode::Settings settings;
