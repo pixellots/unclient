@@ -22,6 +22,7 @@
 
 #include <QDir>
 #include <QDebug>
+#include <QNetworkConfigurationManager>
 #include "logging.h"
 #include "downloader.h"
 #include "localfile.h"
@@ -43,6 +44,8 @@ Constructs an empty Downloader object.
 */
 Downloader::Downloader()
 {
+    QNetworkConfigurationManager manager;
+    m_oManager.setConfiguration(manager.defaultConfiguration());
 }
 
 /*!
@@ -57,6 +60,7 @@ void Downloader::doDownload(const QUrl& url, const QString& aFileName)
 
     connect(&m_oManager, SIGNAL(finished(QNetworkReply*)), SLOT(downloadFileFinished(QNetworkReply*)));
     connect(&m_oManager, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), SLOT(onSslError(QNetworkReply*,QList<QSslError>)));
+    connect(&m_oManager, SIGNAL(networkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility)), SLOT(onNetworkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility)));
 
     QNetworkReply *reply = m_oManager.get(request);
 
@@ -94,6 +98,7 @@ QNetworkReply* Downloader::doDownload(const QUrl& url, const UpdateNode::Update&
 
     connect(&m_oManager, SIGNAL(finished(QNetworkReply*)), SLOT(downloadFinished(QNetworkReply*)));
     connect(&m_oManager, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), SLOT(onSslError(QNetworkReply*,QList<QSslError>)));
+    connect(&m_oManager, SIGNAL(networkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility)), SLOT(onNetworkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility)));
 
     QNetworkRequest request(finalUrl);
 
@@ -242,5 +247,18 @@ void Downloader::onSslError(QNetworkReply *reply, const QList<QSslError>& errors
     QList<QSslError> expectedSslErrors;
     expectedSslErrors.append(error);
     reply->ignoreSslErrors(expectedSslErrors);
+}
+
+/*!
+Slot called network state changes
+*/
+void Downloader::onNetworkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility status)
+{
+    if(status == QNetworkAccessManager::NotAccessible)
+    {
+        UpdateNode::Logging() << "Connection lost. Download aborted.";
+        cancel();
+        qApp->exit(UPDATENODE_PROCERROR_CONNECTION_ERROR);
+    }
 }
 
