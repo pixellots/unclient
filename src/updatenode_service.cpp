@@ -261,6 +261,8 @@ void Service::requestReceived(QNetworkReply* reply)
     {
         // Error
         UpdateNode::Logging() << "ERROR: " << reply->errorString();
+        qApp->exit(UPDATENODE_PROCERROR_CONNECTION_ERROR);
+        return;
     }
 
     m_mapConfig.remove(reply);

@@ -481,6 +481,10 @@ QString Application::errorCodeToString(int aCode) const
             result = "Binary signature is invalid. The update is untrusted";
             break;
 
+        case UPDATENODE_PROCERROR_CONNECTION_ERROR:
+            result = "Failed to connect to server";
+            break;
+
         default:
             result = "Unknown error";
             break;
