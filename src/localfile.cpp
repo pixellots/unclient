@@ -39,7 +39,12 @@ Constructs a file location for a gieven \a aFileName based on its name and the r
 */
 QString LocalFile::getDownloadLocation(const QString& aFileName)
 {
-    return QDir::toNativeSeparators(LocalFile::getDownloadPath() + QDir::separator() + QFileInfo(aFileName).fileName());
+    QFileInfo info(aFileName);
+    QString fileName = info.fileName();
+
+    fileName = fileName.split('?').at(0);
+
+    return QDir::toNativeSeparators(LocalFile::getDownloadPath() + QDir::separator() + fileName);
 }
 
 /*!
