@@ -281,7 +281,7 @@ void SingleAppDialog::updateExit(int aExitCode, QProcess::ExitStatus aExitStatus
 
 void SingleAppDialog::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
-    if(isHidden()
+    if(!UpdateNode::Config::Instance()->isSilent() && isHidden()
             && (bytesReceived < (qint64)bytesTotal/3 || bytesTotal==-1))
     {
         adjustSize();
