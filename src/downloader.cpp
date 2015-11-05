@@ -80,7 +80,7 @@ QNetworkReply* Downloader::doDownload(const QUrl& url, const UpdateNode::Update&
     UpdateNode::Settings settings;
     QString cachedFile = settings.getCachedFile(aUpdate.getCode());
 
-    if(!cachedFile.isEmpty())
+    if(!cachedFile.isEmpty() && QFileInfo(cachedFile).exists())
     {
         if(!aUpdate.getChecksum().isEmpty())
             if(!UpdateNode::Security::validateChecksum(cachedFile, aUpdate.getChecksum(), aUpdate.getChecksumAlg()))
@@ -148,8 +148,12 @@ bool Downloader::saveToDisk(const QString &filename, QIODevice *data, const QStr
             UpdateNode::Logging() << "File operation failed for " << filename <<  ": " << file.errorString();
             return false;
         }
-    }
+        file.flush();
+    #ifdef Q_OS_LINUX
+        fsync(file.handle());
+    #endif
 
+    }
     file.close();
 
     UpdateNode::Settings settings;

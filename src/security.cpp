@@ -63,7 +63,7 @@ Static method to validate checksum for a given aFileName, aHashReference and sel
 */
 bool Security::validateChecksum(const QString& aFileName, const QString& aHashReference, const QString aAlgorithm)
 {
-    if(aHashReference.toLower() == Security::generateChecksum(aFileName.toLower(), aAlgorithm.toLower()))
+    if(aHashReference.toLower() == Security::generateChecksum(aFileName, aAlgorithm.toLower()).toLower())
         return true;
     else
        return false;
@@ -79,6 +79,8 @@ QString Security::generateChecksum(const QString& aFileName, const QString& aAlo
     const EVP_MD* alg;
 
     QFile file(aFileName);
+
+    file.waitForReadyRead(1000);
 
     if(!file.open(QIODevice::ReadOnly))
         return QString();
@@ -100,7 +102,7 @@ QString Security::generateChecksum(const QString& aFileName, const QString& aAlo
 
     EVP_DigestInit(&ctx, alg);
 
-    const int block_size = 10*1024;
+    const int block_size = 1024*1024;
     char buffer[block_size];
     int bytes_read;
 

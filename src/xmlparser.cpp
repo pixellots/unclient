@@ -123,6 +123,9 @@ bool XmlParser::parseStatus()
         n = n.nextSibling();
     }
 
+    UpdateNode::Logging() << "STATUS:" << m_iStatus;
+    UpdateNode::Logging() << "STATUS_MESSAGE:" << m_strStatus;
+
     return true;
 }
 
