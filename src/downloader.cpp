@@ -22,7 +22,9 @@
 
 #include <QDir>
 #include <QDebug>
+#if QT_VERSION >= 0x040700
 #include <QNetworkConfigurationManager>
+#endif
 #include "logging.h"
 #include "downloader.h"
 #include "localfile.h"
