@@ -44,8 +44,10 @@ Constructs an empty Downloader object.
 */
 Downloader::Downloader()
 {
+#if QT_VERSION >= 0x040700
     QNetworkConfigurationManager manager;
     m_oManager.setConfiguration(manager.defaultConfiguration());
+#endif
 }
 
 /*!
