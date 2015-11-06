@@ -62,8 +62,9 @@ namespace UpdateNode
              void downloadFinished(QNetworkReply *reply);
              void downloadFileFinished(QNetworkReply *reply);
              void onSslError(QNetworkReply *reply, const QList<QSslError>& errors);
+#if QT_VERSION >= 0x040700
              void onNetworkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility status);
-
+#endif
         signals:
              void done(QByteArray array, const QString& fileName);
              void done(const UpdateNode::Update& aUpdate, QNetworkReply::NetworkError aError, const QString& aErrorString);

@@ -60,8 +60,9 @@ void Downloader::doDownload(const QUrl& url, const QString& aFileName)
 
     connect(&m_oManager, SIGNAL(finished(QNetworkReply*)), SLOT(downloadFileFinished(QNetworkReply*)));
     connect(&m_oManager, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), SLOT(onSslError(QNetworkReply*,QList<QSslError>)));
+#if QT_VERSION >= 0x040700
     connect(&m_oManager, SIGNAL(networkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility)), SLOT(onNetworkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility)));
-
+#endif
     QNetworkReply *reply = m_oManager.get(request);
 
     m_oCurrentFileDownloads[reply] = aFileName;
@@ -98,8 +99,9 @@ QNetworkReply* Downloader::doDownload(const QUrl& url, const UpdateNode::Update&
 
     connect(&m_oManager, SIGNAL(finished(QNetworkReply*)), SLOT(downloadFinished(QNetworkReply*)));
     connect(&m_oManager, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), SLOT(onSslError(QNetworkReply*,QList<QSslError>)));
+#if QT_VERSION >= 0x040700
     connect(&m_oManager, SIGNAL(networkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility)), SLOT(onNetworkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility)));
-
+#endif
     QNetworkRequest request(finalUrl);
 
     QNetworkReply *reply = m_oManager.get(request);
@@ -253,6 +255,7 @@ void Downloader::onSslError(QNetworkReply *reply, const QList<QSslError>& errors
     reply->ignoreSslErrors(expectedSslErrors);
 }
 
+#if QT_VERSION >= 0x040700
 /*!
 Slot called network state changes
 */
@@ -265,4 +268,5 @@ void Downloader::onNetworkAccessibleChanged(QNetworkAccessManager::NetworkAccess
         qApp->exit(UPDATENODE_PROCERROR_CONNECTION_ERROR);
     }
 }
+#endif
 
